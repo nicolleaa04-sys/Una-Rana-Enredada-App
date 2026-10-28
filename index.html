@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Rana Enredada">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3069/3069172.png">
+  <link rel="apple-touch-icon" href="logo.png">
 
   <!-- Fuentes & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,13 +27,13 @@
         extend: {
           colors: {
             rana: {
-              DEFAULT: '#A6D854', // Verde vivo de la marca
+              DEFAULT: '#A6D854',
               light: '#C3E882',
               dark: '#85B535',
               soft: '#F2F9E8'
             },
             morado: {
-              DEFAULT: '#3B1C54', // Púrpura profundo del logo
+              DEFAULT: '#3B1C54',
               light: '#532B74',
               soft: '#F4EEF8',
               lila: '#BA68C8'
@@ -75,8 +75,8 @@
   <header class="sticky top-0 z-40 bg-white/95 dark:bg-noche-card/95 backdrop-blur-md border-b border-stone-200 dark:border-noche-border shadow-sm px-4 py-2.5">
     <div class="max-w-5xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-full bg-rana-soft dark:bg-morado-light/40 border-2 border-rana flex items-center justify-center text-morado dark:text-rana text-2xl shadow-sm">
-          <i class="fa-solid fa-frog"></i>
+        <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-rana shadow-sm bg-white flex items-center justify-center">
+          <img src="logo.png" alt="Logo Una Rana Enredada" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-frog text-morado text-2xl\'></i>'">
         </div>
         <div>
           <h1 class="font-brand font-bold text-lg text-morado dark:text-rana-light leading-tight">Una rana enredada</h1>
@@ -85,18 +85,15 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <!-- Indicador de sincronización -->
         <div id="sync-container" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-crema-100 dark:bg-noche-border text-stone-600 dark:text-stone-300">
           <span id="sync-indicator" class="inline-block w-2 h-2 rounded-full bg-amber-400"></span>
           <span id="sync-text" class="text-[11px]">Conectando...</span>
         </div>
 
-        <!-- Modo Oscuro / Claro -->
         <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-crema-100 dark:bg-noche-border flex items-center justify-center text-morado dark:text-mostaza hover:scale-105 transition" title="Cambiar tema">
           <i id="theme-icon" class="fa-solid fa-moon"></i>
         </button>
 
-        <!-- Perfil de Usuario y Cerrar Sesión -->
         <div id="user-profile" class="hidden flex items-center gap-2 ml-1">
           <img id="user-avatar" class="w-8 h-8 rounded-full border-2 border-rana" alt="Avatar">
           <button onclick="cerrarSesion()" class="w-8 h-8 rounded-xl bg-crema-100 dark:bg-noche-border text-stone-400 hover:text-rose-500 flex items-center justify-center transition" title="Cerrar sesión">
@@ -104,7 +101,6 @@
           </button>
         </div>
 
-        <!-- Navegación Desktop -->
         <nav id="nav-desktop" class="hidden md:flex gap-1 bg-crema-100 dark:bg-noche-border p-1 rounded-xl text-xs font-bold ml-2">
           <button onclick="cambiarModulo('proyectos')" id="btn-nav-proyectos" class="px-3 py-1.5 rounded-lg bg-white dark:bg-morado-light text-morado dark:text-white shadow-sm">Patrones</button>
           <button onclick="cambiarModulo('almacen')" id="btn-nav-almacen" class="px-3 py-1.5 rounded-lg text-stone-600 dark:text-stone-300">Almacén</button>
@@ -118,8 +114,8 @@
   <!-- CONTENEDOR PRINCIPAL -->
   <main class="max-w-5xl mx-auto p-4 flex-1 w-full pb-24 md:pb-8">
 
-    <!-- PANTALLA DE ACCESO CON GMAIL -->
-    <div id="pantalla-login" class="max-w-md mx-auto my-12 p-8 bg-white dark:bg-noche-card rounded-3xl border border-stone-200 dark:border-noche-border shadow-xl text-center space-y-5">
+    <!-- PANTALLA DE ACCESO CON GMAIL (Oculta por defecto para evitar parpadeo) -->
+    <div id="pantalla-login" class="hidden max-w-md mx-auto my-12 p-8 bg-white dark:bg-noche-card rounded-3xl border border-stone-200 dark:border-noche-border shadow-xl text-center space-y-5">
       <div class="w-16 h-16 mx-auto rounded-full bg-rana-soft dark:bg-morado-light flex items-center justify-center text-morado dark:text-rana text-3xl">
         <i class="fa-solid fa-lock"></i>
       </div>
@@ -353,7 +349,7 @@
     </button>
   </nav>
 
-  <!-- MODAL: REGISTRAR / EDITAR PROYECTO -->
+  <!-- MODAL: PROYECTO -->
   <div id="modal-proyecto" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
@@ -434,7 +430,7 @@
     </div>
   </div>
 
-  <!-- MODAL: REGISTRAR MATERIAL -->
+  <!-- MODAL: INSUMO / MATERIAL -->
   <div id="modal-material" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
@@ -540,22 +536,21 @@
     </div>
   </div>
 
-  <!-- SCRIPT FIREBASE Y LÓGICA CON TUS CLAVES REALES -->
+  <!-- LÓGICA JAVASCRIPT CON PERSISTENCIA Y FIREBASE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { 
-      getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged 
+      getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+      setPersistence, indexedDBLocalPersistence, browserLocalPersistence
     } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
     import { 
       getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc 
     } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
-    // PWA Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 
-    // TUS CLAVES REALES DE UNA RANA ENREDADA
     const firebaseConfig = {
       apiKey: "AIzaSyBL777DgFPrByHDlWOoFq78ehtrXWI3eho",
       authDomain: "una-rana-enredada.firebaseapp.com",
@@ -573,7 +568,6 @@
     let filtroAlmacenActual = 'all';
     let filtroFinanzasActual = 'mes';
 
-    // Manejo de Tema (Oscuro / Claro)
     window.toggleTheme = () => {
       const isDark = document.documentElement.classList.toggle('dark');
       localStorage.setItem('rana_theme', isDark ? 'dark' : 'light');
@@ -591,12 +585,16 @@
       actualizarIconoTema(true);
     }
 
-    // Inicializar Firebase
     try {
       app = initializeApp(firebaseConfig);
       auth = getAuth(app);
       db = getFirestore(app);
       provider = new GoogleAuthProvider();
+
+      // Guardar sesión duradera en el dispositivo
+      setPersistence(auth, indexedDBLocalPersistence).catch(() => {
+        setPersistence(auth, browserLocalPersistence).catch(console.warn);
+      });
 
       onAuthStateChanged(auth, (user) => {
         usuarioActual = user;
@@ -610,7 +608,7 @@
           userProfile.classList.remove('hidden');
           syncCont.classList.remove('hidden');
           navMovil.classList.remove('hidden');
-          document.getElementById('user-avatar').src = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/3069/3069172.png';
+          document.getElementById('user-avatar').src = user.photoURL || 'logo.png';
           
           marcarSincronizado();
           cambiarModulo('proyectos');
@@ -634,6 +632,7 @@
 
     window.iniciarSesionGoogle = async () => {
       try {
+        await setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
         await signInWithPopup(auth, provider);
       } catch (err) {
         alert("Error al iniciar sesión: " + err.message);
@@ -715,7 +714,7 @@
       const filtrados = proyectos.filter(p => p.nombre.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q));
 
       if (filtrados.length === 0) {
-        cont.innerHTML = `<div class="col-span-full text-center py-12 text-stone-400 text-xs font-bold">No hay amigurumis registrados aún.</div>`;
+        cont.innerHTML = `<div class="col-span-full text-center py-12 text-stone-400 text-xs font-bold">No hay diseños guardados aún.</div>`;
         return;
       }
 
@@ -843,7 +842,7 @@
       });
 
       if (filtrados.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-8 text-stone-400 text-xs font-bold">Sin materiales en esta sección.</div>`;
+        grid.innerHTML = `<div class="col-span-full text-center py-8 text-stone-400 text-xs font-bold">Sin materiales en esta categoría.</div>`;
         return;
       }
 
