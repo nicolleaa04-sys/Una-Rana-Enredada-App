@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rana-v3';
+const CACHE_NAME = 'rana-v4';
 self.addEventListener('install', (e) => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
 self.addEventListener('fetch', (e) => {
