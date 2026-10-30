@@ -216,7 +216,7 @@
         <div id="lista-compras-contenido" class="divide-y divide-stone-100 dark:divide-noche-border"></div>
       </div>
 
-      <!-- SUBTAB 3: CALCULADORA RÁPIDA CON COSTOS FIJOS DESPLEGABLES -->
+      <!-- SUBTAB 3: CALCULADORA RÁPIDA -->
       <div id="almacen-sub-calculadora" class="hidden bg-white dark:bg-noche-card p-5 rounded-2xl border border-stone-200 dark:border-noche-border max-w-xl mx-auto space-y-4">
         <div class="flex justify-between items-center">
           <div>
@@ -231,7 +231,6 @@
           <input type="text" id="calc-nombre-amigurumi" placeholder="Ej. Ranita con Overol" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-rana">
         </div>
 
-        <!-- Campos Principales (Variables) -->
         <div class="grid grid-cols-2 gap-3 text-xs bg-crema-50 dark:bg-noche-bg/60 p-3.5 rounded-2xl border border-stone-100 dark:border-noche-border">
           <div>
             <label class="block font-bold mb-1 text-morado dark:text-rana-light">Gramos de Hilo</label>
@@ -243,7 +242,7 @@
           </div>
         </div>
 
-        <!-- Panel Desplegable para Costos Fijos -->
+        <!-- Desplegable Costos Fijos -->
         <div class="border border-stone-200 dark:border-noche-border rounded-2xl overflow-hidden">
           <button type="button" onclick="toggleCostosFijos()" class="w-full px-4 py-2.5 bg-stone-50 dark:bg-noche-bg flex justify-between items-center text-xs font-bold text-stone-600 dark:text-stone-300 hover:bg-stone-100">
             <span><i class="fa-solid fa-sliders mr-1.5 text-morado dark:text-rana"></i> Costos Fijos Predeterminados (Empaque, Napa, Llavero)</span>
@@ -253,7 +252,7 @@
           <div id="panel-costos-fijos" class="hidden p-3.5 space-y-3 bg-white dark:bg-noche-card text-xs border-t border-stone-100 dark:border-noche-border">
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="block text-[11px] font-semibold mb-1">Kit Empaque Total (Bolsa craft, celofán, stickers, tarjeta)</label>
+                <label class="block text-[11px] font-semibold mb-1">Kit Empaque Total (Bolsa craft, celofán, stickers)</label>
                 <input type="number" step="0.5" id="calc-empaque" value="3.50" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
               </div>
               <div>
@@ -279,7 +278,7 @@
           </div>
         </div>
 
-        <!-- Resultado -->
+        <!-- Total Calculado -->
         <div class="p-4 bg-rana-soft dark:bg-noche-bg border-2 border-dashed border-rana rounded-2xl text-center space-y-1">
           <span class="text-[10px] uppercase font-bold text-morado-lila tracking-wide">Precio de Venta Sugerido</span>
           <div id="calc-precio-final" class="text-3xl font-extrabold text-morado dark:text-rana">S/ 38.00</div>
@@ -386,7 +385,7 @@
     </button>
   </nav>
 
-  <!-- MODAL 1: VISOR DE DETALLES Y PATRÓN (LECTURA RÁPIDA AL HACER CLIC) -->
+  <!-- MODAL 1: VISOR DE DETALLES Y PATRÓN (LECTURA RÁPIDA) -->
   <div id="modal-ver-patron" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
@@ -397,13 +396,11 @@
         <button onclick="cerrarModal('modal-ver-patron')" class="w-8 h-8 rounded-full bg-stone-100 dark:bg-noche-bg text-stone-400 hover:text-stone-700 dark:hover:text-white flex items-center justify-center text-lg">&times;</button>
       </div>
 
-      <!-- Foto Grande -->
       <div id="ver-p-foto-container" class="w-full h-52 rounded-2xl bg-crema-50 dark:bg-noche-bg overflow-hidden flex items-center justify-center border border-stone-100 dark:border-noche-border">
         <img id="ver-p-foto" src="" class="w-full h-full object-cover hidden">
         <i id="ver-p-foto-placeholder" class="fa-solid fa-frog text-stone-300 dark:text-noche-border text-4xl"></i>
       </div>
 
-      <!-- Medidas y Costos -->
       <div class="grid grid-cols-3 gap-2 text-center text-xs">
         <div class="bg-crema-100 dark:bg-noche-bg p-2.5 rounded-xl border border-stone-200 dark:border-noche-border">
           <span class="text-[10px] text-stone-400 font-bold block">Tamaño</span>
@@ -419,13 +416,11 @@
         </div>
       </div>
 
-      <!-- Materiales -->
       <div>
         <h4 class="text-xs font-bold text-stone-700 dark:text-stone-300 mb-1">🧶 Materiales sugeridos:</h4>
         <p id="ver-p-materiales" class="text-xs text-stone-600 dark:text-stone-400 bg-stone-50 dark:bg-noche-bg p-3 rounded-xl border border-stone-100 dark:border-noche-border leading-relaxed"></p>
       </div>
 
-      <!-- Contenido del Patrón -->
       <div class="space-y-2">
         <div class="flex justify-between items-center">
           <h4 class="text-xs font-bold text-stone-700 dark:text-stone-300">📖 Instrucciones / Esquema:</h4>
@@ -553,11 +548,11 @@
     </div>
   </div>
 
-  <!-- MODAL 3: REGISTRAR / EDITAR INSUMO DINÁMICO -->
+  <!-- MODAL 3: REGISTRAR / EDITAR INSUMO DINÁMICO (SOPORTA EDICIÓN COMPLETA) -->
   <div id="modal-material" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
-        <h3 class="font-brand font-bold text-lg text-morado dark:text-rana">Ficha de Insumo</h3>
+        <h3 id="titulo-modal-material" class="font-brand font-bold text-lg text-morado dark:text-rana">Ficha de Insumo</h3>
         <button onclick="cerrarModal('modal-material')" class="text-stone-400 text-xl">&times;</button>
       </div>
 
@@ -967,7 +962,6 @@
 
         return `
           <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
-            <!-- Clic en portada o títulos abre el visor completo -->
             <div onclick="verDetallePatron('${p.id}')" class="cursor-pointer">
               <div class="h-44 w-full bg-crema-100 dark:bg-noche-bg relative overflow-hidden flex items-center justify-center">
                 ${fotoSrc 
@@ -992,7 +986,6 @@
               </div>
             </div>
 
-            <!-- Acciones -->
             <div class="px-4 pb-3 pt-2 border-t border-stone-100 dark:border-noche-border flex items-center justify-between">
               <span class="text-lg font-extrabold text-morado dark:text-mostaza">S/ ${parseFloat(p.precio).toFixed(2)}</span>
               <div class="flex gap-1.5">
@@ -1155,12 +1148,6 @@
         contenedorColor.classList.remove('hidden');
       }
 
-      if (cat === 'relleno' && unidad === 'unid') {
-        document.getElementById('mat-unidad').value = 'kg';
-      } else if (cat === 'cintas' && unidad === 'unid') {
-        document.getElementById('mat-unidad').value = 'm';
-      }
-
       const u = document.getElementById('mat-unidad').value;
       lblCosto.innerText = `Costo/${u.toUpperCase()} (S/)`;
       lblStock.innerText = `Stock (${u})`;
@@ -1186,6 +1173,7 @@
       renderizarAlmacen();
     };
 
+    // RENDERIZAR ALMACÉN (CON BOTÓN DE EDITAR LÁPIZ)
     window.renderizarAlmacen = () => {
       const grid = document.getElementById('grid-materiales');
       const filtrados = materiales.filter(m => {
@@ -1208,7 +1196,7 @@
         let badgeTexto = m.noReponer ? 'Saldo' : (m.stock === 0 ? 'Agotado' : (m.stock <= m.minStock ? 'Bajo' : 'OK'));
 
         return `
-          <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border p-3 shadow-sm flex flex-col justify-between">
+          <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border p-3 shadow-sm flex flex-col justify-between hover:shadow-md transition">
             <div>
               <div class="flex justify-between items-center mb-1.5">
                 <span class="text-[9px] text-white font-bold px-1.5 py-0.5 rounded-full ${badgeColor}">${badgeTexto}</span>
@@ -1222,7 +1210,7 @@
               </div>
 
               <h5 class="font-bold text-xs text-stone-800 dark:text-white leading-snug">${m.nombre}</h5>
-              <div class="text-[10px] text-stone-400">${m.colorNombre || m.categoria} • S/ ${parseFloat(m.costo).toFixed(2)}/${u}</div>
+              <div class="text-[10px] text-stone-400 font-semibold">${m.colorNombre || m.categoria} • S/ ${parseFloat(m.costo).toFixed(2)}/${u}</div>
             </div>
 
             <div class="mt-3 pt-2 border-t border-stone-100 dark:border-noche-border flex items-center justify-between">
@@ -1231,7 +1219,10 @@
                 <span class="px-2 text-xs font-extrabold">${parseFloat(m.stock).toFixed(u === 'unid' ? 0 : 2)} <span class="text-[9px] font-normal text-stone-400">${u}</span></span>
                 <button onclick="cambiarStockMaterial('${m.id}', ${paso})" class="w-6 h-6 rounded bg-white dark:bg-noche-card font-extrabold text-xs">+</button>
               </div>
-              <button onclick="borrarMaterial('${m.id}')" class="text-stone-300 hover:text-rose-500 text-xs p-1"><i class="fa-regular fa-trash-can"></i></button>
+              <div class="flex items-center gap-1">
+                <button onclick="abrirModalMaterial('${m.id}')" class="text-stone-400 hover:text-morado dark:hover:text-rana text-xs p-1" title="Editar insumo"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button onclick="borrarMaterial('${m.id}')" class="text-stone-300 hover:text-rose-500 text-xs p-1" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>
+              </div>
             </div>
           </div>
         `;
@@ -1246,10 +1237,41 @@
       }
     };
 
-    window.abrirModalMaterial = () => {
+    // ABRIR MODAL INSUMOS (CREAR O EDITAR)
+    window.abrirModalMaterial = (id = null) => {
       document.getElementById('form-material').reset();
       document.getElementById('mat-id').value = '';
+      document.getElementById('mat-foto-data').value = '';
+      document.getElementById('mat-foto-url').value = '';
       quitarFoto('mat');
+
+      if (id) {
+        const m = materiales.find(x => x.id === id);
+        if (m) {
+          document.getElementById('titulo-modal-material').innerText = 'Editar Insumo';
+          document.getElementById('mat-id').value = m.id;
+          document.getElementById('mat-nombre').value = m.nombre;
+          document.getElementById('mat-categoria').value = m.categoria;
+          document.getElementById('mat-unidad').value = m.unidad || 'unid';
+          document.getElementById('mat-color-nombre').value = m.colorNombre || '';
+          document.getElementById('mat-color-hex').value = m.colorHex || '#A6D854';
+          document.getElementById('mat-costo').value = m.costo;
+          document.getElementById('mat-stock').value = m.stock;
+          document.getElementById('mat-min-stock').value = m.minStock;
+          document.getElementById('mat-no-reponer').checked = m.noReponer || false;
+
+          if (m.fotoUrl) {
+            document.getElementById('mat-foto-url').value = m.fotoUrl;
+            mostrarPreview('mat', m.fotoUrl);
+          } else if (m.fotoData) {
+            document.getElementById('mat-foto-data').value = m.fotoData;
+            mostrarPreview('mat', m.fotoData);
+          }
+        }
+      } else {
+        document.getElementById('titulo-modal-material').innerText = 'Nuevo Insumo';
+      }
+
       adaptarFormularioInsumo();
       document.getElementById('modal-material').classList.remove('hidden');
     };
@@ -1293,7 +1315,7 @@
       const faltantes = materiales.filter(m => !m.noReponer && m.stock <= m.minStock);
 
       if (faltantes.length === 0) {
-        cont.innerHTML = `<div class="text-center py-6 text-emerald-600 text-xs font-bold"><i class="fa-solid fa-circle-check text-lg mb-1 block"></i>¡Todo en stock!</div>`;
+        cont.innerHTML = `<div class="text-center py-6 text-emerald-600 text-xs font-bold"><i class="fa-solid fa-circle-check text-lg mb-1 block"></i>¡Todo en stock suficiente!</div>`;
         return;
       }
 
@@ -1337,7 +1359,6 @@
       const hG = Number(document.getElementById('calc-hilo').value) || 0;
       const hrs = Number(document.getElementById('calc-horas').value) || 0;
 
-      // Costos predeterminados
       const emp = Number(document.getElementById('calc-empaque').value) || 0;
       const arg = Number(document.getElementById('calc-argolla').value) || 0;
       const nG = Number(document.getElementById('calc-napa').value) || 0;
