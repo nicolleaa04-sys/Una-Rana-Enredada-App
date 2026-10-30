@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Una rana enredada - Taller & Gestión</title>
   
-  <!-- Configuración PWA e Iconos -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3B1C54">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,7 +12,6 @@
   <meta name="apple-mobile-web-app-title" content="Rana Enredada">
   <link rel="apple-touch-icon" href="logo.png">
 
-  <!-- Fuentes & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Comfortaa:wght@600;700&display=swap" rel="stylesheet">
@@ -71,11 +69,11 @@
 </head>
 <body class="bg-crema-50 dark:bg-noche-bg text-stone-800 dark:text-stone-100 font-sans min-h-screen flex flex-col antialiased transition-colors duration-200">
 
-  <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+  <!-- BARRA SUPERIOR -->
   <header class="sticky top-0 z-40 bg-white/95 dark:bg-noche-card/95 backdrop-blur-md border-b border-stone-200 dark:border-noche-border shadow-sm px-4 py-2.5">
     <div class="max-w-5xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-rana shadow-sm bg-white flex items-center justify-center">
+        <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-rana shadow-sm bg-white flex items-center justify-center shrink-0">
           <img src="logo.png" alt="Logo Una Rana Enredada" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-frog text-morado text-2xl\'></i>'">
         </div>
         <div>
@@ -95,7 +93,7 @@
         </button>
 
         <div id="user-profile" class="hidden flex items-center gap-2 ml-1">
-          <img id="user-avatar" class="w-8 h-8 rounded-full border-2 border-rana" alt="Avatar">
+          <img id="user-avatar" class="w-8 h-8 rounded-full border-2 border-rana object-cover" alt="Avatar">
           <button onclick="cerrarSesion()" class="w-8 h-8 rounded-xl bg-crema-100 dark:bg-noche-border text-stone-400 hover:text-rose-500 flex items-center justify-center transition" title="Cerrar sesión">
             <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
           </button>
@@ -114,14 +112,14 @@
   <!-- CONTENEDOR PRINCIPAL -->
   <main class="max-w-5xl mx-auto p-4 flex-1 w-full pb-24 md:pb-8">
 
-    <!-- PANTALLA DE ACCESO CON GMAIL (Oculta por defecto para evitar parpadeo) -->
+    <!-- PANTALLA LOGIN -->
     <div id="pantalla-login" class="hidden max-w-md mx-auto my-12 p-8 bg-white dark:bg-noche-card rounded-3xl border border-stone-200 dark:border-noche-border shadow-xl text-center space-y-5">
       <div class="w-16 h-16 mx-auto rounded-full bg-rana-soft dark:bg-morado-light flex items-center justify-center text-morado dark:text-rana text-3xl">
         <i class="fa-solid fa-lock"></i>
       </div>
       <div>
         <h2 class="font-brand font-bold text-xl text-morado dark:text-rana-light">Taller Privado</h2>
-        <p class="text-xs text-stone-400 mt-1">Inicia sesión con tu cuenta de Google para sincronizar tus patrones, almacén y finanzas.</p>
+        <p class="text-xs text-stone-400 mt-1">Inicia sesión con tu cuenta de Google para sincronizar tus amigurumis, inventario y ventas.</p>
       </div>
       <button onclick="iniciarSesionGoogle()" class="w-full py-3 px-4 rounded-xl border border-stone-300 dark:border-noche-border hover:bg-stone-50 dark:hover:bg-noche-bg font-bold text-sm text-stone-700 dark:text-stone-200 flex items-center justify-center gap-3 transition shadow-sm">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
@@ -129,12 +127,12 @@
       </button>
     </div>
 
-    <!-- MÓDULO 1: PROYECTOS Y PATRONES -->
+    <!-- MÓDULO 1: PATRONES & PERSONAJES -->
     <section id="modulo-proyectos" class="hidden space-y-4">
       <div class="flex flex-col sm:flex-row gap-2 justify-between items-stretch sm:items-center">
         <div class="relative flex-1">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-stone-400"></i>
-          <input type="text" id="busqueda-proyecto" oninput="renderizarProyectos()" placeholder="Buscar muñeco, categoría o crochet..." 
+          <input type="text" id="busqueda-proyecto" oninput="renderizarProyectos()" placeholder="Buscar personaje, tamaño o categoría..." 
                  class="w-full pl-10 pr-3 py-2 bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rana">
         </div>
         <button onclick="abrirModalProyecto()" class="bg-morado hover:bg-morado-light dark:bg-rana dark:hover:bg-rana-light text-white dark:text-morado font-bold px-4 py-2.5 rounded-xl text-sm shadow-md flex items-center justify-center gap-2 transition">
@@ -145,13 +143,13 @@
       <div id="lista-proyectos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
     </section>
 
-    <!-- MÓDULO 2: ALMACÉN E INVENTARIO -->
+    <!-- MÓDULO 2: ALMACÉN E INSUMOS -->
     <section id="modulo-almacen" class="hidden space-y-5">
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div class="bg-white dark:bg-noche-card p-3 rounded-2xl border border-stone-200 dark:border-noche-border shadow-sm flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-rana-soft dark:bg-morado-light text-morado dark:text-rana flex items-center justify-center text-lg"><i class="fa-solid fa-cubes-stacked"></i></div>
           <div>
-            <div class="text-[10px] text-stone-400 uppercase font-bold">Materiales</div>
+            <div class="text-[10px] text-stone-400 uppercase font-bold">Insumos</div>
             <div id="metricTotalItems" class="text-lg font-extrabold text-stone-800 dark:text-white">0</div>
           </div>
         </div>
@@ -179,12 +177,12 @@
       </div>
 
       <div class="flex items-center justify-between border-b border-stone-200 dark:border-noche-border pb-2">
-        <div class="flex gap-2 text-xs font-bold">
+        <div class="flex gap-2 text-xs font-bold overflow-x-auto pb-1">
           <button onclick="cambiarSubTabAlmacen('inventario')" id="subtab-inventario" class="px-3 py-1.5 rounded-lg bg-morado dark:bg-rana text-white dark:text-morado">Inventario</button>
-          <button onclick="cambiarSubTabAlmacen('compras')" id="subtab-compras" class="px-3 py-1.5 rounded-lg bg-white dark:bg-noche-card text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-noche-border">Lista Compras</button>
+          <button onclick="cambiarSubTabAlmacen('compras')" id="subtab-compras" class="px-3 py-1.5 rounded-lg bg-white dark:bg-noche-card text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-noche-border">Compras</button>
           <button onclick="cambiarSubTabAlmacen('calculadora')" id="subtab-calculadora" class="px-3 py-1.5 rounded-lg bg-white dark:bg-noche-card text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-noche-border">Calculadora</button>
         </div>
-        <button onclick="abrirModalMaterial()" class="bg-rana hover:bg-rana-light text-morado text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm">
+        <button onclick="abrirModalMaterial()" class="bg-rana hover:bg-rana-light text-morado text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm shrink-0">
           <i class="fa-solid fa-plus"></i> Insumo
         </button>
       </div>
@@ -193,8 +191,11 @@
         <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
           <button onclick="filtrarAlmacen('all')" class="chip-filtro-almacen active px-3 py-1 rounded-full bg-morado dark:bg-rana text-white dark:text-morado font-bold" data-filter="all">Todos</button>
           <button onclick="filtrarAlmacen('hilos')" class="chip-filtro-almacen px-3 py-1 rounded-full bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border font-bold" data-filter="hilos">Hilos</button>
+          <button onclick="filtrarAlmacen('relleno')" class="chip-filtro-almacen px-3 py-1 rounded-full bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border font-bold" data-filter="relleno">Napa / Relleno</button>
+          <button onclick="filtrarAlmacen('cintas')" class="chip-filtro-almacen px-3 py-1 rounded-full bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border font-bold" data-filter="cintas">Cintas / Metros</button>
           <button onclick="filtrarAlmacen('accesorios')" class="chip-filtro-almacen px-3 py-1 rounded-full bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border font-bold" data-filter="accesorios">Ojos / Llaveros</button>
           <button onclick="filtrarAlmacen('empaques')" class="chip-filtro-almacen px-3 py-1 rounded-full bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border font-bold" data-filter="empaques">Packaging</button>
+          <button onclick="filtrarAlmacen('otros')" class="chip-filtro-almacen px-3 py-1 rounded-full bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border font-bold" data-filter="otros">Otros (Parantes)</button>
           <button onclick="filtrarAlmacen('alertas')" class="chip-filtro-almacen px-3 py-1 rounded-full bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border font-bold text-amber-500" data-filter="alertas"><i class="fa-solid fa-bell"></i> Alertas</button>
         </div>
         <div id="grid-materiales" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
@@ -203,34 +204,47 @@
       <div id="almacen-sub-compras" class="hidden bg-white dark:bg-noche-card p-4 rounded-2xl border border-stone-200 dark:border-noche-border space-y-4">
         <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
           <div>
-            <h3 class="font-brand font-bold text-morado dark:text-rana-light">Materiales por Reponer</h3>
-            <p class="text-xs text-stone-400">Calculado automáticamente cuando el stock baja del mínimo</p>
+            <h3 class="font-brand font-bold text-morado dark:text-rana-light">Insumos por Reponer</h3>
+            <p class="text-xs text-stone-400">Calculado cuando el stock baja del mínimo</p>
           </div>
           <button onclick="copiarListaComprasWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm">
-            <i class="fa-brands fa-whatsapp text-sm"></i> Copiar a WhatsApp
+            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
           </button>
         </div>
         <div id="lista-compras-contenido" class="divide-y divide-stone-100 dark:divide-noche-border"></div>
       </div>
 
       <div id="almacen-sub-calculadora" class="hidden bg-white dark:bg-noche-card p-5 rounded-2xl border border-stone-200 dark:border-noche-border max-w-xl mx-auto space-y-4">
-        <h3 class="font-brand font-bold text-morado dark:text-rana-light text-base">Calculadora de Precio Justo</h3>
+        <div class="flex justify-between items-center">
+          <h3 class="font-brand font-bold text-morado dark:text-rana-light text-base">Calculadora de Precio & Ficha</h3>
+          <span class="text-[10px] font-bold text-stone-400 uppercase bg-stone-100 dark:bg-noche-bg px-2 py-1 rounded-md">Cotizador</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold mb-1 text-morado dark:text-rana">Nombre del Amigurumi / Personaje</label>
+          <input type="text" id="calc-nombre-amigurumi" placeholder="Ej. Ranita Jardinera con Sombrero" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-rana">
+        </div>
+
         <div class="grid grid-cols-2 gap-3 text-xs">
           <div>
             <label class="block font-bold mb-1">Gramos Hilo</label>
-            <input type="number" id="calc-hilo" value="30" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
+            <input type="number" id="calc-hilo" value="35" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
           </div>
           <div>
-            <label class="block font-bold mb-1">Gramos Napa</label>
+            <label class="block font-bold mb-1">Gramos Napa Siliconada</label>
             <input type="number" id="calc-napa" value="25" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
           </div>
           <div>
-            <label class="block font-bold mb-1">Argolla / Llavero (S/)</label>
+            <label class="block font-bold mb-1">Argolla / Llavero / Base (S/)</label>
             <input type="number" step="0.5" id="calc-argolla" value="1.50" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
           </div>
           <div>
             <label class="block font-bold mb-1">Ojos y Accesorios (S/)</label>
-            <input type="number" step="0.5" id="calc-ojos" value="0.80" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
+            <input type="number" step="0.5" id="calc-ojos" value="1.00" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
+          </div>
+          <div>
+            <label class="block font-bold mb-1">Cintas y Detalles (S/)</label>
+            <input type="number" step="0.5" id="calc-cintas" value="0.80" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
           </div>
           <div>
             <label class="block font-bold mb-1">Empaque y Bolsa (S/)</label>
@@ -238,20 +252,23 @@
           </div>
           <div>
             <label class="block font-bold mb-1">Horas de Tejido</label>
-            <input type="number" step="0.5" id="calc-horas" value="2.5" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
+            <input type="number" step="0.5" id="calc-horas" value="3" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
           </div>
-        </div>
-
-        <div class="text-xs">
-          <label class="block font-bold mb-1">Valor por hora de tu mano de obra (S/)</label>
-          <input type="number" step="0.5" id="calc-tarifa-hora" value="7.00" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
+          <div>
+            <label class="block font-bold mb-1">Pago por Hora (S/)</label>
+            <input type="number" step="0.5" id="calc-tarifa-hora" value="7.00" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
+          </div>
         </div>
 
         <div class="p-4 bg-rana-soft dark:bg-noche-bg border-2 border-dashed border-rana rounded-2xl text-center space-y-1">
           <span class="text-[10px] uppercase font-bold text-morado-lila tracking-wide">Precio de Venta Sugerido</span>
-          <div id="calc-precio-final" class="text-3xl font-extrabold text-morado dark:text-rana">S/ 32.00</div>
-          <p id="calc-desglose" class="text-[11px] text-stone-500 dark:text-stone-400 font-medium">Materiales: S/ 7.80 | Mano de obra: S/ 17.50</p>
+          <div id="calc-precio-final" class="text-3xl font-extrabold text-morado dark:text-rana">S/ 38.00</div>
+          <p id="calc-desglose" class="text-[11px] text-stone-500 dark:text-stone-400 font-medium">Materiales: S/ 9.10 | Mano de obra: S/ 21.00</p>
         </div>
+
+        <button onclick="guardarCotizacionEnPatrones()" class="w-full py-3 bg-morado hover:bg-morado-light dark:bg-rana dark:hover:bg-rana-light text-white dark:text-morado font-extrabold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-bookmark"></i> Guardar como Diseño en Patrones
+        </button>
       </div>
     </section>
 
@@ -259,7 +276,7 @@
     <section id="modulo-ventas" class="hidden space-y-4">
       <div class="flex justify-between items-center">
         <div>
-          <h2 class="font-brand font-bold text-lg text-morado dark:text-rana-light">Libro Contable de Ventas</h2>
+          <h2 class="font-brand font-bold text-lg text-morado dark:text-rana-light">Libro de Ventas</h2>
           <p class="text-xs text-stone-400">Historial de encargos y entregas realizadas</p>
         </div>
         <button onclick="abrirModalVenta()" class="bg-mostaza hover:bg-mostaza-dark text-morado font-extrabold px-4 py-2 rounded-xl text-sm shadow-sm flex items-center gap-2">
@@ -273,7 +290,7 @@
             <thead class="bg-crema-100 dark:bg-noche-border text-stone-600 dark:text-stone-300 text-xs uppercase font-bold">
               <tr>
                 <th class="p-3">Fecha</th>
-                <th class="p-3">Muñeco / Pedido</th>
+                <th class="p-3">Personaje</th>
                 <th class="p-3">Cliente</th>
                 <th class="p-3">Canal</th>
                 <th class="p-3">Cobrado</th>
@@ -310,7 +327,7 @@
         <div class="bg-white dark:bg-noche-card p-4 rounded-2xl border border-stone-200 dark:border-noche-border shadow-sm flex items-center gap-4">
           <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 flex items-center justify-center text-xl"><i class="fa-solid fa-arrow-trend-up"></i></div>
           <div>
-            <p class="text-[10px] font-bold text-stone-400 uppercase">Ganancia Estimada</p>
+            <p class="text-[10px] font-bold text-stone-400 uppercase">Ganancia Neta</p>
             <h3 id="kpi-ganancia" class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">S/ 0.00</h3>
           </div>
         </div>
@@ -333,7 +350,7 @@
     </section>
   </main>
 
-  <!-- BARRA DE NAVEGACIÓN INFERIOR (MÓVIL) -->
+  <!-- NAVEGACIÓN MÓVIL INFERIOR -->
   <nav id="nav-movil" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-noche-card/95 backdrop-blur-md border-t border-stone-200 dark:border-noche-border px-4 py-2 flex justify-around items-center z-40 shadow-lg">
     <button onclick="cambiarModulo('proyectos')" id="m-btn-proyectos" class="flex flex-col items-center text-morado dark:text-rana font-bold text-[10px] gap-1">
       <i class="fa-solid fa-book-open text-base"></i> Patrones
@@ -349,7 +366,7 @@
     </button>
   </nav>
 
-  <!-- MODAL: PROYECTO -->
+  <!-- MODAL: REGISTRAR / EDITAR PROYECTO (CON FOTO Y TAMAÑO) -->
   <div id="modal-proyecto" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
@@ -359,17 +376,38 @@
 
       <form id="form-proyecto" onsubmit="guardarProyecto(event)" class="space-y-3 text-sm">
         <input type="hidden" id="p-id">
+        <input type="hidden" id="p-foto-data">
         <input type="hidden" id="p-archivo-data">
 
+        <!-- Foto del Amigurumi -->
+        <div class="border border-stone-200 dark:border-noche-border rounded-2xl p-3 bg-crema-50 dark:bg-noche-bg/50">
+          <label class="block text-xs font-bold mb-1.5 text-morado dark:text-rana-light">Foto del Personaje</label>
+          <div class="flex items-center gap-3">
+            <div id="p-foto-preview" class="w-16 h-16 rounded-xl border border-dashed border-stone-300 dark:border-noche-border bg-white dark:bg-noche-card flex items-center justify-center overflow-hidden shrink-0">
+              <i class="fa-regular fa-image text-stone-400 text-xl"></i>
+            </div>
+            <div class="flex-1 space-y-2">
+              <input type="url" id="p-foto-url" placeholder="Pegar enlace de imagen web (URL)..." oninput="actualizarPreviewFotoWeb('p')" class="w-full px-2.5 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs outline-none">
+              <div class="flex items-center gap-2">
+                <label class="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-noche-card border border-stone-200 dark:border-noche-border text-xs font-bold text-stone-600 dark:text-stone-300 cursor-pointer hover:bg-stone-200">
+                  <i class="fa-solid fa-upload"></i> Subir foto
+                  <input type="file" id="p-foto-input" accept="image/*" class="hidden">
+                </label>
+                <button type="button" onclick="quitarFoto('p')" class="text-[11px] text-stone-400 hover:text-rose-500">Quitar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div>
-          <label class="block text-xs font-bold mb-1">Nombre del Diseño</label>
+          <label class="block text-xs font-bold mb-1">Nombre del Personaje</label>
           <input type="text" id="p-nombre" required placeholder="Ej. Ranita con Overol" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none focus:ring-2 focus:ring-rana">
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-3 gap-2">
           <div>
             <label class="block text-xs font-bold mb-1">Categoría</label>
-            <select id="p-categoria" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+            <select id="p-categoria" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
               <option value="Animalitos">Animalitos</option>
               <option value="Llaveros">Llaveros</option>
               <option value="Personajes">Personajes</option>
@@ -378,27 +416,32 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold mb-1">Ganchillo Crochet</label>
-            <input type="text" id="p-crochet" placeholder="Ej. 2.20 mm" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+            <label class="block text-xs font-bold mb-1">Tamaño</label>
+            <input type="text" id="p-tamano" placeholder="Ej. 15 cm" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">Crochet</label>
+            <input type="text" id="p-crochet" placeholder="Ej. 2.20 mm" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2 bg-crema-100 dark:bg-noche-bg p-3 rounded-xl border border-stone-200 dark:border-noche-border">
           <div>
-            <label class="block text-xs font-bold mb-1">Costo Estimado (S/)</label>
-            <input type="number" step="0.5" id="p-costo" required placeholder="10.00" class="w-full px-3 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg">
+            <label class="block text-xs font-bold mb-1">Costo Base (S/)</label>
+            <input type="number" step="0.5" id="p-costo" required placeholder="10.00" class="w-full px-3 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs">
           </div>
           <div>
             <label class="block text-xs font-bold mb-1">Precio Venta (S/)</label>
-            <input type="number" step="0.5" id="p-precio" required placeholder="35.00" class="w-full px-3 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold text-morado dark:text-rana">
+            <input type="number" step="0.5" id="p-precio" required placeholder="35.00" class="w-full px-3 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs font-bold text-morado dark:text-rana">
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-bold mb-1">Materiales Recomendados</label>
-          <input type="text" id="p-materiales" placeholder="Ej. Hilo verde algodón, ojos 10mm, argolla plateada" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+          <input type="text" id="p-materiales" placeholder="Ej. Algodón verde, ojitos 8mm, cinta blanca" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
         </div>
 
+        <!-- Formato de Patrón -->
         <div class="border border-stone-200 dark:border-noche-border rounded-2xl p-3 space-y-2">
           <label class="block text-xs font-bold text-morado-lila">Formato del Patrón</label>
           
@@ -413,7 +456,7 @@
           </div>
 
           <div id="campo-patron-link" class="hidden">
-            <input type="url" id="p-link" placeholder="https://youtube.com/... o enlace del blog" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
+            <input type="url" id="p-link" placeholder="https://youtube.com/... o enlace de drive/blog" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
           </div>
 
           <div id="campo-patron-archivo" class="hidden space-y-2">
@@ -424,60 +467,105 @@
 
         <div class="flex justify-end gap-2 pt-2 border-t border-stone-100 dark:border-noche-border">
           <button type="button" onclick="cerrarModal('modal-proyecto')" class="px-4 py-2 rounded-xl text-stone-400 font-bold">Cancelar</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-morado dark:bg-rana hover:bg-morado-light text-white dark:text-morado font-bold">Guardar</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-morado dark:bg-rana hover:bg-morado-light text-white dark:text-morado font-bold">Guardar Diseño</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: INSUMO / MATERIAL -->
+  <!-- MODAL: REGISTRAR / EDITAR INSUMO DINÁMICO -->
   <div id="modal-material" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-noche-card rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
+    <div class="bg-white dark:bg-noche-card rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
-        <h3 class="font-brand font-bold text-lg text-morado dark:text-rana">Nuevo Insumo</h3>
+        <h3 class="font-brand font-bold text-lg text-morado dark:text-rana">Ficha de Insumo</h3>
         <button onclick="cerrarModal('modal-material')" class="text-stone-400 text-xl">&times;</button>
       </div>
+
       <form id="form-material" onsubmit="guardarMaterial(event)" class="space-y-3 text-sm">
         <input type="hidden" id="mat-id">
-        <div>
-          <label class="block text-xs font-bold mb-1">Nombre</label>
-          <input type="text" id="mat-nombre" required placeholder="Ej. Algodón Verde Rana" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+        <input type="hidden" id="mat-foto-data">
+
+        <!-- Foto del Insumo -->
+        <div class="border border-stone-200 dark:border-noche-border rounded-2xl p-3 bg-crema-50 dark:bg-noche-bg/50">
+          <label class="block text-xs font-bold mb-1.5 text-morado dark:text-rana-light">Foto de Referencia (Opcional)</label>
+          <div class="flex items-center gap-3">
+            <div id="mat-foto-preview" class="w-14 h-14 rounded-xl border border-dashed border-stone-300 dark:border-noche-border bg-white dark:bg-noche-card flex items-center justify-center overflow-hidden shrink-0">
+              <i class="fa-regular fa-image text-stone-400 text-lg"></i>
+            </div>
+            <div class="flex-1 space-y-1.5">
+              <input type="url" id="mat-foto-url" placeholder="Pegar link de imagen web..." oninput="actualizarPreviewFotoWeb('mat')" class="w-full px-2.5 py-1 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs outline-none">
+              <div class="flex items-center gap-2">
+                <label class="px-2 py-1 rounded-lg bg-stone-100 dark:bg-noche-card border border-stone-200 dark:border-noche-border text-[11px] font-bold text-stone-600 dark:text-stone-300 cursor-pointer">
+                  <i class="fa-solid fa-camera"></i> Subir
+                  <input type="file" id="mat-foto-input" accept="image/*" class="hidden">
+                </label>
+                <button type="button" onclick="quitarFoto('mat')" class="text-[11px] text-stone-400 hover:text-rose-500">Quitar</button>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div>
+          <label class="block text-xs font-bold mb-1">Nombre del Insumo</label>
+          <input type="text" id="mat-nombre" required placeholder="Ej. Algodón Verde Hoja o Parantes de Madera" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+        </div>
+
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-xs font-bold mb-1">Categoría</label>
-            <select id="mat-categoria" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+            <select id="mat-categoria" onchange="adaptarFormularioInsumo()" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
               <option value="hilos">Hilos y Lanas</option>
+              <option value="relleno">Napa / Relleno</option>
+              <option value="cintas">Cintas / Metros</option>
               <option value="accesorios">Llaveros y Ojos</option>
               <option value="empaques">Packaging / Bolsas</option>
-              <option value="otros">Otros (Napa)</option>
+              <option value="otros">Otros (Parantes, etc.)</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold mb-1">Tono / Código</label>
-            <input type="text" id="mat-color-nombre" placeholder="Ej. Tono #10" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+            <label class="block text-xs font-bold mb-1">Unidad de Medida</label>
+            <select id="mat-unidad" onchange="adaptarFormularioInsumo()" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
+              <option value="unid">Unidades (ovillo/pz)</option>
+              <option value="kg">Kilos (kg)</option>
+              <option value="g">Gramos (g)</option>
+              <option value="m">Metros (m)</option>
+            </select>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-2">
+
+        <!-- Campos de Color y Tono (Dinámicos) -->
+        <div id="contenedor-campos-color" class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold mb-1">Tono / Código</label>
+            <input type="text" id="mat-color-nombre" placeholder="Ej. Tono #14" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
+          </div>
           <div>
             <label class="block text-xs font-bold mb-1">Color Muestra</label>
-            <input type="color" id="mat-color-hex" value="#A6D854" class="w-full h-10 p-1 border dark:border-noche-border dark:bg-noche-bg rounded-xl cursor-pointer">
-          </div>
-          <div>
-            <label class="block text-xs font-bold mb-1">Costo Unitario (S/)</label>
-            <input type="number" step="0.1" id="mat-costo" required placeholder="8.00" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+            <input type="color" id="mat-color-hex" value="#A6D854" class="w-full h-9 p-1 border dark:border-noche-border dark:bg-noche-bg rounded-xl cursor-pointer">
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-2">
+
+        <div class="grid grid-cols-3 gap-2">
           <div>
-            <label class="block text-xs font-bold mb-1">Stock Actual</label>
-            <input type="number" id="mat-stock" required placeholder="5" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+            <label id="lbl-mat-costo" class="block text-[11px] font-bold mb-1">Costo Unit. (S/)</label>
+            <input type="number" step="0.01" id="mat-costo" required placeholder="8.00" class="w-full px-2 py-1.5 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
           </div>
           <div>
-            <label class="block text-xs font-bold mb-1">Alerta Mínima</label>
-            <input type="number" id="mat-min-stock" required placeholder="2" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+            <label id="lbl-mat-stock" class="block text-[11px] font-bold mb-1">Stock Actual</label>
+            <input type="number" step="0.01" id="mat-stock" required placeholder="5" class="w-full px-2 py-1.5 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
+          </div>
+          <div>
+            <label id="lbl-mat-min" class="block text-[11px] font-bold mb-1">Alerta Mín.</label>
+            <input type="number" step="0.01" id="mat-min-stock" required placeholder="2" class="w-full px-2 py-1.5 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
           </div>
         </div>
+
+        <!-- Casilla para saldos únicos o colores que no volverás a comprar -->
+        <div class="flex items-center gap-2 pt-1 text-xs">
+          <input type="checkbox" id="mat-no-reponer" class="w-4 h-4 rounded text-morado focus:ring-rana">
+          <label for="mat-no-reponer" class="text-stone-600 dark:text-stone-300 font-medium">Insumo único / saldo (no emitir alerta de compra)</label>
+        </div>
+
         <div class="flex justify-end gap-2 pt-2 border-t border-stone-100 dark:border-noche-border">
           <button type="button" onclick="cerrarModal('modal-material')" class="px-4 py-2 rounded-xl text-stone-400 font-bold">Cancelar</button>
           <button type="submit" class="px-5 py-2 rounded-xl bg-rana hover:bg-rana-light text-morado font-extrabold">Guardar Insumo</button>
@@ -530,13 +618,13 @@
         </div>
         <div class="flex justify-end gap-2 pt-2 border-t border-stone-100 dark:border-noche-border">
           <button type="button" onclick="cerrarModal('modal-venta')" class="px-4 py-2 rounded-xl text-stone-400 font-bold">Cancelar</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-mostaza text-morado font-extrabold">Registrar</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-mostaza text-morado font-extrabold">Registrar Venta</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- LÓGICA JAVASCRIPT CON PERSISTENCIA Y FIREBASE -->
+  <!-- FIREBASE Y LÓGICA GENERAL -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { 
@@ -591,7 +679,6 @@
       db = getFirestore(app);
       provider = new GoogleAuthProvider();
 
-      // Guardar sesión duradera en el dispositivo
       setPersistence(auth, indexedDBLocalPersistence).catch(() => {
         setPersistence(auth, browserLocalPersistence).catch(console.warn);
       });
@@ -687,6 +774,79 @@
       if (activoM) activoM.className = 'flex flex-col items-center text-morado dark:text-rana font-bold text-[10px] gap-1';
     };
 
+    // Compresión y manejo de fotos (Patrones e Insumos)
+    function comprimirImagen(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 600;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height *= maxDim / width;
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width *= maxDim / height;
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    document.getElementById('p-foto-input').addEventListener('change', function(e) {
+      if (e.target.files[0]) {
+        comprimirImagen(e.target.files[0], (base64) => {
+          document.getElementById('p-foto-data').value = base64;
+          document.getElementById('p-foto-url').value = '';
+          mostrarPreview('p', base64);
+        });
+      }
+    });
+
+    document.getElementById('mat-foto-input').addEventListener('change', function(e) {
+      if (e.target.files[0]) {
+        comprimirImagen(e.target.files[0], (base64) => {
+          document.getElementById('mat-foto-data').value = base64;
+          document.getElementById('mat-foto-url').value = '';
+          mostrarPreview('mat', base64);
+        });
+      }
+    });
+
+    window.actualizarPreviewFotoWeb = (prefijo) => {
+      const url = document.getElementById(`${prefijo}-foto-url`).value.trim();
+      if (url) {
+        document.getElementById(`${prefijo}-foto-data`).value = '';
+        mostrarPreview(prefijo, url);
+      }
+    };
+
+    function mostrarPreview(prefijo, src) {
+      const prev = document.getElementById(`${prefijo}-foto-preview`);
+      prev.innerHTML = `<img src="${src}" class="w-full h-full object-cover">`;
+    }
+
+    window.quitarFoto = (prefijo) => {
+      document.getElementById(`${prefijo}-foto-data`).value = '';
+      document.getElementById(`${prefijo}-foto-url`).value = '';
+      document.getElementById(`${prefijo}-foto-preview`).innerHTML = `<i class="fa-regular fa-image text-stone-400 text-lg"></i>`;
+    };
+
+    // PDF / Esquema Patrón
     document.getElementById('p-archivo-input').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -708,42 +868,65 @@
       document.getElementById(`btn-modo-${modo}`).className = 'px-3 py-1 rounded-lg bg-morado dark:bg-rana text-white dark:text-morado font-bold';
     };
 
+    // MÓDULO 1: RENDERIZAR PATRONES
     window.renderizarProyectos = () => {
       const q = document.getElementById('busqueda-proyecto').value.toLowerCase();
       const cont = document.getElementById('lista-proyectos');
-      const filtrados = proyectos.filter(p => p.nombre.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q));
+      const filtrados = proyectos.filter(p => 
+        p.nombre.toLowerCase().includes(q) || 
+        p.categoria.toLowerCase().includes(q) ||
+        (p.tamano && p.tamano.toLowerCase().includes(q))
+      );
 
       if (filtrados.length === 0) {
-        cont.innerHTML = `<div class="col-span-full text-center py-12 text-stone-400 text-xs font-bold">No hay diseños guardados aún.</div>`;
+        cont.innerHTML = `<div class="col-span-full text-center py-12 text-stone-400 text-xs font-bold">No se encontraron personajes o diseños.</div>`;
         return;
       }
 
       cont.innerHTML = filtrados.map(p => {
+        const fotoSrc = p.fotoUrl || p.fotoData || null;
         let botonAcceso = '';
         if (p.link) {
           botonAcceso = `<a href="${p.link}" target="_blank" class="p-2 rounded-lg bg-morado-soft dark:bg-morado-light text-morado dark:text-white" title="Abrir enlace"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>`;
         } else if (p.archivo) {
           botonAcceso = `<a href="${p.archivo}" download="${p.nombre}_patron" class="p-2 rounded-lg bg-rana-soft dark:bg-noche-bg text-morado dark:text-rana" title="Descargar esquema"><i class="fa-solid fa-file-arrow-down"></i></a>`;
         } else if (p.patron) {
-          botonAcceso = `<button onclick="copiarPatron('${p.id}')" class="p-2 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-600 dark:text-stone-300" title="Copiar patrón"><i class="fa-regular fa-copy"></i></button>`;
+          botonAcceso = `<button onclick="copiarPatron('${p.id}')" class="p-2 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-600 dark:text-stone-300" title="Copiar texto"><i class="fa-regular fa-copy"></i></button>`;
         }
 
         return `
-          <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border p-4 shadow-sm flex flex-col justify-between">
-            <div class="space-y-1.5">
-              <div class="flex justify-between items-center text-xs">
-                <span class="px-2 py-0.5 rounded-md bg-rana-soft dark:bg-morado-light text-morado dark:text-rana font-bold text-[10px]">${p.categoria}</span>
-                <span class="text-stone-400 font-semibold text-[11px]">Crochet: <b>${p.crochet || 'N/A'}</b></span>
+          <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border overflow-hidden shadow-sm flex flex-col justify-between">
+            <!-- Portada / Foto del Amigurumi -->
+            <div class="h-44 w-full bg-crema-100 dark:bg-noche-bg relative overflow-hidden flex items-center justify-center">
+              ${fotoSrc 
+                ? `<img src="${fotoSrc}" class="w-full h-full object-cover">` 
+                : `<div class="text-stone-300 dark:text-noche-border flex flex-col items-center gap-1">
+                     <i class="fa-solid fa-frog text-3xl"></i>
+                     <span class="text-[10px] font-bold">Sin foto</span>
+                   </div>`}
+              <div class="absolute top-2 left-2 flex gap-1">
+                <span class="px-2 py-0.5 rounded-md bg-white/90 dark:bg-morado/90 text-morado dark:text-rana-light font-bold text-[10px] shadow-sm backdrop-blur-sm">${p.categoria}</span>
+                ${p.tamano ? `<span class="px-2 py-0.5 rounded-md bg-white/90 dark:bg-morado/90 text-stone-600 dark:text-stone-300 font-bold text-[10px] shadow-sm backdrop-blur-sm"><i class="fa-solid fa-ruler-vertical text-[9px] mr-1"></i>${p.tamano}</span>` : ''}
               </div>
-              <h4 class="font-brand font-bold text-base text-morado dark:text-white">${p.nombre}</h4>
-              <p class="text-xs text-stone-500 dark:text-stone-400 line-clamp-2">${p.materiales || 'Sin materiales especificados'}</p>
             </div>
-            <div class="pt-3 mt-3 border-t border-stone-100 dark:border-noche-border flex items-center justify-between">
-              <span class="text-base font-extrabold text-morado dark:text-mostaza">S/ ${parseFloat(p.precio).toFixed(2)}</span>
-              <div class="flex gap-1.5">
-                ${botonAcceso}
-                <button onclick="abrirModalProyecto('${p.id}')" class="p-2 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-500 hover:text-morado"><i class="fa-regular fa-pen-to-square"></i></button>
-                <button onclick="borrarProyecto('${p.id}')" class="p-2 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-300 hover:text-rose-500"><i class="fa-regular fa-trash-can"></i></button>
+
+            <div class="p-4 flex-1 flex flex-col justify-between space-y-2">
+              <div>
+                <div class="flex justify-between items-center text-[11px] text-stone-400 font-semibold mb-0.5">
+                  <span>Crochet: <b>${p.crochet || 'N/A'}</b></span>
+                  <span>Costo: S/ ${parseFloat(p.costo || 0).toFixed(2)}</span>
+                </div>
+                <h4 class="font-brand font-bold text-base text-morado dark:text-white leading-tight">${p.nombre}</h4>
+                <p class="text-xs text-stone-500 dark:text-stone-400 line-clamp-2 mt-1">${p.materiales || 'Materiales no detallados'}</p>
+              </div>
+
+              <div class="pt-3 border-t border-stone-100 dark:border-noche-border flex items-center justify-between">
+                <span class="text-lg font-extrabold text-morado dark:text-mostaza">S/ ${parseFloat(p.precio).toFixed(2)}</span>
+                <div class="flex gap-1.5">
+                  ${botonAcceso}
+                  <button onclick="abrirModalProyecto('${p.id}')" class="p-2 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-500 hover:text-morado"><i class="fa-regular fa-pen-to-square"></i></button>
+                  <button onclick="borrarProyecto('${p.id}')" class="p-2 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-300 hover:text-rose-500"><i class="fa-regular fa-trash-can"></i></button>
+                </div>
               </div>
             </div>
           </div>
@@ -751,11 +934,14 @@
       }).join('');
     };
 
-    window.abrirModalProyecto = (id = null) => {
+    window.abrirModalProyecto = (id = null, datosPrecargados = null) => {
       document.getElementById('form-proyecto').reset();
       document.getElementById('p-id').value = '';
       document.getElementById('p-archivo-data').value = '';
+      document.getElementById('p-foto-data').value = '';
+      document.getElementById('p-foto-url').value = '';
       document.getElementById('p-archivo-status').innerText = '';
+      quitarFoto('p');
       setModoPatron('texto');
 
       if (id) {
@@ -764,6 +950,7 @@
           document.getElementById('p-id').value = p.id;
           document.getElementById('p-nombre').value = p.nombre;
           document.getElementById('p-categoria').value = p.categoria;
+          document.getElementById('p-tamano').value = p.tamano || '';
           document.getElementById('p-crochet').value = p.crochet || '';
           document.getElementById('p-costo').value = p.costo;
           document.getElementById('p-precio').value = p.precio;
@@ -772,13 +959,27 @@
           document.getElementById('p-link').value = p.link || '';
           document.getElementById('p-archivo-data').value = p.archivo || '';
 
+          if (p.fotoUrl) {
+            document.getElementById('p-foto-url').value = p.fotoUrl;
+            mostrarPreview('p', p.fotoUrl);
+          } else if (p.fotoData) {
+            document.getElementById('p-foto-data').value = p.fotoData;
+            mostrarPreview('p', p.fotoData);
+          }
+
           if (p.link) setModoPatron('link');
           else if (p.archivo) {
             setModoPatron('archivo');
             document.getElementById('p-archivo-status').innerText = '✓ Esquema guardado';
           }
         }
+      } else if (datosPrecargados) {
+        document.getElementById('p-nombre').value = datosPrecargados.nombre || '';
+        document.getElementById('p-costo').value = datosPrecargados.costo || 0;
+        document.getElementById('p-precio').value = datosPrecargados.precio || 0;
+        document.getElementById('p-materiales').value = datosPrecargados.materiales || '';
       }
+
       document.getElementById('modal-proyecto').classList.remove('hidden');
     };
 
@@ -788,13 +989,16 @@
       const data = {
         nombre: document.getElementById('p-nombre').value,
         categoria: document.getElementById('p-categoria').value,
+        tamano: document.getElementById('p-tamano').value,
         crochet: document.getElementById('p-crochet').value,
         costo: Number(document.getElementById('p-costo').value) || 0,
         precio: Number(document.getElementById('p-precio').value) || 0,
         materiales: document.getElementById('p-materiales').value,
         patron: document.getElementById('p-patron').value,
         link: document.getElementById('p-link').value,
-        archivo: document.getElementById('p-archivo-data').value
+        archivo: document.getElementById('p-archivo-data').value,
+        fotoUrl: document.getElementById('p-foto-url').value,
+        fotoData: document.getElementById('p-foto-data').value
       };
 
       if (id) await updateDoc(doc(db, "proyectos", id), data);
@@ -810,8 +1014,37 @@
       const p = proyectos.find(x => x.id === id);
       if (p && p.patron) {
         navigator.clipboard.writeText(p.patron);
-        alert('¡Patrón copiado!');
+        alert('¡Patrón copiado al portapapeles!');
       }
+    };
+
+    // MÓDULO 2: FORMULARIO DINÁMICO DE INSUMOS
+    window.adaptarFormularioInsumo = () => {
+      const cat = document.getElementById('mat-categoria').value;
+      const unidad = document.getElementById('mat-unidad').value;
+      const contenedorColor = document.getElementById('contenedor-campos-color');
+      const lblCosto = document.getElementById('lbl-mat-costo');
+      const lblStock = document.getElementById('lbl-mat-stock');
+      const lblMin = document.getElementById('lbl-mat-min');
+
+      // Si es Napa o no requiere color
+      if (cat === 'relleno' || cat === 'empaques' || (cat === 'otros' && unidad === 'kg')) {
+        contenedorColor.classList.add('hidden');
+      } else {
+        contenedorColor.classList.remove('hidden');
+      }
+
+      // Auto-seleccionar unidad sugerida si el usuario cambia categoría
+      if (cat === 'relleno' && unidad === 'unid') {
+        document.getElementById('mat-unidad').value = 'kg';
+      } else if (cat === 'cintas' && unidad === 'unid') {
+        document.getElementById('mat-unidad').value = 'm';
+      }
+
+      const u = document.getElementById('mat-unidad').value;
+      lblCosto.innerText = `Costo por ${u.toUpperCase()} (S/)`;
+      lblStock.innerText = `Stock (${u})`;
+      lblMin.innerText = `Alerta Mín. (${u})`;
     };
 
     window.cambiarSubTabAlmacen = (sub) => {
@@ -837,32 +1070,47 @@
       const grid = document.getElementById('grid-materiales');
       const filtrados = materiales.filter(m => {
         if (filtroAlmacenActual === 'all') return true;
-        if (filtroAlmacenActual === 'alertas') return m.stock <= m.minStock;
+        if (filtroAlmacenActual === 'alertas') return !m.noReponer && m.stock <= m.minStock;
         return m.categoria === filtroAlmacenActual;
       });
 
       if (filtrados.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-8 text-stone-400 text-xs font-bold">Sin materiales en esta categoría.</div>`;
+        grid.innerHTML = `<div class="col-span-full text-center py-8 text-stone-400 text-xs font-bold">Sin insumos en esta sección.</div>`;
         return;
       }
 
       grid.innerHTML = filtrados.map(m => {
-        let badgeColor = m.stock === 0 ? 'bg-rose-500' : (m.stock <= m.minStock ? 'bg-amber-500' : 'bg-emerald-600');
+        const u = m.unidad || 'unid';
+        const paso = (u === 'kg' || u === 'm') ? 0.25 : 1;
+        const fotoSrc = m.fotoUrl || m.fotoData || null;
+
+        let badgeColor = m.stock === 0 ? 'bg-rose-500' : (!m.noReponer && m.stock <= m.minStock ? 'bg-amber-500' : 'bg-emerald-600');
+        let badgeTexto = m.noReponer ? 'Saldo' : (m.stock === 0 ? 'Agotado' : (m.stock <= m.minStock ? 'Bajo' : 'OK'));
+
         return `
           <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border p-3 shadow-sm flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-center mb-1.5">
-                <span class="text-[9px] text-white font-bold px-1.5 py-0.5 rounded-full ${badgeColor}">${m.stock === 0 ? 'Agotado' : (m.stock <= m.minStock ? 'Bajo' : 'OK')}</span>
-                <div class="w-3.5 h-3.5 rounded-full border border-stone-300" style="background-color: ${m.colorHex || '#ccc'};"></div>
+                <span class="text-[9px] text-white font-bold px-1.5 py-0.5 rounded-full ${badgeColor}">${badgeTexto}</span>
+                ${m.colorHex ? `<div class="w-3.5 h-3.5 rounded-full border border-stone-300" style="background-color: ${m.colorHex};"></div>` : ''}
               </div>
+
+              <!-- Foto Miniatura o Ícono -->
+              <div class="h-20 w-full rounded-xl bg-crema-50 dark:bg-noche-bg mb-2 overflow-hidden flex items-center justify-center">
+                ${fotoSrc 
+                  ? `<img src="${fotoSrc}" class="w-full h-full object-cover">` 
+                  : `<i class="fa-solid fa-boxes-stacked text-stone-300 dark:text-noche-border text-2xl"></i>`}
+              </div>
+
               <h5 class="font-bold text-xs text-stone-800 dark:text-white leading-snug">${m.nombre}</h5>
-              <div class="text-[10px] text-stone-400">${m.colorNombre || 'Único'} • S/ ${parseFloat(m.costo).toFixed(2)}</div>
+              <div class="text-[10px] text-stone-400">${m.colorNombre || m.categoria} • S/ ${parseFloat(m.costo).toFixed(2)}/${u}</div>
             </div>
+
             <div class="mt-3 pt-2 border-t border-stone-100 dark:border-noche-border flex items-center justify-between">
               <div class="flex items-center bg-crema-100 dark:bg-noche-bg rounded-lg p-0.5">
-                <button onclick="cambiarStockMaterial('${m.id}', -1)" class="w-6 h-6 rounded bg-white dark:bg-noche-card font-extrabold text-xs">-</button>
-                <span class="px-2 text-xs font-extrabold">${m.stock}</span>
-                <button onclick="cambiarStockMaterial('${m.id}', 1)" class="w-6 h-6 rounded bg-white dark:bg-noche-card font-extrabold text-xs">+</button>
+                <button onclick="cambiarStockMaterial('${m.id}', -${paso})" class="w-6 h-6 rounded bg-white dark:bg-noche-card font-extrabold text-xs">-</button>
+                <span class="px-2 text-xs font-extrabold">${parseFloat(m.stock).toFixed(u === 'unid' ? 0 : 2)} <span class="text-[9px] font-normal text-stone-400">${u}</span></span>
+                <button onclick="cambiarStockMaterial('${m.id}', ${paso})" class="w-6 h-6 rounded bg-white dark:bg-noche-card font-extrabold text-xs">+</button>
               </div>
               <button onclick="borrarMaterial('${m.id}')" class="text-stone-300 hover:text-rose-500 text-xs p-1"><i class="fa-regular fa-trash-can"></i></button>
             </div>
@@ -873,12 +1121,17 @@
 
     window.cambiarStockMaterial = async (id, delta) => {
       const mat = materiales.find(m => m.id === id);
-      if (mat) await updateDoc(doc(db, "materiales", id), { stock: Math.max(0, mat.stock + delta) });
+      if (mat) {
+        const nuevo = Math.max(0, parseFloat((mat.stock + delta).toFixed(2)));
+        await updateDoc(doc(db, "materiales", id), { stock: nuevo });
+      }
     };
 
     window.abrirModalMaterial = () => {
       document.getElementById('form-material').reset();
       document.getElementById('mat-id').value = '';
+      quitarFoto('mat');
+      adaptarFormularioInsumo();
       document.getElementById('modal-material').classList.remove('hidden');
     };
 
@@ -888,11 +1141,15 @@
       const data = {
         nombre: document.getElementById('mat-nombre').value,
         categoria: document.getElementById('mat-categoria').value,
+        unidad: document.getElementById('mat-unidad').value,
         colorNombre: document.getElementById('mat-color-nombre').value,
         colorHex: document.getElementById('mat-color-hex').value,
         costo: Number(document.getElementById('mat-costo').value) || 0,
         stock: Number(document.getElementById('mat-stock').value) || 0,
-        minStock: Number(document.getElementById('mat-min-stock').value) || 1
+        minStock: Number(document.getElementById('mat-min-stock').value) || 0,
+        noReponer: document.getElementById('mat-no-reponer').checked,
+        fotoUrl: document.getElementById('mat-foto-url').value,
+        fotoData: document.getElementById('mat-foto-data').value
       };
 
       if (id) await updateDoc(doc(db, "materiales", id), data);
@@ -906,67 +1163,88 @@
 
     window.actualizarMetricasAlmacen = () => {
       document.getElementById('metricTotalItems').innerText = materiales.length;
-      document.getElementById('metricLowStock').innerText = materiales.filter(m => m.stock > 0 && m.stock <= m.minStock).length;
-      document.getElementById('metricOutStock').innerText = materiales.filter(m => m.stock === 0).length;
+      document.getElementById('metricLowStock').innerText = materiales.filter(m => !m.noReponer && m.stock > 0 && m.stock <= m.minStock).length;
+      document.getElementById('metricOutStock').innerText = materiales.filter(m => !m.noReponer && m.stock === 0).length;
       const val = materiales.reduce((acc, m) => acc + (m.costo * m.stock), 0);
       document.getElementById('metricTotalValue').innerText = `S/ ${val.toFixed(0)}`;
     };
 
     window.renderizarCompras = () => {
       const cont = document.getElementById('lista-compras-contenido');
-      const faltantes = materiales.filter(m => m.stock <= m.minStock);
+      const faltantes = materiales.filter(m => !m.noReponer && m.stock <= m.minStock);
 
       if (faltantes.length === 0) {
-        cont.innerHTML = `<div class="text-center py-6 text-emerald-600 text-xs font-bold"><i class="fa-solid fa-circle-check text-lg mb-1 block"></i>¡Todo en stock!</div>`;
+        cont.innerHTML = `<div class="text-center py-6 text-emerald-600 text-xs font-bold"><i class="fa-solid fa-circle-check text-lg mb-1 block"></i>¡Todo en stock suficiente!</div>`;
         return;
       }
 
       cont.innerHTML = faltantes.map(m => {
+        const u = m.unidad || 'unid';
         const cantPedir = Math.max(1, (m.minStock * 2) - m.stock);
         return `
           <div class="py-2.5 flex justify-between items-center text-xs">
             <div>
               <span class="font-bold text-stone-800 dark:text-white">${m.nombre}</span>
-              <div class="text-[10px] text-stone-400">Stock: ${m.stock} (Mín: ${m.minStock})</div>
+              <div class="text-[10px] text-stone-400">Stock: ${m.stock} ${u} (Mín: ${m.minStock} ${u})</div>
             </div>
-            <span class="font-bold text-morado dark:text-rana bg-rana-soft dark:bg-morado-light px-2 py-1 rounded-lg">Pedir: ${cantPedir}</span>
+            <span class="font-bold text-morado dark:text-rana bg-rana-soft dark:bg-morado-light px-2 py-1 rounded-lg">Pedir: ${parseFloat(cantPedir).toFixed(u === 'unid' ? 0 : 2)} ${u}</span>
           </div>
         `;
       }).join('');
     };
 
     window.copiarListaComprasWhatsApp = () => {
-      const faltantes = materiales.filter(m => m.stock <= m.minStock);
-      if (faltantes.length === 0) return alert('No hay insumos por reponer');
+      const faltantes = materiales.filter(m => !m.noReponer && m.stock <= m.minStock);
+      if (faltantes.length === 0) return alert('No hay insumos pendientes por comprar');
       let t = "🧶 *LISTA DE COMPRAS - UNA RANA ENREDADA* 🐸\n\n";
       faltantes.forEach(m => {
+        const u = m.unidad || 'unid';
         const qty = Math.max(1, (m.minStock * 2) - m.stock);
-        t += `• ${m.nombre} (${m.colorNombre || 'color'}) -> Pedir: *${qty}* (Stock: ${m.stock})\n`;
+        t += `• ${m.nombre} (${m.colorNombre || m.categoria}) -> Pedir: *${parseFloat(qty).toFixed(u === 'unid' ? 0 : 2)} ${u}* (Stock: ${m.stock})\n`;
       });
       navigator.clipboard.writeText(t);
-      alert('¡Lista copiada!');
+      alert('¡Lista copiada para enviar a tu proveedor!');
     };
 
+    // CALCULADORA & GUARDADO A FICHA DE PATRÓN
     window.calcularPrecioAmigurumi = () => {
       const hG = Number(document.getElementById('calc-hilo').value) || 0;
       const nG = Number(document.getElementById('calc-napa').value) || 0;
       const arg = Number(document.getElementById('calc-argolla').value) || 0;
       const ojos = Number(document.getElementById('calc-ojos').value) || 0;
+      const cintas = Number(document.getElementById('calc-cintas').value) || 0;
       const emp = Number(document.getElementById('calc-empaque').value) || 0;
       const hrs = Number(document.getElementById('calc-horas').value) || 0;
       const tar = Number(document.getElementById('calc-tarifa-hora').value) || 0;
 
-      const mat = ((hG / 100) * 8.0) + ((nG / 1000) * 21.0) + arg + ojos + emp;
+      const mat = ((hG / 100) * 8.0) + ((nG / 1000) * 21.0) + arg + ojos + cintas + emp;
       const mo = hrs * tar;
       const sugerido = Math.round((mat + mo) * 1.25);
 
       document.getElementById('calc-precio-final').innerText = `S/ ${sugerido}.00`;
       document.getElementById('calc-desglose').innerText = `Materiales: S/ ${mat.toFixed(2)} | Mano de obra: S/ ${mo.toFixed(2)}`;
+
+      return { costo: Math.round(mat), precio: sugerido, materiales: `${hG}g hilo, ${nG}g napa, accesorios, empaque` };
     };
 
+    window.guardarCotizacionEnPatrones = () => {
+      const nom = document.getElementById('calc-nombre-amigurumi').value.trim();
+      if (!nom) return alert('Por favor escribe el nombre del amigurumi en la calculadora para guardar su ficha.');
+
+      const datos = calcularPrecioAmigurumi();
+      cambiarModulo('proyectos');
+      abrirModalProyecto(null, {
+        nombre: nom,
+        costo: datos.costo,
+        precio: datos.precio,
+        materiales: datos.materiales
+      });
+    };
+
+    // MÓDULO 3: VENTAS
     window.actualizarSelectVentas = () => {
       const s = document.getElementById('v-proyecto');
-      s.innerHTML = `<option value="">Selecciona muñeco...</option>` + 
+      s.innerHTML = `<option value="">Selecciona diseño...</option>` + 
         proyectos.map(p => `<option value="${p.id}">${p.nombre} (S/ ${p.precio})</option>`).join('') +
         `<option value="personalizado">-- Encargo Personalizado --</option>`;
     };
@@ -1028,6 +1306,7 @@
       `).join('');
     };
 
+    // MÓDULO 4: FINANZAS
     window.filtrarFinanzas = (p) => {
       filtroFinanzasActual = p;
       ['semana', 'mes', 'anio', 'total'].forEach(f => {
