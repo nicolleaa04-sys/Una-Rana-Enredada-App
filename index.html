@@ -65,9 +65,49 @@
     * { -webkit-tap-highlight-color: transparent; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    @keyframes pulsoRanita {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .anim-pulso {
+      animation: pulsoRanita 2s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="bg-crema-50 dark:bg-noche-bg text-stone-800 dark:text-stone-100 font-sans min-h-screen flex flex-col antialiased transition-colors duration-200">
+
+  <!-- PANTALLA DE INICIO (SPLASH SCREEN) -->
+  <div id="splash-screen" class="fixed inset-0 z-[100] bg-morado flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700 select-none">
+    <div class="relative mb-5 anim-pulso">
+      <div class="w-32 h-32 rounded-full border-4 border-mostaza-claro shadow-2xl overflow-hidden bg-white flex items-center justify-center p-1">
+        <img src="logo.png" alt="Logo" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-frog text-morado text-6xl\'></i>'">
+      </div>
+      <div class="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-rana border-2 border-morado flex items-center justify-center text-morado font-extrabold text-sm shadow-md">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </div>
+    </div>
+    <h1 class="font-brand font-extrabold text-2xl text-white tracking-wide">Una rana enredada</h1>
+    <p class="font-sans text-xs text-rana-light font-semibold mt-1 tracking-wider uppercase">Pequeños enredos, grandes sonrisas.</p>
+    
+    <div class="mt-8 flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-rana animate-ping"></span>
+      <span class="text-[11px] text-stone-300 font-medium">Cargando taller...</span>
+    </div>
+  </div>
+
+  <!-- VISOR FLOTANTE PARA VER FOTO DE HILO EN GRANDE (LONG-PRESS) -->
+  <div id="visor-zoom-insumo" class="fixed inset-0 z-[90] bg-black/80 backdrop-blur-md hidden flex flex-col items-center justify-center p-4 transition-all duration-200">
+    <div class="bg-white dark:bg-noche-card rounded-3xl p-3 border-2 border-rana max-w-xs w-full shadow-2xl flex flex-col items-center space-y-2">
+      <div class="w-full h-72 rounded-2xl overflow-hidden bg-stone-100 dark:bg-noche-bg flex items-center justify-center">
+        <img id="zoom-img-target" src="" class="w-full h-full object-contain">
+      </div>
+      <div class="text-center pb-1">
+        <h4 id="zoom-nombre-target" class="font-bold text-sm text-morado dark:text-white"></h4>
+        <span id="zoom-tono-target" class="text-xs text-stone-400"></span>
+      </div>
+    </div>
+  </div>
 
   <!-- BARRA SUPERIOR -->
   <header class="sticky top-0 z-40 bg-white/95 dark:bg-noche-card/95 backdrop-blur-md border-b border-stone-200 dark:border-noche-border shadow-sm px-4 py-2.5">
@@ -221,7 +261,7 @@
         <div class="flex justify-between items-center">
           <div>
             <h3 class="font-brand font-bold text-morado dark:text-rana-light text-base">Cotizador Rápido</h3>
-            <p class="text-[11px] text-stone-400">Solo ingresa gramos y horas de tejido para calcular al instante.</p>
+            <p class="text-[11px] text-stone-400">Ingresa gramos y horas de tejido para calcular al instante.</p>
           </div>
           <span class="text-[10px] font-bold text-morado dark:text-rana bg-rana-soft dark:bg-morado-light px-2.5 py-1 rounded-lg">Express</span>
         </div>
@@ -385,18 +425,19 @@
     </button>
   </nav>
 
-  <!-- MODAL 1: VISOR DE DETALLES Y PATRÓN (LECTURA RÁPIDA) -->
-  <div id="modal-ver-patron" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-noche-card rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
+  <!-- MODAL: VISOR DE DETALLES, PATRÓN Y PDF -->
+  <div id="modal-ver-patron" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-noche-card rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
+      
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
         <div>
           <span id="ver-p-categoria" class="text-[10px] uppercase font-bold text-morado-lila"></span>
-          <h3 id="ver-p-nombre" class="font-brand font-bold text-xl text-morado dark:text-rana"></h3>
+          <h3 id="ver-p-nombre" class="font-brand font-bold text-xl text-morado dark:text-rana leading-tight"></h3>
         </div>
         <button onclick="cerrarModal('modal-ver-patron')" class="w-8 h-8 rounded-full bg-stone-100 dark:bg-noche-bg text-stone-400 hover:text-stone-700 dark:hover:text-white flex items-center justify-center text-lg">&times;</button>
       </div>
 
-      <div id="ver-p-foto-container" class="w-full h-52 rounded-2xl bg-crema-50 dark:bg-noche-bg overflow-hidden flex items-center justify-center border border-stone-100 dark:border-noche-border">
+      <div id="ver-p-foto-container" class="w-full h-44 sm:h-52 rounded-2xl bg-crema-50 dark:bg-noche-bg overflow-hidden flex items-center justify-center border border-stone-100 dark:border-noche-border">
         <img id="ver-p-foto" src="" class="w-full h-full object-cover hidden">
         <i id="ver-p-foto-placeholder" class="fa-solid fa-frog text-stone-300 dark:text-noche-border text-4xl"></i>
       </div>
@@ -423,15 +464,44 @@
 
       <div class="space-y-2">
         <div class="flex justify-between items-center">
-          <h4 class="text-xs font-bold text-stone-700 dark:text-stone-300">📖 Instrucciones / Esquema:</h4>
-          <button id="btn-copiar-patron-modal" class="text-[11px] font-bold text-morado dark:text-rana hover:underline flex items-center gap-1">
-            <i class="fa-regular fa-copy"></i> Copiar texto
-          </button>
+          <h4 class="text-xs font-bold text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-glasses text-morado dark:text-rana"></i> Lectura de Patrón
+          </h4>
+          <div class="flex items-center gap-2">
+            <button id="btn-zoom-patron" onclick="cambiarTamanoTextoPatron()" class="hidden text-[11px] font-bold text-stone-500 hover:text-morado dark:hover:text-rana px-2 py-0.5 rounded bg-stone-100 dark:bg-noche-bg">
+              <i class="fa-solid fa-text-height"></i> Letra
+            </button>
+            <button id="btn-copiar-patron-modal" class="hidden text-[11px] font-bold text-morado dark:text-rana hover:underline flex items-center gap-1">
+              <i class="fa-regular fa-copy"></i> Copiar
+            </button>
+          </div>
         </div>
-        <div id="ver-p-contenido" class="bg-stone-50 dark:bg-noche-bg p-3.5 rounded-xl border border-stone-100 dark:border-noche-border max-h-56 overflow-y-auto">
-          <pre id="ver-p-patron-texto" class="font-mono text-xs text-stone-700 dark:text-stone-200 whitespace-pre-wrap leading-relaxed"></pre>
-          <div id="ver-p-patron-link" class="hidden text-center py-2"></div>
-          <div id="ver-p-patron-archivo" class="hidden text-center py-2"></div>
+
+        <div id="ver-p-contenido" class="rounded-2xl overflow-hidden border border-stone-200 dark:border-noche-border bg-stone-50 dark:bg-noche-bg">
+          <div id="contenedor-patron-texto" class="p-4 max-h-72 overflow-y-auto hidden">
+            <pre id="ver-p-patron-texto" class="font-mono text-xs text-stone-800 dark:text-stone-200 whitespace-pre-wrap leading-relaxed select-text"></pre>
+          </div>
+
+          <div id="contenedor-patron-archivo" class="hidden flex flex-col items-center">
+            <div class="w-full h-80 sm:h-96 bg-stone-200 dark:bg-noche-bg/80 relative">
+              <iframe id="ver-p-iframe-pdf" class="w-full h-full border-0 rounded-t-2xl" src=""></iframe>
+            </div>
+            <div class="w-full p-2.5 bg-stone-100 dark:bg-noche-card border-t border-stone-200 dark:border-noche-border flex justify-between items-center text-xs px-4">
+              <span class="text-stone-500 text-[11px] font-medium"><i class="fa-solid fa-file-pdf text-rose-500 mr-1"></i> Documento / Esquema integrado</span>
+              <a id="btn-descargar-pdf-opcional" href="#" download="patron_amigurumi" class="px-3 py-1 rounded-lg bg-rana-soft dark:bg-morado-light text-morado dark:text-rana font-bold text-[11px] hover:bg-rana transition flex items-center gap-1">
+                <i class="fa-solid fa-file-arrow-down"></i> Descarga opcional
+              </a>
+            </div>
+          </div>
+
+          <div id="ver-p-patron-link" class="hidden text-center py-6 px-4 space-y-2">
+            <p class="text-xs text-stone-400">Este patrón corresponde a un tutorial o enlace web externo.</p>
+            <div id="link-externo-btn-container"></div>
+          </div>
+
+          <div id="ver-p-patron-vacio" class="hidden text-center py-8 text-stone-400 text-xs">
+            Sin instrucciones registradas para este diseño.
+          </div>
         </div>
       </div>
 
@@ -441,7 +511,7 @@
     </div>
   </div>
 
-  <!-- MODAL 2: REGISTRAR / EDITAR PROYECTO -->
+  <!-- MODAL: REGISTRAR / EDITAR PROYECTO -->
   <div id="modal-proyecto" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
@@ -454,7 +524,6 @@
         <input type="hidden" id="p-foto-data">
         <input type="hidden" id="p-archivo-data">
 
-        <!-- Foto del Amigurumi -->
         <div class="border border-stone-200 dark:border-noche-border rounded-2xl p-3 bg-crema-50 dark:bg-noche-bg/50">
           <label class="block text-xs font-bold mb-1.5 text-morado dark:text-rana-light">Foto del Personaje</label>
           <div class="flex items-center gap-3">
@@ -516,7 +585,6 @@
           <input type="text" id="p-materiales" placeholder="Ej. Algodón verde, ojitos 8mm, cinta blanca" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
         </div>
 
-        <!-- Formato de Patrón -->
         <div class="border border-stone-200 dark:border-noche-border rounded-2xl p-3 space-y-2">
           <label class="block text-xs font-bold text-morado-lila">Formato del Patrón</label>
           
@@ -535,7 +603,7 @@
           </div>
 
           <div id="campo-patron-archivo" class="hidden space-y-2">
-            <input type="file" id="p-archivo-input" accept="image/*,.pdf" class="w-full text-xs text-stone-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-rana file:text-morado">
+            <input type="file" id="p-archivo-input" accept="image/*,.pdf,application/pdf" class="w-full text-xs text-stone-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-rana file:text-morado">
             <span id="p-archivo-status" class="text-[11px] text-emerald-500 font-bold block"></span>
           </div>
         </div>
@@ -548,7 +616,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: REGISTRAR / EDITAR INSUMO DINÁMICO (SOPORTA EDICIÓN COMPLETA) -->
+  <!-- MODAL: REGISTRAR / EDITAR INSUMO DINÁMICO -->
   <div id="modal-material" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
@@ -560,7 +628,6 @@
         <input type="hidden" id="mat-id">
         <input type="hidden" id="mat-foto-data">
 
-        <!-- Foto del Insumo -->
         <div class="border border-stone-200 dark:border-noche-border rounded-2xl p-3 bg-crema-50 dark:bg-noche-bg/50">
           <label class="block text-xs font-bold mb-1.5 text-morado dark:text-rana-light">Foto de Referencia (Opcional)</label>
           <div class="flex items-center gap-3">
@@ -608,7 +675,6 @@
           </div>
         </div>
 
-        <!-- Campos de Color y Tono (Dinámicos) -->
         <div id="contenedor-campos-color" class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-xs font-bold mb-1">Tono / Código</label>
@@ -635,7 +701,6 @@
           </div>
         </div>
 
-        <!-- Casilla para saldos únicos -->
         <div class="flex items-center gap-2 pt-1 text-xs">
           <input type="checkbox" id="mat-no-reponer" class="w-4 h-4 rounded text-morado focus:ring-rana">
           <label for="mat-no-reponer" class="text-stone-600 dark:text-stone-300 font-medium">Insumo único / saldo (no alertar compras)</label>
@@ -649,7 +714,7 @@
     </div>
   </div>
 
-  <!-- MODAL 4: REGISTRAR VENTA -->
+  <!-- MODAL: REGISTRAR VENTA -->
   <div id="modal-venta" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
@@ -730,6 +795,18 @@
     let ventas = [];
     let filtroAlmacenActual = 'all';
     let filtroFinanzasActual = 'mes';
+    let escalaFuentePatron = 0;
+
+    // Manejo de Splash Screen (desvanecer a los 2 segundos)
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+          splash.classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => splash.remove(), 700);
+        }
+      }, 1800);
+    });
 
     window.toggleTheme = () => {
       const isDark = document.documentElement.classList.toggle('dark');
@@ -921,13 +998,14 @@
       document.getElementById(`${prefijo}-foto-preview`).innerHTML = `<i class="fa-regular fa-image text-stone-400 text-lg"></i>`;
     };
 
+    // ARCHIVO / PDF / ESQUEMA
     document.getElementById('p-archivo-input').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(evt) {
           document.getElementById('p-archivo-data').value = evt.target.result;
-          document.getElementById('p-archivo-status').innerText = `✓ Archivo cargado: ${file.name}`;
+          document.getElementById('p-archivo-status').innerText = `✓ Guardado: ${file.name}`;
         };
         reader.readAsDataURL(file);
       }
@@ -959,6 +1037,10 @@
 
       cont.innerHTML = filtrados.map(p => {
         const fotoSrc = p.fotoUrl || p.fotoData || null;
+        let badgeFormato = '';
+        if (p.archivo) badgeFormato = `<span class="bg-rose-500 text-white px-1.5 py-0.5 rounded text-[9px] font-bold shadow-sm"><i class="fa-solid fa-file-pdf mr-0.5"></i> PDF</span>`;
+        else if (p.link) badgeFormato = `<span class="bg-sky-500 text-white px-1.5 py-0.5 rounded text-[9px] font-bold shadow-sm"><i class="fa-solid fa-video mr-0.5"></i> Enlace</span>`;
+        else if (p.patron) badgeFormato = `<span class="bg-rana text-morado px-1.5 py-0.5 rounded text-[9px] font-bold shadow-sm"><i class="fa-solid fa-align-left mr-0.5"></i> Escrito</span>`;
 
         return `
           <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
@@ -974,6 +1056,9 @@
                   <span class="px-2 py-0.5 rounded-md bg-white/90 dark:bg-morado/90 text-morado dark:text-rana-light font-bold text-[10px] shadow-sm backdrop-blur-sm">${p.categoria}</span>
                   ${p.tamano ? `<span class="px-2 py-0.5 rounded-md bg-white/90 dark:bg-morado/90 text-stone-600 dark:text-stone-300 font-bold text-[10px] shadow-sm backdrop-blur-sm"><i class="fa-solid fa-ruler-vertical text-[9px] mr-1"></i>${p.tamano}</span>` : ''}
                 </div>
+                <div class="absolute top-2 right-2">
+                  ${badgeFormato}
+                </div>
               </div>
 
               <div class="p-4 pb-2">
@@ -982,14 +1067,14 @@
                   <span>Costo: S/ ${parseFloat(p.costo || 0).toFixed(2)}</span>
                 </div>
                 <h4 class="font-brand font-bold text-base text-morado dark:text-white leading-tight hover:text-rana-dark dark:hover:text-rana transition">${p.nombre}</h4>
-                <p class="text-xs text-stone-500 dark:text-stone-400 line-clamp-2 mt-1">${p.materiales || 'Toca para abrir detalles del patrón...'}</p>
+                <p class="text-xs text-stone-500 dark:text-stone-400 line-clamp-2 mt-1">${p.materiales || 'Toca para abrir la ventana de lectura y patrón...'}</p>
               </div>
             </div>
 
             <div class="px-4 pb-3 pt-2 border-t border-stone-100 dark:border-noche-border flex items-center justify-between">
               <span class="text-lg font-extrabold text-morado dark:text-mostaza">S/ ${parseFloat(p.precio).toFixed(2)}</span>
               <div class="flex gap-1.5">
-                <button onclick="verDetallePatron('${p.id}')" class="p-2 rounded-lg bg-morado-soft dark:bg-noche-bg text-morado dark:text-rana" title="Ver detalles"><i class="fa-regular fa-eye"></i></button>
+                <button onclick="verDetallePatron('${p.id}')" class="p-2 rounded-lg bg-morado-soft dark:bg-noche-bg text-morado dark:text-rana hover:scale-105 transition" title="Abrir y leer patrón"><i class="fa-solid fa-book-open"></i></button>
                 <button onclick="abrirModalProyecto('${p.id}')" class="p-2 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-500 hover:text-morado" title="Editar"><i class="fa-regular fa-pen-to-square"></i></button>
                 <button onclick="borrarProyecto('${p.id}')" class="p-2 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-300 hover:text-rose-500" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>
               </div>
@@ -999,7 +1084,7 @@
       }).join('');
     };
 
-    // VISOR DE DETALLES
+    // VISOR PATRÓN & PDF EMBEBIDO
     window.verDetallePatron = (id) => {
       const p = proyectos.find(x => x.id === id);
       if (!p) return;
@@ -1024,37 +1109,59 @@
         placeholder.classList.remove('hidden');
       }
 
+      const contTexto = document.getElementById('contenedor-patron-texto');
       const txt = document.getElementById('ver-p-patron-texto');
-      const linkDiv = document.getElementById('ver-p-patron-link');
-      const archDiv = document.getElementById('ver-p-patron-archivo');
+      const contArchivo = document.getElementById('contenedor-patron-archivo');
+      const iframePdf = document.getElementById('ver-p-iframe-pdf');
+      const btnDescargar = document.getElementById('btn-descargar-pdf-opcional');
+      const contLink = document.getElementById('ver-p-patron-link');
+      const contBtnLink = document.getElementById('link-externo-btn-container');
+      const contVacio = document.getElementById('ver-p-patron-vacio');
       const btnCopiar = document.getElementById('btn-copiar-patron-modal');
+      const btnZoom = document.getElementById('btn-zoom-patron');
 
-      txt.innerText = '';
-      txt.classList.add('hidden');
-      linkDiv.classList.add('hidden');
-      archDiv.classList.add('hidden');
+      contTexto.classList.add('hidden');
+      contArchivo.classList.add('hidden');
+      contLink.classList.add('hidden');
+      contVacio.classList.add('hidden');
       btnCopiar.classList.add('hidden');
+      btnZoom.classList.add('hidden');
+      iframePdf.src = 'about:blank';
 
-      if (p.patron) {
+      if (p.archivo) {
+        contArchivo.classList.remove('hidden');
+        iframePdf.src = p.archivo;
+        btnDescargar.href = p.archivo;
+        btnDescargar.download = `${p.nombre.replace(/\s+/g, '_')}_patron`;
+      } else if (p.patron && p.patron.trim() !== '') {
+        contTexto.classList.remove('hidden');
         txt.innerText = p.patron;
-        txt.classList.remove('hidden');
         btnCopiar.classList.remove('hidden');
+        btnZoom.classList.remove('hidden');
         btnCopiar.onclick = () => {
           navigator.clipboard.writeText(p.patron);
           alert('¡Patrón copiado al portapapeles!');
         };
       } else if (p.link) {
-        linkDiv.innerHTML = `<a href="${p.link}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-morado text-white font-bold text-xs"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Enlace del Tutorial</a>`;
-        linkDiv.classList.remove('hidden');
-      } else if (p.archivo) {
-        archDiv.innerHTML = `<a href="${p.archivo}" download="${p.nombre}_patron" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rana text-morado font-extrabold text-xs"><i class="fa-solid fa-file-arrow-down"></i> Descargar Esquema / PDF</a>`;
-        archDiv.classList.remove('hidden');
+        contLink.classList.remove('hidden');
+        contBtnLink.innerHTML = `<a href="${p.link}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-morado text-white font-bold text-xs shadow-md hover:bg-morado-light transition"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Tutorial o Esquema Web</a>`;
       } else {
-        txt.innerText = 'No se registraron notas de tejido para este diseño.';
-        txt.classList.remove('hidden');
+        contVacio.classList.remove('hidden');
       }
 
       document.getElementById('modal-ver-patron').classList.remove('hidden');
+    };
+
+    window.cambiarTamanoTextoPatron = () => {
+      const txt = document.getElementById('ver-p-patron-texto');
+      escalaFuentePatron = (escalaFuentePatron + 1) % 3;
+      if (escalaFuentePatron === 0) {
+        txt.className = 'font-mono text-xs text-stone-800 dark:text-stone-200 whitespace-pre-wrap leading-relaxed select-text';
+      } else if (escalaFuentePatron === 1) {
+        txt.className = 'font-mono text-sm text-stone-800 dark:text-stone-200 whitespace-pre-wrap leading-loose select-text font-medium';
+      } else {
+        txt.className = 'font-mono text-base text-stone-900 dark:text-stone-100 whitespace-pre-wrap leading-loose select-text font-bold';
+      }
     };
 
     window.abrirModalProyecto = (id = null, datosPrecargados = null) => {
@@ -1093,7 +1200,7 @@
           if (p.link) setModoPatron('link');
           else if (p.archivo) {
             setModoPatron('archivo');
-            document.getElementById('p-archivo-status').innerText = '✓ Esquema guardado';
+            document.getElementById('p-archivo-status').innerText = '✓ PDF guardado';
           }
         }
       } else if (datosPrecargados) {
@@ -1132,6 +1239,32 @@
     window.borrarProyecto = async (id) => {
       if (confirm('¿Eliminar este diseño?')) await deleteDoc(doc(db, "proyectos", id));
     };
+
+    // INSUMOS: LONG-PRESS PARA VER FOTO EN GRANDE
+    let temporizadorLongPress = null;
+
+    window.iniciarLongPress = (src, nombre, tono) => {
+      if (!src) return;
+      temporizadorLongPress = setTimeout(() => {
+        mostrarZoomFoto(src, nombre, tono);
+      }, 400); // 400ms de presión
+    };
+
+    window.cancelarLongPress = () => {
+      if (temporizadorLongPress) {
+        clearTimeout(temporizadorLongPress);
+        temporizadorLongPress = null;
+      }
+    };
+
+    function mostrarZoomFoto(src, nombre, tono) {
+      document.getElementById('zoom-img-target').src = src;
+      document.getElementById('zoom-nombre-target').innerText = nombre;
+      document.getElementById('zoom-tono-target').innerText = tono || '';
+      const visor = document.getElementById('visor-zoom-insumo');
+      visor.classList.remove('hidden');
+      visor.onclick = () => visor.classList.add('hidden');
+    }
 
     // FORMULARIO DINÁMICO DE INSUMOS
     window.adaptarFormularioInsumo = () => {
@@ -1173,7 +1306,7 @@
       renderizarAlmacen();
     };
 
-    // RENDERIZAR ALMACÉN (CON BOTÓN DE EDITAR LÁPIZ)
+    // RENDERIZAR ALMACÉN
     window.renderizarAlmacen = () => {
       const grid = document.getElementById('grid-materiales');
       const filtrados = materiales.filter(m => {
@@ -1203,7 +1336,16 @@
                 ${m.colorHex ? `<div class="w-3.5 h-3.5 rounded-full border border-stone-300" style="background-color: ${m.colorHex};"></div>` : ''}
               </div>
 
-              <div class="h-20 w-full rounded-xl bg-crema-50 dark:bg-noche-bg mb-2 overflow-hidden flex items-center justify-center">
+              <!-- Miniatura con Long-Press táctil y clic sostenido -->
+              <div 
+                class="h-20 w-full rounded-xl bg-crema-50 dark:bg-noche-bg mb-2 overflow-hidden flex items-center justify-center cursor-pointer select-none active:scale-95 transition"
+                onmousedown="iniciarLongPress('${fotoSrc}', '${m.nombre}', '${m.colorNombre}')"
+                onmouseup="cancelarLongPress()"
+                onmouseleave="cancelarLongPress()"
+                ontouchstart="iniciarLongPress('${fotoSrc}', '${m.nombre}', '${m.colorNombre}')"
+                ontouchend="cancelarLongPress()"
+                onclick="if('${fotoSrc}') mostrarZoomFoto('${fotoSrc}', '${m.nombre}', '${m.colorNombre}')"
+                title="Mantén presionado para ampliar foto">
                 ${fotoSrc 
                   ? `<img src="${fotoSrc}" class="w-full h-full object-cover">` 
                   : `<i class="fa-solid fa-boxes-stacked text-stone-300 dark:text-noche-border text-2xl"></i>`}
@@ -1237,7 +1379,7 @@
       }
     };
 
-    // ABRIR MODAL INSUMOS (CREAR O EDITAR)
+    // MODAL INSUMOS
     window.abrirModalMaterial = (id = null) => {
       document.getElementById('form-material').reset();
       document.getElementById('mat-id').value = '';
@@ -1347,7 +1489,7 @@
       alert('¡Lista copiada!');
     };
 
-    // CALCULADORA EXPRESS & GUARDADO
+    // CALCULADORA EXPRESS
     window.toggleCostosFijos = () => {
       const panel = document.getElementById('panel-costos-fijos');
       const icono = document.getElementById('icono-costos-fijos');
