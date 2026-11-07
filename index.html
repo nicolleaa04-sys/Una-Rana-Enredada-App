@@ -1339,24 +1339,6 @@
       }
       calcularSaldoPedidoModal();
     };
-      
-      if (opt && opt.dataset.precio && tipo === 'stock') {
-        document.getElementById('ped-precio').value = opt.dataset.precio;
-      }
-
-      const total = Number(document.getElementById('ped-precio').value) || 0;
-      const delivery = Number(document.getElementById('ped-delivery').value) || 0;
-      const hint = document.getElementById('ped-adelanto-hint');
-
-      if (tipo === 'stock') {
-        hint.innerText = "Stock: se cancela el 100% por adelantado. Delivery se abona en la entrega.";
-        document.getElementById('ped-adelanto').value = total;
-      } else {
-        hint.innerText = "Personalizado: se separa con el 50% de anticipo mínimo para iniciar tejido.";
-        document.getElementById('ped-adelanto').value = (total * 0.5).toFixed(2);
-      }
-      calcularSaldoPedidoModal();
-    };
 
     window.calcularSaldoPedidoModal = () => {
       const precio = Number(document.getElementById('ped-precio').value) || 0;
