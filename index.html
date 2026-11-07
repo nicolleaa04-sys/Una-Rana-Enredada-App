@@ -96,7 +96,7 @@
     </div>
   </div>
 
-  <!-- VISOR FLOTANTE PARA VER FOTO DE HILO EN GRANDE (LONG-PRESS) -->
+  <!-- VISOR ZOOM FOTO INSUMO (LONG-PRESS) -->
   <div id="visor-zoom-insumo" class="fixed inset-0 z-[90] bg-black/80 backdrop-blur-md hidden flex flex-col items-center justify-center p-4 transition-all duration-200">
     <div class="bg-white dark:bg-noche-card rounded-3xl p-3 border-2 border-rana max-w-xs w-full shadow-2xl flex flex-col items-center space-y-2">
       <div class="w-full h-72 rounded-2xl overflow-hidden bg-stone-100 dark:bg-noche-bg flex items-center justify-center">
@@ -109,16 +109,86 @@
     </div>
   </div>
 
+  <!-- MENÚ LATERAL RETRÁCTIL (DRAWER) -->
+  <div id="drawer-overlay" onclick="toggleDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden transition-opacity"></div>
+  <aside id="sidebar-drawer" class="fixed top-0 left-0 bottom-0 w-72 bg-white dark:bg-noche-card z-50 border-r border-stone-200 dark:border-noche-border shadow-2xl transform -translate-x-full transition-transform duration-300 flex flex-col justify-between">
+    <div class="p-5">
+      <div class="flex items-center justify-between pb-4 border-b border-stone-100 dark:border-noche-border">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-rana bg-white flex items-center justify-center">
+            <img src="logo.png" alt="Logo" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-frog text-morado text-xl\'></i>'">
+          </div>
+          <div>
+            <h2 class="font-brand font-bold text-sm text-morado dark:text-rana-light">Una rana enredada</h2>
+            <span class="text-[10px] text-stone-400">Menú del Taller</span>
+          </div>
+        </div>
+        <button onclick="toggleDrawer()" class="w-8 h-8 rounded-full bg-stone-100 dark:bg-noche-bg text-stone-400 hover:text-stone-700 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <nav class="mt-4 space-y-1 text-xs font-bold">
+        <button onclick="navegarModulo('pedidos')" id="side-btn-pedidos" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-morado dark:text-rana bg-rana-soft dark:bg-morado-light">
+          <i class="fa-solid fa-clock-rotate-left text-base text-morado dark:text-rana w-5"></i>
+          <span>Cola & Urgencias</span>
+          <span id="sideBadgeUrgentes" class="ml-auto text-[10px] bg-rose-500 text-white font-extrabold px-2 py-0.5 rounded-full hidden">0</span>
+        </button>
+
+        <button onclick="navegarModulo('calendario')" id="side-btn-calendario" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-noche-bg">
+          <i class="fa-regular fa-calendar-days text-base text-mostaza w-5"></i>
+          <span>Calendario de Cupos</span>
+        </button>
+
+        <button onclick="navegarModulo('proyectos')" id="side-btn-proyectos" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-noche-bg">
+          <i class="fa-solid fa-book-open text-base text-rana-dark w-5"></i>
+          <span>Patrones & Diseños</span>
+        </button>
+
+        <button onclick="navegarModulo('almacen')" id="side-btn-almacen" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-noche-bg">
+          <i class="fa-solid fa-boxes-packing text-base text-morado-lila w-5"></i>
+          <span>Almacén & Insumos</span>
+        </button>
+
+        <button onclick="navegarModulo('ventas')" id="side-btn-ventas" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-noche-bg">
+          <i class="fa-solid fa-receipt text-base text-emerald-500 w-5"></i>
+          <span>Libro de Ventas</span>
+        </button>
+
+        <button onclick="navegarModulo('finanzas')" id="side-btn-finanzas" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-noche-bg">
+          <i class="fa-solid fa-chart-pie text-base text-mostaza-dark w-5"></i>
+          <span>Finanzas & Métricas</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="p-4 border-t border-stone-100 dark:border-noche-border space-y-2">
+      <button onclick="abrirModalTelegram()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-crema-100 dark:bg-noche-bg text-stone-700 dark:text-stone-200 text-xs font-bold hover:bg-rana-soft transition">
+        <span class="flex items-center gap-2">
+          <i class="fa-brands fa-telegram text-sky-500 text-sm"></i> Notificaciones Telegram
+        </span>
+        <i class="fa-solid fa-gear text-stone-400"></i>
+      </button>
+      <div class="text-[10px] text-center text-stone-400">v2.1 • Taller Digital Sincronizado</div>
+    </div>
+  </aside>
+
   <!-- BARRA SUPERIOR -->
   <header class="sticky top-0 z-40 bg-white/95 dark:bg-noche-card/95 backdrop-blur-md border-b border-stone-200 dark:border-noche-border shadow-sm px-4 py-2.5">
     <div class="max-w-5xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-rana shadow-sm bg-white flex items-center justify-center shrink-0">
-          <img src="logo.png" alt="Logo Una Rana Enredada" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-frog text-morado text-2xl\'></i>'">
-        </div>
-        <div>
-          <h1 class="font-brand font-bold text-lg text-morado dark:text-rana-light leading-tight">Una rana enredada</h1>
-          <p class="text-[10px] text-stone-400 dark:text-stone-300 font-medium italic -mt-0.5">Pequeños enredos, grandes sonrisas.</p>
+        <button onclick="toggleDrawer()" class="w-10 h-10 rounded-xl bg-crema-100 dark:bg-noche-border flex items-center justify-center text-morado dark:text-rana hover:scale-105 transition" title="Menú principal">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-full overflow-hidden border border-rana bg-white flex items-center justify-center shrink-0">
+            <img src="logo.png" alt="Logo" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-frog text-morado text-lg\'></i>'">
+          </div>
+          <div>
+            <h1 class="font-brand font-bold text-base text-morado dark:text-rana-light leading-tight">Una rana enredada</h1>
+            <p class="text-[9px] text-stone-400 font-medium italic -mt-0.5">Taller & Entregas</p>
+          </div>
         </div>
       </div>
 
@@ -138,19 +208,12 @@
             <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
           </button>
         </div>
-
-        <nav id="nav-desktop" class="hidden md:flex gap-1 bg-crema-100 dark:bg-noche-border p-1 rounded-xl text-xs font-bold ml-2">
-          <button onclick="cambiarModulo('proyectos')" id="btn-nav-proyectos" class="px-3 py-1.5 rounded-lg bg-white dark:bg-morado-light text-morado dark:text-white shadow-sm">Patrones</button>
-          <button onclick="cambiarModulo('almacen')" id="btn-nav-almacen" class="px-3 py-1.5 rounded-lg text-stone-600 dark:text-stone-300">Almacén</button>
-          <button onclick="cambiarModulo('ventas')" id="btn-nav-ventas" class="px-3 py-1.5 rounded-lg text-stone-600 dark:text-stone-300">Ventas</button>
-          <button onclick="cambiarModulo('finanzas')" id="btn-nav-finanzas" class="px-3 py-1.5 rounded-lg text-stone-600 dark:text-stone-300">Finanzas</button>
-        </nav>
       </div>
     </div>
   </header>
 
   <!-- CONTENEDOR PRINCIPAL -->
-  <main class="max-w-5xl mx-auto p-4 flex-1 w-full pb-24 md:pb-8">
+  <main class="max-w-5xl mx-auto p-4 flex-1 w-full pb-16">
 
     <!-- LOGIN -->
     <div id="pantalla-login" class="hidden max-w-md mx-auto my-12 p-8 bg-white dark:bg-noche-card rounded-3xl border border-stone-200 dark:border-noche-border shadow-xl text-center space-y-5">
@@ -167,7 +230,79 @@
       </button>
     </div>
 
-    <!-- MÓDULO 1: PATRONES & PERSONAJES -->
+    <!-- MÓDULO: COLA DE PEDIDOS & URGENCIA -->
+    <section id="modulo-pedidos" class="space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 class="font-brand font-bold text-lg text-morado dark:text-rana-light flex items-center gap-2">
+            <i class="fa-solid fa-clock-rotate-left text-rana"></i> Cola de Pedidos & Urgencia
+          </h2>
+          <p class="text-xs text-stone-400">Orden automático según fecha límite, horas estimadas y dificultad.</p>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="enviarAlertaManualTelegram()" class="px-3 py-2 rounded-xl bg-sky-50 dark:bg-sky-950/40 text-sky-600 dark:text-sky-300 border border-sky-200 dark:border-sky-900 text-xs font-bold flex items-center gap-1.5 shadow-xs hover:bg-sky-100 transition">
+            <i class="fa-brands fa-telegram text-sm"></i> Avisar a Telegram
+          </button>
+          <button onclick="abrirModalPedido()" class="px-4 py-2 bg-morado dark:bg-rana hover:bg-morado-light text-white dark:text-morado font-extrabold text-xs rounded-xl shadow-md flex items-center gap-2 transition ml-auto sm:ml-0">
+            <i class="fa-solid fa-plus"></i> Nuevo Pedido
+          </button>
+        </div>
+      </div>
+
+      <!-- Resumen Métricas de Pedidos -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-white dark:bg-noche-card p-3 rounded-2xl border border-stone-200 dark:border-noche-border shadow-xs">
+          <span class="text-[10px] text-rose-500 font-bold uppercase block"><i class="fa-solid fa-fire mr-1"></i> Urgentes</span>
+          <span id="kpi-pedidos-urgentes" class="text-xl font-extrabold text-rose-600">0</span>
+        </div>
+        <div class="bg-white dark:bg-noche-card p-3 rounded-2xl border border-stone-200 dark:border-noche-border shadow-xs">
+          <span class="text-[10px] text-amber-500 font-bold uppercase block"><i class="fa-solid fa-yarn mr-1"></i> En Tejido</span>
+          <span id="kpi-pedidos-proceso" class="text-xl font-extrabold text-amber-600">0</span>
+        </div>
+        <div class="bg-white dark:bg-noche-card p-3 rounded-2xl border border-stone-200 dark:border-noche-border shadow-xs">
+          <span class="text-[10px] text-stone-400 font-bold uppercase block"><i class="fa-solid fa-hand-holding-dollar mr-1"></i> Saldos Pendientes</span>
+          <span id="kpi-pedidos-saldos" class="text-xl font-extrabold text-morado dark:text-mostaza">S/ 0</span>
+        </div>
+        <div class="bg-white dark:bg-noche-card p-3 rounded-2xl border border-stone-200 dark:border-noche-border shadow-xs">
+          <span class="text-[10px] text-emerald-600 font-bold uppercase block"><i class="fa-solid fa-check-double mr-1"></i> Listos / Entrega</span>
+          <span id="kpi-pedidos-listos" class="text-xl font-extrabold text-emerald-600">0</span>
+        </div>
+      </div>
+
+      <div id="lista-pedidos-cards" class="space-y-3"></div>
+    </section>
+
+    <!-- MÓDULO: CALENDARIO DE ENTREGAS Y CUPOS -->
+    <section id="modulo-calendario" class="hidden space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="font-brand font-bold text-lg text-morado dark:text-rana-light flex items-center gap-2">
+            <i class="fa-regular fa-calendar-days text-mostaza"></i> Calendario de Cupos del Mes
+          </h2>
+          <p class="text-xs text-stone-400">Verifica disponibilidad antes de aceptar nuevos encargos.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="cambiarMesCalendario(-1)" class="w-8 h-8 rounded-lg bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border text-xs"><i class="fa-solid fa-chevron-left"></i></button>
+          <span id="cal-mes-label" class="text-xs font-bold text-morado dark:text-white px-2"></span>
+          <button onclick="cambiarMesCalendario(1)" class="w-8 h-8 rounded-lg bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border text-xs"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border p-4 shadow-sm">
+        <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-stone-400 uppercase mb-2">
+          <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span>
+        </div>
+        <div id="grid-dias-calendario" class="grid grid-cols-7 gap-1"></div>
+      </div>
+
+      <div id="detalle-dia-calendario" class="bg-crema-100 dark:bg-noche-card/60 p-4 rounded-2xl border border-stone-200 dark:border-noche-border text-xs space-y-2">
+        <span class="font-bold text-morado dark:text-rana block" id="cal-dia-seleccionado-titulo">Selecciona un día en el calendario</span>
+        <div id="cal-pedidos-del-dia" class="space-y-1 text-stone-600 dark:text-stone-300">Toca cualquier casilla para ver los pedidos y cupos.</div>
+      </div>
+    </section>
+
+    <!-- MÓDULO: PATRONES & PERSONAJES -->
     <section id="modulo-proyectos" class="hidden space-y-4">
       <div class="flex flex-col sm:flex-row gap-2 justify-between items-stretch sm:items-center">
         <div class="relative flex-1">
@@ -183,7 +318,7 @@
       <div id="lista-proyectos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
     </section>
 
-    <!-- MÓDULO 2: ALMACÉN E INSUMOS -->
+    <!-- MÓDULO: ALMACÉN E INSUMOS -->
     <section id="modulo-almacen" class="hidden space-y-5">
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div class="bg-white dark:bg-noche-card p-3 rounded-2xl border border-stone-200 dark:border-noche-border shadow-sm flex items-center gap-3">
@@ -282,43 +417,6 @@
           </div>
         </div>
 
-        <!-- Desplegable Costos Fijos -->
-        <div class="border border-stone-200 dark:border-noche-border rounded-2xl overflow-hidden">
-          <button type="button" onclick="toggleCostosFijos()" class="w-full px-4 py-2.5 bg-stone-50 dark:bg-noche-bg flex justify-between items-center text-xs font-bold text-stone-600 dark:text-stone-300 hover:bg-stone-100">
-            <span><i class="fa-solid fa-sliders mr-1.5 text-morado dark:text-rana"></i> Costos Fijos Predeterminados (Empaque, Napa, Llavero)</span>
-            <i id="icono-costos-fijos" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
-          </button>
-
-          <div id="panel-costos-fijos" class="hidden p-3.5 space-y-3 bg-white dark:bg-noche-card text-xs border-t border-stone-100 dark:border-noche-border">
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-[11px] font-semibold mb-1">Kit Empaque Total (Bolsa craft, celofán, stickers)</label>
-                <input type="number" step="0.5" id="calc-empaque" value="3.50" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
-              </div>
-              <div>
-                <label class="block text-[11px] font-semibold mb-1">Argolla / Llavero / Base (S/)</label>
-                <input type="number" step="0.5" id="calc-argolla" value="1.50" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2">
-              <div>
-                <label class="block text-[11px] font-semibold mb-1">Napa estimada (g)</label>
-                <input type="number" id="calc-napa" value="25" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
-              </div>
-              <div>
-                <label class="block text-[11px] font-semibold mb-1">Ojos / Botones (S/)</label>
-                <input type="number" step="0.5" id="calc-ojos" value="1.00" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
-              </div>
-              <div>
-                <label class="block text-[11px] font-semibold mb-1">Tu Pago por Hora (S/)</label>
-                <input type="number" step="0.5" id="calc-tarifa-hora" value="7.00" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Total Calculado -->
         <div class="p-4 bg-rana-soft dark:bg-noche-bg border-2 border-dashed border-rana rounded-2xl text-center space-y-1">
           <span class="text-[10px] uppercase font-bold text-morado-lila tracking-wide">Precio de Venta Sugerido</span>
           <div id="calc-precio-final" class="text-3xl font-extrabold text-morado dark:text-rana">S/ 38.00</div>
@@ -331,7 +429,7 @@
       </div>
     </section>
 
-    <!-- MÓDULO 3: LIBRO DE VENTAS -->
+    <!-- MÓDULO: LIBRO DE VENTAS -->
     <section id="modulo-ventas" class="hidden space-y-4">
       <div class="flex justify-between items-center">
         <div>
@@ -362,7 +460,7 @@
       </div>
     </section>
 
-    <!-- MÓDULO 4: FINANZAS Y REPORTES -->
+    <!-- MÓDULO: FINANZAS Y REPORTES -->
     <section id="modulo-finanzas" class="hidden space-y-6">
       <div class="flex flex-wrap gap-2 items-center justify-between">
         <h2 class="font-brand font-bold text-lg text-morado dark:text-rana-light">Métricas de Ganancia</h2>
@@ -409,26 +507,144 @@
     </section>
   </main>
 
-  <!-- NAVEGACIÓN MÓVIL INFERIOR -->
-  <nav id="nav-movil" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-noche-card/95 backdrop-blur-md border-t border-stone-200 dark:border-noche-border px-4 py-2 flex justify-around items-center z-40 shadow-lg">
-    <button onclick="cambiarModulo('proyectos')" id="m-btn-proyectos" class="flex flex-col items-center text-morado dark:text-rana font-bold text-[10px] gap-1">
-      <i class="fa-solid fa-book-open text-base"></i> Patrones
-    </button>
-    <button onclick="cambiarModulo('almacen')" id="m-btn-almacen" class="flex flex-col items-center text-stone-400 font-bold text-[10px] gap-1">
-      <i class="fa-solid fa-boxes-packing text-base"></i> Almacén
-    </button>
-    <button onclick="cambiarModulo('ventas')" id="m-btn-ventas" class="flex flex-col items-center text-stone-400 font-bold text-[10px] gap-1">
-      <i class="fa-solid fa-receipt text-base"></i> Ventas
-    </button>
-    <button onclick="cambiarModulo('finanzas')" id="m-btn-finanzas" class="flex flex-col items-center text-stone-400 font-bold text-[10px] gap-1">
-      <i class="fa-solid fa-chart-pie text-base"></i> Finanzas
-    </button>
-  </nav>
+  <!-- MODAL: REGISTRAR / EDITAR PEDIDO -->
+  <div id="modal-pedido" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-noche-card rounded-3xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4 my-auto">
+      <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
+        <h3 id="titulo-modal-pedido" class="font-brand font-bold text-lg text-morado dark:text-rana">Nuevo Pedido de Crochet</h3>
+        <button onclick="cerrarModal('modal-pedido')" class="text-stone-400 text-xl">&times;</button>
+      </div>
 
-  <!-- MODAL: VISOR DE DETALLES, PATRÓN Y PDF -->
+      <form id="form-pedido" onsubmit="guardarPedido(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="ped-id">
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold mb-1">Nombre del Cliente *</label>
+            <input type="text" id="ped-cliente" required placeholder="Ej. Valeria Gómez" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="block font-bold mb-1">Tipo de Pedido</label>
+            <select id="ped-tipo" onchange="actualizarCalculoAdelanto()" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl font-bold">
+              <option value="personalizado">Personalizado (50% anticipo)</option>
+              <option value="stock">Producto en Stock (100% anticipo)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold mb-1">Amigurumi / Proyecto</label>
+            <select id="ped-proyecto-select" onchange="vincularPatronAPedido()" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl"></select>
+          </div>
+          <div>
+            <label class="block font-bold mb-1">Nombre Personalizado</label>
+            <input type="text" id="ped-proyecto-nombre" placeholder="Si no está en catálogo..." class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold mb-1">Fecha de Encargo</label>
+            <input type="date" id="ped-fecha-encargo" required class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="block font-bold mb-1 text-rose-500">Fecha de Entrega Límite *</label>
+            <input type="date" id="ped-fecha-entrega" required class="w-full px-3 py-2 border border-rose-300 dark:border-rose-900 dark:bg-noche-bg rounded-xl font-bold outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 bg-crema-100 dark:bg-noche-bg p-3 rounded-xl border border-stone-200 dark:border-noche-border">
+          <div>
+            <label class="block font-bold mb-1">Horas Estimadas de Tejido</label>
+            <input type="number" step="0.5" id="ped-horas" required value="4" class="w-full px-3 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold">
+          </div>
+          <div>
+            <label class="block font-bold mb-1">Dificultad Técnica</label>
+            <select id="ped-dificultad" class="w-full px-2.5 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold">
+              <option value="1">1 - Rápido / Llavero</option>
+              <option value="2" selected>2 - Intermedio / Estándar</option>
+              <option value="3">3 - Alto / Detallado</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Módulo Financiero: Cobro y Adelantos -->
+        <div class="p-3 bg-rana-soft dark:bg-noche-bg rounded-xl border border-rana/30 space-y-2">
+          <span class="font-bold text-morado dark:text-rana-light block">Condición de Pago & Delivery</span>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[10px] text-stone-500 font-semibold mb-1">Precio Producto (S/)</label>
+              <input type="number" step="0.5" id="ped-precio-producto" value="40" oninput="actualizarCalculoAdelanto()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold">
+            </div>
+            <div>
+              <label class="block text-[10px] text-stone-500 font-semibold mb-1">Costo Delivery (S/)</label>
+              <input type="number" step="0.5" id="ped-costo-delivery" value="10" oninput="actualizarCalculoAdelanto()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg">
+            </div>
+            <div>
+              <label class="block text-[10px] text-stone-500 font-semibold mb-1">Adelanto Recibido (S/)</label>
+              <input type="number" step="0.5" id="ped-monto-adelanto" value="20" oninput="actualizarCalculoAdelanto()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold text-emerald-600">
+            </div>
+          </div>
+          <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-200 dark:border-noche-border">
+            <span class="text-stone-500">Saldo pendiente de cobro:</span>
+            <span id="ped-saldo-label" class="font-extrabold text-rose-600 text-xs">S/ 30.00</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1">Notas de Taller (gancho mm, tonos de hilo, etc.)</label>
+          <textarea id="ped-notas" rows="2" placeholder="Ej. Algodón rústico verde oliva, ojos 9mm con traba..." class="w-full p-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-stone-100 dark:border-noche-border">
+          <button type="button" onclick="cerrarModal('modal-pedido')" class="px-4 py-2 rounded-xl text-stone-400 font-bold">Cancelar</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-morado dark:bg-rana hover:bg-morado-light text-white dark:text-morado font-extrabold shadow-sm">Guardar Pedido</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: AJUSTES DE TELEGRAM -->
+  <div id="modal-telegram" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-noche-card rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
+      <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
+        <div class="flex items-center gap-2">
+          <i class="fa-brands fa-telegram text-sky-500 text-xl"></i>
+          <h3 class="font-brand font-bold text-lg text-morado dark:text-rana">Alertas de Telegram</h3>
+        </div>
+        <button onclick="cerrarModal('modal-telegram')" class="text-stone-400 text-xl">&times;</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <p class="text-stone-500 dark:text-stone-400 leading-relaxed">
+          Ingresa el <b>Bot Token</b> y tu <b>Chat ID</b> para recibir recordatorios en tu celular:
+        </p>
+
+        <div>
+          <label class="block font-bold mb-1">Telegram Bot Token</label>
+          <input type="text" id="cfg-telegram-token" placeholder="7123456789:AAFlkjhsdf8934kjnsdf..." class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl font-mono text-[11px] outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1">Tu Chat ID</label>
+          <input type="text" id="cfg-telegram-chatid" placeholder="123456789" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl font-mono text-xs outline-none">
+        </div>
+
+        <button onclick="probarEnvioTelegram()" class="w-full py-2 bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-sky-300 border border-sky-300 dark:border-sky-800 rounded-xl font-bold flex items-center justify-center gap-2 transition hover:bg-sky-100">
+          <i class="fa-regular fa-paper-plane"></i> Probar Envío
+        </button>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-stone-100 dark:border-noche-border">
+        <button onclick="guardarAjustesTelegram()" class="px-5 py-2 rounded-xl bg-morado dark:bg-rana text-white dark:text-morado font-extrabold text-xs">Guardar Configuración</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VER PATRÓN -->
   <div id="modal-ver-patron" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
-      
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
         <div>
           <span id="ver-p-categoria" class="text-[10px] uppercase font-bold text-morado-lila"></span>
@@ -487,15 +703,15 @@
               <iframe id="ver-p-iframe-pdf" class="w-full h-full border-0 rounded-t-2xl" src=""></iframe>
             </div>
             <div class="w-full p-2.5 bg-stone-100 dark:bg-noche-card border-t border-stone-200 dark:border-noche-border flex justify-between items-center text-xs px-4">
-              <span class="text-stone-500 text-[11px] font-medium"><i class="fa-solid fa-file-pdf text-rose-500 mr-1"></i> Documento / Esquema integrado</span>
+              <span class="text-stone-500 text-[11px] font-medium"><i class="fa-solid fa-file-pdf text-rose-500 mr-1"></i> Documento / Esquema</span>
               <a id="btn-descargar-pdf-opcional" href="#" download="patron_amigurumi" class="px-3 py-1 rounded-lg bg-rana-soft dark:bg-morado-light text-morado dark:text-rana font-bold text-[11px] hover:bg-rana transition flex items-center gap-1">
-                <i class="fa-solid fa-file-arrow-down"></i> Descarga opcional
+                <i class="fa-solid fa-file-arrow-down"></i> Descargar
               </a>
             </div>
           </div>
 
           <div id="ver-p-patron-link" class="hidden text-center py-6 px-4 space-y-2">
-            <p class="text-xs text-stone-400">Este patrón corresponde a un tutorial o enlace web externo.</p>
+            <p class="text-xs text-stone-400">Este patrón corresponde a un tutorial o enlace externo.</p>
             <div id="link-externo-btn-container"></div>
           </div>
 
@@ -616,7 +832,7 @@
     </div>
   </div>
 
-  <!-- MODAL: REGISTRAR / EDITAR INSUMO DINÁMICO -->
+  <!-- MODAL: REGISTRAR / EDITAR INSUMO -->
   <div id="modal-material" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-noche-card rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
@@ -763,7 +979,6 @@
       </form>
     </div>
   </div>
-
   <!-- JAVASCRIPT & FIREBASE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
@@ -793,9 +1008,13 @@
     let proyectos = [];
     let materiales = [];
     let ventas = [];
+    let pedidos = [];
+
     let filtroAlmacenActual = 'all';
     let filtroFinanzasActual = 'mes';
     let escalaFuentePatron = 0;
+    let calMesActual = new Date().getMonth();
+    let calAnioActual = new Date().getFullYear();
 
     // Manejo de Splash Screen (desvanecer a los 2 segundos)
     window.addEventListener('load', () => {
@@ -808,6 +1027,21 @@
       }, 1800);
     });
 
+    // SIDEBAR DRAWER (MENÚ LATERAL)
+    window.toggleSidebar = () => {
+      const drawer = document.getElementById('sidebar-drawer');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      const isClosed = drawer.classList.contains('-translate-x-full');
+      
+      if (isClosed) {
+        drawer.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        drawer.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    };
+
     window.toggleTheme = () => {
       const isDark = document.documentElement.classList.toggle('dark');
       localStorage.setItem('rana_theme', isDark ? 'dark' : 'light');
@@ -816,7 +1050,7 @@
 
     function actualizarIconoTema(isDark) {
       const icon = document.getElementById('theme-icon');
-      icon.className = isDark ? 'fa-solid fa-sun text-mostaza' : 'fa-solid fa-moon text-morado';
+      if (icon) icon.className = isDark ? 'fa-solid fa-sun text-mostaza' : 'fa-solid fa-moon text-morado';
     }
 
     if (localStorage.getItem('rana_theme') === 'dark' || 
@@ -840,26 +1074,25 @@
         const pantallaLogin = document.getElementById('pantalla-login');
         const userProfile = document.getElementById('user-profile');
         const syncCont = document.getElementById('sync-container');
-        const navMovil = document.getElementById('nav-movil');
 
         if (user) {
           pantallaLogin.classList.add('hidden');
           userProfile.classList.remove('hidden');
           syncCont.classList.remove('hidden');
-          navMovil.classList.remove('hidden');
           document.getElementById('user-avatar').src = user.photoURL || 'logo.png';
           
           marcarSincronizado();
-          cambiarModulo('proyectos');
+          cambiarModulo('pedidos');
           iniciarEscuchasEnTiempoReal();
+          cargarConfigTelegram();
         } else {
-          ['proyectos', 'almacen', 'ventas', 'finanzas'].forEach(m => {
-            document.getElementById(`modulo-${m}`).classList.add('hidden');
+          ['pedidos', 'calendario', 'proyectos', 'almacen', 'ventas', 'finanzas'].forEach(m => {
+            const el = document.getElementById(`modulo-${m}`);
+            if (el) el.classList.add('hidden');
           });
           pantallaLogin.classList.remove('hidden');
           userProfile.classList.add('hidden');
           syncCont.classList.add('hidden');
-          navMovil.classList.add('hidden');
         }
       });
 
@@ -888,12 +1121,23 @@
     }
 
     function iniciarEscuchasEnTiempoReal() {
+      // Pedidos
+      onSnapshot(collection(db, "pedidos"), (snap) => {
+        pedidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderizarPedidos();
+        renderizarCalendario();
+        actualizarAlertasTelegramAuto();
+      });
+
+      // Proyectos
       onSnapshot(collection(db, "proyectos"), (snap) => {
         proyectos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderizarProyectos();
         actualizarSelectVentas();
+        actualizarSelectPedidos();
       });
 
+      // Materiales
       onSnapshot(collection(db, "materiales"), (snap) => {
         materiales = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderizarAlmacen();
@@ -901,6 +1145,7 @@
         actualizarMetricasAlmacen();
       });
 
+      // Ventas
       onSnapshot(collection(db, "ventas"), (snap) => {
         ventas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderizarVentas();
@@ -911,22 +1156,533 @@
     window.cambiarModulo = (modulo) => {
       if (!usuarioActual) return;
 
-      ['proyectos', 'almacen', 'ventas', 'finanzas'].forEach(m => {
-        document.getElementById(`modulo-${m}`).classList.add('hidden');
-        const b = document.getElementById(`btn-nav-${m}`);
-        if (b) b.className = 'px-3 py-1.5 rounded-lg text-stone-600 dark:text-stone-300 font-bold';
-        const mb = document.getElementById(`m-btn-${m}`);
-        if (mb) mb.className = 'flex flex-col items-center text-stone-400 font-bold text-[10px] gap-1';
+      ['pedidos', 'calendario', 'proyectos', 'almacen', 'ventas', 'finanzas'].forEach(m => {
+        const mod = document.getElementById(`modulo-${m}`);
+        if (mod) mod.classList.add('hidden');
+        const b = document.getElementById(`side-btn-${m}`);
+        if (b) b.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-noche-card transition';
       });
 
-      document.getElementById(`modulo-${modulo}`).classList.remove('hidden');
-      const activo = document.getElementById(`btn-nav-${modulo}`);
-      if (activo) activo.className = 'px-3 py-1.5 rounded-lg bg-white dark:bg-morado-light text-morado dark:text-white shadow-sm font-bold';
-      const activoM = document.getElementById(`m-btn-${modulo}`);
-      if (activoM) activoM.className = 'flex flex-col items-center text-morado dark:text-rana font-bold text-[10px] gap-1';
+      const actual = document.getElementById(`modulo-${modulo}`);
+      if (actual) actual.classList.remove('hidden');
+
+      const activo = document.getElementById(`side-btn-${modulo}`);
+      if (activo) activo.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-morado dark:bg-rana text-white dark:text-morado shadow-sm transition';
+
+      // Cerrar drawer en móvil tras seleccionar
+      const drawer = document.getElementById('sidebar-drawer');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (drawer && !drawer.classList.contains('-translate-x-full')) {
+        drawer.classList.add('-translate-x-full');
+        if (backdrop) backdrop.classList.add('hidden');
+      }
+
+      if (modulo === 'calendario') renderizarCalendario();
     };
 
+    // ==========================================
+    // NOTIFICACIONES & TELEGRAM API
+    // ==========================================
+    window.abrirModalTelegram = () => {
+      cargarConfigTelegram();
+      document.getElementById('modal-telegram').classList.remove('hidden');
+    };
+
+    function cargarConfigTelegram() {
+      const token = localStorage.getItem('rana_tg_token') || '';
+      const chatId = localStorage.getItem('rana_tg_chatid') || '';
+      if (document.getElementById('tg-bot-token')) document.getElementById('tg-bot-token').value = token;
+      if (document.getElementById('tg-chat-id')) document.getElementById('tg-chat-id').value = chatId;
+    }
+
+    window.guardarConfigTelegram = () => {
+      const token = document.getElementById('tg-bot-token').value.trim();
+      const chatId = document.getElementById('tg-chat-id').value.trim();
+      localStorage.setItem('rana_tg_token', token);
+      localStorage.setItem('rana_tg_chatid', chatId);
+      document.getElementById('tg-status-msg').innerText = '✓ Claves guardadas en el dispositivo';
+      document.getElementById('tg-status-msg').className = 'text-xs font-bold text-emerald-500';
+      setTimeout(() => cerrarModal('modal-telegram'), 800);
+    };
+
+    window.enviarMensajeTelegram = async (texto) => {
+      const token = localStorage.getItem('rana_tg_token');
+      const chatId = localStorage.getItem('rana_tg_chatid');
+      if (!token || !chatId) return false;
+
+      try {
+        const resp = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: texto,
+            parse_mode: 'HTML'
+          })
+        });
+        const res = await resp.json();
+        return res.ok;
+      } catch (err) {
+        console.warn('Error enviando a Telegram:', err);
+        return false;
+      }
+    };
+
+    window.probarNotificacionTelegram = async () => {
+      const token = document.getElementById('tg-bot-token').value.trim();
+      const chatId = document.getElementById('tg-chat-id').value.trim();
+      if (!token || !chatId) {
+        alert('Por favor ingresa tu Token y Chat ID');
+        return;
+      }
+      localStorage.setItem('rana_tg_token', token);
+      localStorage.setItem('rana_tg_chatid', chatId);
+
+      const msgStatus = document.getElementById('tg-status-msg');
+      msgStatus.innerText = 'Enviando mensaje de prueba...';
+      msgStatus.className = 'text-xs text-stone-400';
+
+      const ok = await window.enviarMensajeTelegram('🐸 <b>¡Conexión exitosa!</b>\nTu taller <i>Una Rana Enredada</i> está sincronizado con Telegram.');
+      if (ok) {
+        msgStatus.innerText = '✓ ¡Mensaje recibido en Telegram con éxito!';
+        msgStatus.className = 'text-xs font-bold text-emerald-500';
+      } else {
+        msgStatus.innerText = '✕ Error: revisa el Token, Chat ID o dale /start al bot';
+        msgStatus.className = 'text-xs font-bold text-rose-500';
+      }
+    };
+
+    function actualizarAlertasTelegramAuto() {
+      // Notifica si hay pedidos críticos activos que no hayan sido notificados hoy
+      const hoyStr = new Date().toISOString().split('T')[0];
+      const ultimaAlerta = localStorage.getItem('rana_ultima_alerta_fecha');
+      if (ultimaAlerta === hoyStr) return;
+
+      const criticos = pedidos.filter(p => p.estado !== 'Entregado' && p.estado !== 'Listo para entrega' && calcularDiasRestantes(p.fechaEntrega) <= 2);
+      if (criticos.length > 0) {
+        const texto = `🧶 <b>Recordatorio de Taller - Pedidos Urgentes</b>\nTienes ${criticos.length} encargo(s) por entregar en menos de 48 horas.\n\n` + 
+          criticos.map(p => `• <b>${p.cliente}</b> (${p.articulo}) - Entrega: ${p.fechaEntrega}\n  Saldo pend: S/ ${p.saldoPendiente || 0}`).join('\n');
+        window.enviarMensajeTelegram(texto);
+        localStorage.setItem('rana_ultima_alerta_fecha', hoyStr);
+      }
+    }
+
+    // ==========================================
+    // CÁLCULO DE PRIORIDAD & MOTOR DE PEDIDOS
+    // ==========================================
+    function calcularDiasRestantes(fechaEntrega) {
+      if (!fechaEntrega) return 999;
+      const hoy = new Date();
+      hoy.setHours(0,0,0,0);
+      const entrega = new Date(fechaEntrega + "T00:00:00");
+      const diffTime = entrega - hoy;
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function calcularScoreUrgencia(pedido) {
+      if (pedido.estado === 'Entregado') return -100;
+      if (pedido.estado === 'Listo para entrega') return -50;
+
+      const dias = calcularDiasRestantes(pedido.fechaEntrega);
+      const horas = Number(pedido.horasTejido) || 3;
+      const factorDificultad = (Number(pedido.dificultad) || 2) * 0.5;
+
+      // Si ya está vencido o vence hoy
+      if (dias <= 0) return 999 + horas;
+
+      // Fórmula de prioridad: Horas netas requeridas divididas entre días restantes ponderados
+      const score = (horas * (1 + factorDificultad)) / (dias * 2.5);
+      return score;
+    }
+
+    window.actualizarSelectPedidos = () => {
+      const sel = document.getElementById('ped-articulo');
+      if (!sel) return;
+      sel.innerHTML = `<option value="">Seleccionar amigurumi o diseño...</option>` +
+        proyectos.map(p => `<option value="${p.nombre}" data-precio="${p.precio}" data-id="${p.id}">${p.nombre} (S/ ${p.precio})</option>`).join('') +
+        `<option value="Personalizado">-- Personalizado / A Pedido --</option>`;
+    };
+
+    window.adaptarFormularioPedido = () => {
+      const tipo = document.getElementById('ped-tipo').value;
+      const selArt = document.getElementById('ped-articulo');
+      const opt = selArt.options[selArt.selectedIndex];
+      
+      if (opt && opt.dataset.precio && tipo === 'stock') {
+        document.getElementById('ped-precio').value = opt.dataset.precio;
+      }
+
+      const total = Number(document.getElementById('ped-precio').value) || 0;
+      const delivery = Number(document.getElementById('ped-delivery').value) || 0;
+      const hint = document.getElementById('ped-adelanto-hint');
+
+      if (tipo === 'stock') {
+        hint.innerText = "Stock: se cancela el 100% por adelantado. Delivery se abona en la entrega.";
+        document.getElementById('ped-adelanto').value = total;
+      } else {
+        hint.innerText = "Personalizado: se separa con el 50% de anticipo mínimo para iniciar tejido.";
+        document.getElementById('ped-adelanto').value = (total * 0.5).toFixed(2);
+      }
+      calcularSaldoPedidoModal();
+    };
+
+    window.calcularSaldoPedidoModal = () => {
+      const precio = Number(document.getElementById('ped-precio').value) || 0;
+      const delivery = Number(document.getElementById('ped-delivery').value) || 0;
+      const adelanto = Number(document.getElementById('ped-adelanto').value) || 0;
+      const saldo = Math.max(0, (precio + delivery) - adelanto);
+      document.getElementById('ped-saldo-calc').innerText = `S/ ${saldo.toFixed(2)}`;
+    };
+
+    window.abrirModalPedido = (id = null) => {
+      document.getElementById('form-pedido').reset();
+      document.getElementById('ped-id').value = '';
+      document.getElementById('ped-fecha-encargo').value = new Date().toISOString().split('T')[0];
+      
+      const entregaSugerida = new Date();
+      entregaSugerida.setDate(entregaSugerida.getDate() + 5);
+      document.getElementById('ped-fecha-entrega').value = entregaSugerida.toISOString().split('T')[0];
+
+      if (id) {
+        const ped = pedidos.find(p => p.id === id);
+        if (ped) {
+          document.getElementById('ped-id').value = ped.id;
+          document.getElementById('ped-cliente').value = ped.cliente;
+          document.getElementById('ped-telefono').value = ped.telefono || '';
+          document.getElementById('ped-tipo').value = ped.tipo || 'personalizado';
+          document.getElementById('ped-articulo').value = ped.articulo;
+          document.getElementById('ped-dificultad').value = ped.dificultad || 2;
+          document.getElementById('ped-horas').value = ped.horasTejido || 3;
+          document.getElementById('ped-fecha-encargo').value = ped.fechaEncargo;
+          document.getElementById('ped-fecha-entrega').value = ped.fechaEntrega;
+          document.getElementById('ped-precio').value = ped.precioTotal;
+          document.getElementById('ped-delivery').value = ped.delivery || 0;
+          document.getElementById('ped-adelanto').value = ped.adelanto || 0;
+          document.getElementById('ped-notas').value = ped.notas || '';
+        }
+      }
+      
+      adaptarFormularioPedido();
+      document.getElementById('modal-pedido').classList.remove('hidden');
+    };
+
+    window.guardarPedido = async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('ped-id').value;
+      const precioTotal = Number(document.getElementById('ped-precio').value) || 0;
+      const delivery = Number(document.getElementById('ped-delivery').value) || 0;
+      const adelanto = Number(document.getElementById('ped-adelanto').value) || 0;
+      const saldoPendiente = Math.max(0, (precioTotal + delivery) - adelanto);
+
+      const selArt = document.getElementById('ped-articulo');
+      const opt = selArt.options[selArt.selectedIndex];
+      const proyectoId = opt ? (opt.dataset.id || '') : '';
+
+      const data = {
+        cliente: document.getElementById('ped-cliente').value.trim(),
+        telefono: document.getElementById('ped-telefono').value.trim(),
+        tipo: document.getElementById('ped-tipo').value,
+        articulo: document.getElementById('ped-articulo').value,
+        proyectoId: proyectoId,
+        dificultad: Number(document.getElementById('ped-dificultad').value) || 2,
+        horasTejido: Number(document.getElementById('ped-horas').value) || 3,
+        fechaEncargo: document.getElementById('ped-fecha-encargo').value,
+        fechaEntrega: document.getElementById('ped-fecha-entrega').value,
+        precioTotal: precioTotal,
+        delivery: delivery,
+        adelanto: adelanto,
+        saldoPendiente: saldoPendiente,
+        notas: document.getElementById('ped-notas').value.trim(),
+        vueltasRnd: 0
+      };
+
+      if (!id) {
+        data.estado = 'Por iniciar';
+        data.insumosDescontados = false;
+        await addDoc(collection(db, "pedidos"), data);
+
+        // Notificación opcional por Telegram al registrar
+        window.enviarMensajeTelegram(`🧶 <b>Nuevo Pedido Agendado</b>\n• <b>Cliente:</b> ${data.cliente}\n• <b>Diseño:</b> ${data.articulo}\n• <b>Entrega:</b> ${data.fechaEntrega}\n• <b>Adelanto:</b> S/ ${data.adelanto} (Pendiente: S/ ${data.saldoPendiente})`);
+      } else {
+        await updateDoc(doc(db, "pedidos", id), data);
+      }
+
+      cerrarModal('modal-pedido');
+    };
+
+    window.borrarPedido = async (id) => {
+      if (confirm('¿Eliminar este pedido de la cola de producción?')) {
+        await deleteDoc(doc(db, "pedidos", id));
+      }
+    };
+
+    window.actualizarEstadoPedido = async (id, nuevoEstado) => {
+      const ped = pedidos.find(p => p.id === id);
+      if (!ped) return;
+
+      const updateData = { estado: nuevoEstado };
+      if (nuevoEstado === 'Entregado' && ped.saldoPendiente > 0) {
+        if (confirm(`El cliente tiene un saldo pendiente de S/ ${ped.saldoPendiente}. ¿Marcar como pagado totalmente?`)) {
+          updateData.saldoPendiente = 0;
+          updateData.adelanto = ped.precioTotal + (ped.delivery || 0);
+        }
+      }
+
+      await updateDoc(doc(db, "pedidos", id), updateData);
+    };
+
+    // RENDERIZAR PEDIDOS ORDENADOS POR PRIORIDAD
+    window.renderizarPedidos = () => {
+      const cont = document.getElementById('lista-pedidos-priorizados');
+      if (!cont) return;
+
+      if (pedidos.length === 0) {
+        cont.innerHTML = `<div class="p-8 text-center bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border text-stone-400 text-xs font-bold">No tienes pedidos agendados actualmente. ¡Presiona "Nuevo Pedido" para empezar!</div>`;
+        return;
+      }
+
+      // Ordenar por score de mayor a menor
+      const ordenados = [...pedidos].sort((a,b) => calcularScoreUrgencia(b) - calcularScoreUrgencia(a));
+
+      cont.innerHTML = ordenados.map(p => {
+        const dias = calcularDiasRestantes(p.fechaEntrega);
+        const score = calcularScoreUrgencia(p);
+
+        let semaforoClase = 'border-l-4 border-l-emerald-500';
+        let semaforoBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">Holgado</span>';
+
+        if (p.estado === 'Entregado') {
+          semaforoClase = 'border-l-4 border-l-stone-300 opacity-60';
+          semaforoBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-stone-100 text-stone-500 dark:bg-noche-bg dark:text-stone-400">Entregado</span>';
+        } else if (p.estado === 'Listo para entrega') {
+          semaforoClase = 'border-l-4 border-l-sky-500';
+          semaforoBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300">Empacado</span>';
+        } else if (dias <= 1 || score > 1.2) {
+          semaforoClase = 'border-l-4 border-l-rose-500 shadow-rose-100/50';
+          semaforoBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 animate-pulse"><i class="fa-solid fa-fire mr-1"></i>Crítico / Urgente</span>';
+        } else if (dias <= 3 || score > 0.7) {
+          semaforoClase = 'border-l-4 border-l-amber-500';
+          semaforoBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400">Atención</span>';
+        }
+
+        const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : (dias === 0 ? '¡Entrega HOY!' : (dias === 1 ? 'Entrega MAÑANA' : `${dias} días restantes`));
+
+        return `
+          <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border p-4 shadow-sm hover:shadow-md transition space-y-3 ${semaforoClase}">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 dark:border-noche-border pb-2.5">
+              <div class="flex items-center gap-2">
+                ${semaforoBadge}
+                <span class="text-[11px] font-extrabold text-stone-700 dark:text-stone-200">${p.cliente}</span>
+                ${p.telefono ? `<a href="https://wa.me/51${p.telefono.replace(/\\D/g,'')}" target="_blank" class="text-emerald-500 hover:text-emerald-600 text-xs" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+              </div>
+              <div class="text-[11px] font-bold text-stone-400 flex items-center gap-1.5">
+                <i class="fa-regular fa-calendar-check text-morado dark:text-rana"></i>
+                <span class="${dias <= 1 && p.estado !== 'Entregado' ? 'text-rose-600 dark:text-rose-400 font-extrabold' : ''}">${p.fechaEntrega} (${textoDias})</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+              <div>
+                <h4 class="font-brand font-bold text-base text-morado dark:text-rana-light">${p.articulo}</h4>
+                <div class="flex flex-wrap gap-2 text-[10px] text-stone-500 dark:text-stone-400 font-semibold mt-0.5">
+                  <span class="bg-stone-100 dark:bg-noche-bg px-2 py-0.5 rounded"><i class="fa-regular fa-clock mr-1"></i>${p.horasTejido || 3} hrs estimadas</span>
+                  <span class="bg-stone-100 dark:bg-noche-bg px-2 py-0.5 rounded">Dificultad: ${p.dificultad === 1 ? 'Fácil' : (p.dificultad === 2 ? 'Intermedia' : 'Alta')}</span>
+                  <span class="bg-stone-100 dark:bg-noche-bg px-2 py-0.5 rounded capitalize">${p.tipo || 'personalizado'}</span>
+                </div>
+              </div>
+
+              <!-- Resumen Financiero -->
+              <div class="bg-crema-50 dark:bg-noche-bg/80 p-2.5 rounded-xl border border-stone-100 dark:border-noche-border text-right text-xs">
+                <div class="text-[10px] text-stone-400 font-medium">Total: S/ ${p.precioTotal + (p.delivery || 0)}</div>
+                <div class="font-extrabold ${p.saldoPendiente > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}">
+                  ${p.saldoPendiente > 0 ? `Saldo pend: S/ ${parseFloat(p.saldoPendiente).toFixed(2)}` : '✓ Pagado 100%'}
+                </div>
+              </div>
+            </div>
+
+            ${p.notas ? `<p class="text-xs text-stone-500 dark:text-stone-400 italic bg-stone-50 dark:bg-noche-bg p-2 rounded-lg border border-stone-100 dark:border-noche-border">"${p.notas}"</p>` : ''}
+
+            <!-- Botones de Acción y Estado -->
+            <div class="pt-2 border-t border-stone-100 dark:border-noche-border flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <select onchange="actualizarEstadoPedido('${p.id}', this.value)" class="text-xs font-bold px-2.5 py-1.5 rounded-xl border dark:border-noche-border bg-crema-100 dark:bg-noche-bg text-morado dark:text-white outline-none">
+                  <option value="Por iniciar" ${p.estado === 'Por iniciar' ? 'selected' : ''}>Por iniciar</option>
+                  <option value="Tejiendo" ${p.estado === 'Tejiendo' ? 'selected' : ''}>Tejiendo piezas</option>
+                  <option value="Montaje y detalles" ${p.estado === 'Montaje y detalles' ? 'selected' : ''}>Montaje y detalles</option>
+                  <option value="Listo para entrega" ${p.estado === 'Listo para entrega' ? 'selected' : ''}>Listo / Empacado</option>
+                  <option value="Entregado" ${p.estado === 'Entregado' ? 'selected' : ''}>Entregado al cliente</option>
+                </select>
+
+                ${!p.insumosDescontados && p.estado !== 'Entregado' ? `
+                  <button onclick="descontarInsumosDePedido('${p.id}')" class="px-2.5 py-1.5 rounded-xl bg-rana-soft dark:bg-morado-light text-morado dark:text-rana font-bold text-[11px] hover:bg-rana transition flex items-center gap-1 shadow-sm" title="Descontar materiales de almacén automáticamente">
+                    <i class="fa-solid fa-boxes-packing"></i> Descontar Stock
+                  </button>
+                ` : (p.insumosDescontados ? `<span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold"><i class="fa-solid fa-check-double mr-1"></i>Stock descontado</span>` : '')}
+              </div>
+
+              <div class="flex items-center gap-1">
+                <button onclick="abrirFichaVueltas('${p.id}')" class="p-2 rounded-xl bg-stone-100 dark:bg-noche-bg text-stone-600 dark:text-stone-300 hover:text-morado dark:hover:text-rana text-xs font-bold flex items-center gap-1" title="Contador de vueltas">
+                  <i class="fa-solid fa-calculator"></i> Vueltas (${p.vueltasRnd || 0})
+                </button>
+                <button onclick="abrirModalPedido('${p.id}')" class="p-2 rounded-xl bg-stone-100 dark:bg-noche-bg text-stone-400 hover:text-morado dark:hover:text-rana text-xs" title="Editar"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button onclick="borrarPedido('${p.id}')" class="p-2 rounded-xl bg-stone-100 dark:bg-noche-bg text-stone-300 hover:text-rose-500 text-xs" title="Eliminar"><i class="fa-regular fa-trash-can"></i></button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    // CONTADOR DE VUELTAS (MESA DE TRABAJO RND)
+    window.abrirFichaVueltas = (id) => {
+      const p = pedidos.find(x => x.id === id);
+      if (!p) return;
+      const actual = p.vueltasRnd || 0;
+      const resp = prompt(`Contador de vueltas (Rnd) para: ${p.articulo}\nCliente: ${p.cliente}\n\nIngresa la vuelta actual:`, actual);
+      if (resp !== null) {
+        const num = parseInt(resp) || 0;
+        updateDoc(doc(db, "pedidos", id), { vueltasRnd: num });
+      }
+    };
+
+    // ==========================================
+    // CALENDARIO MENSUAL DE ENTREGAS & CUPOS
+    // ==========================================
+    window.cambiarMesCalendario = (delta) => {
+      calMesActual += delta;
+      if (calMesActual > 11) {
+        calMesActual = 0;
+        calAnioActual++;
+      } else if (calMesActual < 0) {
+        calMesActual = 11;
+        calAnioActual--;
+      }
+      renderizarCalendario();
+    };
+
+    window.renderizarCalendario = () => {
+      const contenedor = document.getElementById('calendario-dias-grid');
+      const titulo = document.getElementById('cal-mes-titulo');
+      if (!contenedor || !titulo) return;
+
+      const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
+      titulo.innerText = `${nombresMeses[calMesActual]} ${calAnioActual}`;
+
+      const primerDia = new Date(calAnioActual, calMesActual, 1).getDay(); // 0 Dom, 1 Lun...
+      const totalDiasMes = new Date(calAnioActual, calMesActual + 1, 0).getDate();
+
+      // Ajustar para que semana empiece en Lunes (0 Lun ... 6 Dom)
+      const offsetInicio = (primerDia === 0 ? 6 : primerDia - 1);
+
+      let celdasHTML = '';
+
+      // Celdas vacías del mes anterior
+      for (let i = 0; i < offsetInicio; i++) {
+        celdasHTML += `<div class="min-h-[70px] sm:min-h-[90px] p-1.5 bg-stone-50/50 dark:bg-noche-bg/30 rounded-xl opacity-30"></div>`;
+      }
+
+      // Celdas del mes
+      const hoy = new Date();
+      const hoyStr = hoy.toISOString().split('T')[0];
+
+      for (let dia = 1; dia <= totalDiasMes; dia++) {
+        const diaPadded = String(dia).padStart(2, '0');
+        const mesPadded = String(calMesActual + 1).padStart(2, '0');
+        const fechaStr = `${calAnioActual}-${mesPadded}-${diaPadded}`;
+
+        const pedidosDelDia = pedidos.filter(p => p.fechaEntrega === fechaStr && p.estado !== 'Entregado');
+        const esHoy = (fechaStr === hoyStr);
+
+        let cupoColor = 'bg-white dark:bg-noche-card';
+        let badgeCupo = '';
+
+        if (pedidosDelDia.length > 2) {
+          cupoColor = 'bg-rose-50/60 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900';
+          badgeCupo = `<span class="w-2 h-2 rounded-full bg-rose-500" title="Saturado"></span>`;
+        } else if (pedidosDelDia.length > 0) {
+          cupoColor = 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300 dark:border-amber-900';
+          badgeCupo = `<span class="w-2 h-2 rounded-full bg-amber-400" title="Ocupado"></span>`;
+        }
+
+        celdasHTML += `
+          <div class="min-h-[70px] sm:min-h-[90px] p-1.5 rounded-xl border border-stone-200 dark:border-noche-border flex flex-col justify-between ${cupoColor} ${esHoy ? 'ring-2 ring-rana' : ''} transition">
+            <div class="flex justify-between items-center">
+              <span class="text-[11px] font-bold ${esHoy ? 'text-morado dark:text-rana font-extrabold' : 'text-stone-600 dark:text-stone-300'}">${dia}</span>
+              ${badgeCupo}
+            </div>
+
+            <div class="space-y-1 mt-1 overflow-y-auto max-h-12 hide-scrollbar">
+              ${pedidosDelDia.map(p => `
+                <div class="text-[9px] font-bold px-1 py-0.5 rounded bg-morado dark:bg-rana text-white dark:text-morado truncate shadow-xs" title="${p.cliente}: ${p.articulo}">
+                  ${p.articulo}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      contenedor.innerHTML = celdasHTML;
+    };
+    // ==========================================
+    // DESCUENTO AUTOMÁTICO DE MATERIALES (RECETA)
+    // ==========================================
+    window.descontarInsumosDePedido = async (pedidoId) => {
+      const ped = pedidos.find(p => p.id === pedidoId);
+      if (!ped) return;
+      if (ped.insumosDescontados) {
+        alert('Los materiales de este pedido ya fueron descontados previamente.');
+        return;
+      }
+
+      // Buscar si el pedido tiene un proyecto vinculado
+      const proy = proyectos.find(pr => pr.id === ped.proyectoId || pr.nombre.toLowerCase() === ped.articulo.toLowerCase());
+
+      if (!proy || !proy.materiales) {
+        // Si no tiene receta detallada, hacer un descuento estándar de taller
+        if (confirm(`El diseño "${ped.articulo}" no tiene receta exacta vinculada. ¿Deseas descontar insumos estándar de amigurumi (35g hilo base, 25g napa, 1 kit empaque)?`)) {
+          await descontarInsumosEstandar();
+          await updateDoc(doc(db, "pedidos", pedidoId), { insumosDescontados: true });
+          alert('✓ Insumos estándar descontados del almacén.');
+        }
+        return;
+      }
+
+      if (confirm(`¿Confirmas descontar de almacén los materiales para "${ped.articulo}"?`)) {
+        // Descontar buscando coincidencias en almacén según el texto de materiales
+        let descontadosContador = 0;
+        const textoMat = proy.materiales.toLowerCase();
+
+        for (const mat of materiales) {
+          const nom = mat.nombre.toLowerCase();
+          if (textoMat.includes(nom) || (mat.categoria === 'relleno' && textoMat.includes('napa')) || (mat.categoria === 'accesorios' && textoMat.includes('ojos') && nom.includes('ojos'))) {
+            let cantRestar = (mat.unidad === 'g' ? 30 : 1);
+            const nuevoStock = Math.max(0, parseFloat((mat.stock - cantRestar).toFixed(2)));
+            await updateDoc(doc(db, "materiales", mat.id), { stock: nuevoStock });
+            descontadosContador++;
+          }
+        }
+
+        await updateDoc(doc(db, "pedidos", pedidoId), { insumosDescontados: true });
+        alert(`✓ Se actualizaron ${descontadosContador} insumo(s) en tu almacén.`);
+      }
+    };
+
+    async function descontarInsumosEstandar() {
+      for (const mat of materiales) {
+        if (mat.categoria === 'relleno' && mat.stock > 0) {
+          const nStock = Math.max(0, parseFloat((mat.stock - (mat.unidad === 'kg' ? 0.025 : 25)).toFixed(2)));
+          await updateDoc(doc(db, "materiales", mat.id), { stock: nStock });
+        } else if (mat.categoria === 'empaques' && mat.stock > 0) {
+          const nStock = Math.max(0, mat.stock - 1);
+          await updateDoc(doc(db, "materiales", mat.id), { stock: nStock });
+        }
+      }
+    }
+
+    // ==========================================
     // FOTOS & COMPRESIÓN
+    // ==========================================
     function comprimirImagen(file, callback) {
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -959,25 +1715,31 @@
       reader.readAsDataURL(file);
     }
 
-    document.getElementById('p-foto-input').addEventListener('change', function(e) {
-      if (e.target.files[0]) {
-        comprimirImagen(e.target.files[0], (base64) => {
-          document.getElementById('p-foto-data').value = base64;
-          document.getElementById('p-foto-url').value = '';
-          mostrarPreview('p', base64);
-        });
-      }
-    });
+    const pFotoInput = document.getElementById('p-foto-input');
+    if (pFotoInput) {
+      pFotoInput.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+          comprimirImagen(e.target.files[0], (base64) => {
+            document.getElementById('p-foto-data').value = base64;
+            document.getElementById('p-foto-url').value = '';
+            mostrarPreview('p', base64);
+          });
+        }
+      });
+    }
 
-    document.getElementById('mat-foto-input').addEventListener('change', function(e) {
-      if (e.target.files[0]) {
-        comprimirImagen(e.target.files[0], (base64) => {
-          document.getElementById('mat-foto-data').value = base64;
-          document.getElementById('mat-foto-url').value = '';
-          mostrarPreview('mat', base64);
-        });
-      }
-    });
+    const matFotoInput = document.getElementById('mat-foto-input');
+    if (matFotoInput) {
+      matFotoInput.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+          comprimirImagen(e.target.files[0], (base64) => {
+            document.getElementById('mat-foto-data').value = base64;
+            document.getElementById('mat-foto-url').value = '';
+            mostrarPreview('mat', base64);
+          });
+        }
+      });
+    }
 
     window.actualizarPreviewFotoWeb = (prefijo) => {
       const url = document.getElementById(`${prefijo}-foto-url`).value.trim();
@@ -989,41 +1751,54 @@
 
     function mostrarPreview(prefijo, src) {
       const prev = document.getElementById(`${prefijo}-foto-preview`);
-      prev.innerHTML = `<img src="${src}" class="w-full h-full object-cover">`;
+      if (prev) prev.innerHTML = `<img src="${src}" class="w-full h-full object-cover">`;
     }
 
     window.quitarFoto = (prefijo) => {
-      document.getElementById(`${prefijo}-foto-data`).value = '';
-      document.getElementById(`${prefijo}-foto-url`).value = '';
-      document.getElementById(`${prefijo}-foto-preview`).innerHTML = `<i class="fa-regular fa-image text-stone-400 text-lg"></i>`;
+      if (document.getElementById(`${prefijo}-foto-data`)) document.getElementById(`${prefijo}-foto-data`).value = '';
+      if (document.getElementById(`${prefijo}-foto-url`)) document.getElementById(`${prefijo}-foto-url`).value = '';
+      const prev = document.getElementById(`${prefijo}-foto-preview`);
+      if (prev) prev.innerHTML = `<i class="fa-regular fa-image text-stone-400 text-lg"></i>`;
     };
 
-    // ARCHIVO / PDF / ESQUEMA
-    document.getElementById('p-archivo-input').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          document.getElementById('p-archivo-data').value = evt.target.result;
-          document.getElementById('p-archivo-status').innerText = `✓ Guardado: ${file.name}`;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+    // ARCHIVO / PDF / ESQUEMA EN PATRONES
+    const pArchivoInput = document.getElementById('p-archivo-input');
+    if (pArchivoInput) {
+      pArchivoInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            document.getElementById('p-archivo-data').value = evt.target.result;
+            document.getElementById('p-archivo-status').innerText = `✓ Guardado: ${file.name}`;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
 
     window.setModoPatron = (modo) => {
       ['texto', 'link', 'archivo'].forEach(m => {
-        document.getElementById(`campo-patron-${m}`).classList.add('hidden');
-        document.getElementById(`btn-modo-${m}`).className = 'px-3 py-1 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-500 font-bold';
+        const campo = document.getElementById(`campo-patron-${m}`);
+        const btn = document.getElementById(`btn-modo-${m}`);
+        if (campo) campo.classList.add('hidden');
+        if (btn) btn.className = 'px-3 py-1 rounded-lg bg-stone-100 dark:bg-noche-bg text-stone-500 font-bold';
       });
-      document.getElementById(`campo-patron-${modo}`).classList.remove('hidden');
-      document.getElementById(`btn-modo-${modo}`).className = 'px-3 py-1 rounded-lg bg-morado dark:bg-rana text-white dark:text-morado font-bold';
+      const actCampo = document.getElementById(`campo-patron-${modo}`);
+      const actBtn = document.getElementById(`btn-modo-${modo}`);
+      if (actCampo) actCampo.classList.remove('hidden');
+      if (actBtn) actBtn.className = 'px-3 py-1 rounded-lg bg-morado dark:bg-rana text-white dark:text-morado font-bold';
     };
 
-    // RENDERIZAR PATRONES
+    // ==========================================
+    // MÓDULO PATRONES
+    // ==========================================
     window.renderizarProyectos = () => {
-      const q = document.getElementById('busqueda-proyecto').value.toLowerCase();
+      const inputB = document.getElementById('busqueda-proyecto');
+      const q = inputB ? inputB.value.toLowerCase() : '';
       const cont = document.getElementById('lista-proyectos');
+      if (!cont) return;
+
       const filtrados = proyectos.filter(p => 
         p.nombre.toLowerCase().includes(q) || 
         p.categoria.toLowerCase().includes(q) ||
@@ -1084,7 +1859,6 @@
       }).join('');
     };
 
-    // VISOR PATRÓN & PDF EMBEBIDO
     window.verDetallePatron = (id) => {
       const p = proyectos.find(x => x.id === id);
       if (!p) return;
@@ -1132,7 +1906,7 @@
         contArchivo.classList.remove('hidden');
         iframePdf.src = p.archivo;
         btnDescargar.href = p.archivo;
-        btnDescargar.download = `${p.nombre.replace(/\s+/g, '_')}_patron`;
+        btnDescargar.download = `${p.nombre.replace(/\\s+/g, '_')}_patron`;
       } else if (p.patron && p.patron.trim() !== '') {
         contTexto.classList.remove('hidden');
         txt.innerText = p.patron;
@@ -1240,14 +2014,16 @@
       if (confirm('¿Eliminar este diseño?')) await deleteDoc(doc(db, "proyectos", id));
     };
 
-    // INSUMOS: LONG-PRESS PARA VER FOTO EN GRANDE
+    // ==========================================
+    // MÓDULO ALMACÉN & INSUMOS
+    // ==========================================
     let temporizadorLongPress = null;
 
     window.iniciarLongPress = (src, nombre, tono) => {
       if (!src) return;
       temporizadorLongPress = setTimeout(() => {
         mostrarZoomFoto(src, nombre, tono);
-      }, 400); // 400ms de presión
+      }, 400);
     };
 
     window.cancelarLongPress = () => {
@@ -1266,7 +2042,6 @@
       visor.onclick = () => visor.classList.add('hidden');
     }
 
-    // FORMULARIO DINÁMICO DE INSUMOS
     window.adaptarFormularioInsumo = () => {
       const cat = document.getElementById('mat-categoria').value;
       const unidad = document.getElementById('mat-unidad').value;
@@ -1306,9 +2081,10 @@
       renderizarAlmacen();
     };
 
-    // RENDERIZAR ALMACÉN
     window.renderizarAlmacen = () => {
       const grid = document.getElementById('grid-materiales');
+      if (!grid) return;
+
       const filtrados = materiales.filter(m => {
         if (filtroAlmacenActual === 'all') return true;
         if (filtroAlmacenActual === 'alertas') return !m.noReponer && m.stock <= m.minStock;
@@ -1336,7 +2112,6 @@
                 ${m.colorHex ? `<div class="w-3.5 h-3.5 rounded-full border border-stone-300" style="background-color: ${m.colorHex};"></div>` : ''}
               </div>
 
-              <!-- Miniatura con Long-Press táctil y clic sostenido -->
               <div 
                 class="h-20 w-full rounded-xl bg-crema-50 dark:bg-noche-bg mb-2 overflow-hidden flex items-center justify-center cursor-pointer select-none active:scale-95 transition"
                 onmousedown="iniciarLongPress('${fotoSrc}', '${m.nombre}', '${m.colorNombre}')"
@@ -1379,7 +2154,6 @@
       }
     };
 
-    // MODAL INSUMOS
     window.abrirModalMaterial = (id = null) => {
       document.getElementById('form-material').reset();
       document.getElementById('mat-id').value = '';
@@ -1454,6 +2228,7 @@
 
     window.renderizarCompras = () => {
       const cont = document.getElementById('lista-compras-contenido');
+      if (!cont) return;
       const faltantes = materiales.filter(m => !m.noReponer && m.stock <= m.minStock);
 
       if (faltantes.length === 0) {
@@ -1479,11 +2254,11 @@
     window.copiarListaComprasWhatsApp = () => {
       const faltantes = materiales.filter(m => !m.noReponer && m.stock <= m.minStock);
       if (faltantes.length === 0) return alert('No hay insumos pendientes');
-      let t = "🧶 *LISTA DE COMPRAS - UNA RANA ENREDADA* 🐸\n\n";
+      let t = "🧶 *LISTA DE COMPRAS - UNA RANA ENREDADA* 🐸\\n\\n";
       faltantes.forEach(m => {
         const u = m.unidad || 'unid';
         const qty = Math.max(1, (m.minStock * 2) - m.stock);
-        t += `• ${m.nombre} (${m.colorNombre || m.categoria}) -> Pedir: *${parseFloat(qty).toFixed(u === 'unid' ? 0 : 2)} ${u}* (Stock: ${m.stock})\n`;
+        t += `• ${m.nombre} (${m.colorNombre || m.categoria}) -> Pedir: *${parseFloat(qty).toFixed(u === 'unid' ? 0 : 2)} ${u}* (Stock: ${m.stock})\\n`;
       });
       navigator.clipboard.writeText(t);
       alert('¡Lista copiada!');
@@ -1500,7 +2275,6 @@
     window.calcularPrecioAmigurumi = () => {
       const hG = Number(document.getElementById('calc-hilo').value) || 0;
       const hrs = Number(document.getElementById('calc-horas').value) || 0;
-
       const emp = Number(document.getElementById('calc-empaque').value) || 0;
       const arg = Number(document.getElementById('calc-argolla').value) || 0;
       const nG = Number(document.getElementById('calc-napa').value) || 0;
@@ -1531,9 +2305,12 @@
       });
     };
 
-    // VENTAS
+    // ==========================================
+    // MÓDULO VENTAS & FINANZAS
+    // ==========================================
     window.actualizarSelectVentas = () => {
       const s = document.getElementById('v-proyecto');
+      if (!s) return;
       s.innerHTML = `<option value="">Selecciona diseño...</option>` + 
         proyectos.map(p => `<option value="${p.id}">${p.nombre} (S/ ${p.precio})</option>`).join('') +
         `<option value="personalizado">-- Encargo Personalizado --</option>`;
@@ -1577,6 +2354,7 @@
 
     window.renderizarVentas = () => {
       const tbody = document.getElementById('lista-ventas');
+      if (!tbody) return;
       if (ventas.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-stone-400 text-xs">Sin ventas registradas.</td></tr>`;
         return;
@@ -1596,13 +2374,14 @@
       `).join('');
     };
 
-    // FINANZAS
     window.filtrarFinanzas = (p) => {
       filtroFinanzasActual = p;
       ['semana', 'mes', 'anio', 'total'].forEach(f => {
-        document.getElementById(`filtro-${f}`).className = 'px-3 py-1 rounded-lg text-stone-600 dark:text-stone-300 font-bold';
+        const el = document.getElementById(`filtro-${f}`);
+        if (el) el.className = 'px-3 py-1 rounded-lg text-stone-600 dark:text-stone-300 font-bold';
       });
-      document.getElementById(`filtro-${p}`).className = 'px-3 py-1 rounded-lg bg-morado dark:bg-rana text-white dark:text-morado shadow-sm font-bold';
+      const act = document.getElementById(`filtro-${p}`);
+      if (act) act.className = 'px-3 py-1 rounded-lg bg-morado dark:bg-rana text-white dark:text-morado shadow-sm font-bold';
       renderizarFinanzas();
     };
 
@@ -1629,11 +2408,16 @@
         rank[v.nombreArticulo] = (rank[v.nombreArticulo] || 0) + v.cantidad;
       });
 
-      document.getElementById('kpi-ingresos').innerText = `S/ ${ing.toFixed(2)}`;
-      document.getElementById('kpi-ganancia').innerText = `S/ ${gan.toFixed(2)}`;
-      document.getElementById('kpi-piezas').innerText = `${pzs} unids.`;
+      const kIng = document.getElementById('kpi-ingresos');
+      const kGan = document.getElementById('kpi-ganancia');
+      const kPzs = document.getElementById('kpi-piezas');
+      if (kIng) kIng.innerText = `S/ ${ing.toFixed(2)}`;
+      if (kGan) kGan.innerText = `S/ ${gan.toFixed(2)}`;
+      if (kPzs) kPzs.innerText = `${pzs} unids.`;
 
       const topCont = document.getElementById('top-amigurumis');
+      if (!topCont) return;
+
       const ord = Object.entries(rank).sort((a,b) => b[1] - a[1]).slice(0, 5);
 
       if (ord.length === 0) {
@@ -1658,7 +2442,8 @@
     };
 
     window.cerrarModal = (id) => {
-      document.getElementById(id).classList.add('hidden');
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
     };
   </script>
 </body>
