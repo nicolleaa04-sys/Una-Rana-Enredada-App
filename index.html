@@ -1069,13 +1069,15 @@
         setPersistence(auth, browserLocalPersistence).catch(console.warn);
       });
 
+    const CORREO_AUTORIZADO = "nicolleaa04@gmail.com";
+
       onAuthStateChanged(auth, (user) => {
-        usuarioActual = user;
         const pantallaLogin = document.getElementById('pantalla-login');
         const userProfile = document.getElementById('user-profile');
         const syncCont = document.getElementById('sync-container');
 
-        if (user) {
+        if (user && user.email === CORREO_AUTORIZADO) {
+          usuarioActual = user;
           pantallaLogin.classList.add('hidden');
           userProfile.classList.remove('hidden');
           syncCont.classList.remove('hidden');
@@ -1085,7 +1087,11 @@
           cambiarModulo('pedidos');
           iniciarEscuchasEnTiempoReal();
           cargarConfigTelegram();
+        } else if (user) {
+          alert("Acceso denegado: solo el administrador puede acceder a este taller.");
+          signOut(auth);
         } else {
+          usuarioActual = null;
           ['pedidos', 'calendario', 'proyectos', 'almacen', 'ventas', 'finanzas'].forEach(m => {
             const el = document.getElementById(`modulo-${m}`);
             if (el) el.classList.add('hidden');
