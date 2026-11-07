@@ -1027,25 +1027,49 @@
       }, 1800);
     });
 
-    // SIDEBAR DRAWER (MENÚ LATERAL)
-    window.toggleSidebar = () => {
+    // CONTROL DEL MENÚ LATERAL (DRAWER)
+    window.abrirSidebar = () => {
       const drawer = document.getElementById('sidebar-drawer');
-      const backdrop = document.getElementById('drawer-overlay') || document.getElementById('sidebar-backdrop');
-      if (!drawer) return;
-      
-      const isClosed = drawer.classList.contains('-translate-x-full');
-      if (isClosed) {
+      const backdrop = document.getElementById('drawer-overlay');
+      if (drawer) {
         drawer.classList.remove('-translate-x-full');
-        if (backdrop) backdrop.classList.remove('hidden');
-      } else {
-        drawer.classList.add('-translate-x-full');
-        if (backdrop) backdrop.classList.add('hidden');
+      }
+      if (backdrop) {
+        backdrop.classList.remove('hidden');
       }
     };
 
-    // Alias de compatibilidad para botones con nombres alternativos
+    window.cerrarSidebar = (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      const drawer = document.getElementById('sidebar-drawer');
+      const backdrop = document.getElementById('drawer-overlay');
+      if (drawer) {
+        drawer.classList.add('-translate-x-full');
+      }
+      if (backdrop) {
+        backdrop.classList.add('hidden');
+      }
+    };
+
+    window.toggleSidebar = (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      const drawer = document.getElementById('sidebar-drawer');
+      if (!drawer) return;
+      const cerrado = drawer.classList.contains('-translate-x-full');
+      if (cerrado) {
+        window.abrirSidebar();
+      } else {
+        window.cerrarSidebar();
+      }
+    };
+
+    // Alias y navegación limpia
     window.toggleDrawer = window.toggleSidebar;
-    window.navegarModulo = (mod) => window.cambiarModulo(mod);
+    window.navegarModulo = (mod, event) => {
+      if (event && event.stopPropagation) event.stopPropagation();
+      window.cambiarModulo(mod);
+      window.cerrarSidebar();
+    };
 
     window.toggleTheme = () => {
       const isDark = document.documentElement.classList.toggle('dark');
