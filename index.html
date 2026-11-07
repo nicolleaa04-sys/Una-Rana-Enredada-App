@@ -177,7 +177,7 @@
   <header class="sticky top-0 z-40 bg-white/95 dark:bg-noche-card/95 backdrop-blur-md border-b border-stone-200 dark:border-noche-border shadow-sm px-4 py-2.5">
     <div class="max-w-5xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <button onclick="toggleDrawer()" class="w-10 h-10 rounded-xl bg-crema-100 dark:bg-noche-border flex items-center justify-center text-morado dark:text-rana hover:scale-105 transition" title="Menú principal">
+        <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-crema-100 dark:bg-noche-border flex items-center justify-center text-morado dark:text-rana hover:scale-105 transition" title="Menú principal">
           <i class="fa-solid fa-bars text-lg"></i>
         </button>
 
@@ -1310,9 +1310,35 @@
     };
 
     window.adaptarFormularioPedido = () => {
-      const tipo = document.getElementById('ped-tipo').value;
+      const tipoEl = document.getElementById('ped-tipo');
       const selArt = document.getElementById('ped-articulo');
-      const opt = selArt.options[selArt.selectedIndex];
+      if (!tipoEl || !selArt) return;
+
+      const tipo = tipoEl.value;
+      const opt = selArt.selectedIndex >= 0 ? selArt.options[selArt.selectedIndex] : null;
+      
+      if (opt && opt.dataset && opt.dataset.precio && tipo === 'stock') {
+        const pedPrecio = document.getElementById('ped-precio');
+        if (pedPrecio) pedPrecio.value = opt.dataset.precio;
+      }
+
+      const precioEl = document.getElementById('ped-precio');
+      const delivEl = document.getElementById('ped-delivery');
+      const adelantoEl = document.getElementById('ped-adelanto');
+      const hint = document.getElementById('ped-adelanto-hint');
+
+      const total = precioEl ? (Number(precioEl.value) || 0) : 0;
+      const delivery = delivEl ? (Number(delivEl.value) || 0) : 0;
+
+      if (tipo === 'stock') {
+        if (hint) hint.innerText = "Stock: se cancela el 100% por adelantado. Delivery se abona en la entrega.";
+        if (adelantoEl) adelantoEl.value = total;
+      } else {
+        if (hint) hint.innerText = "Personalizado: se separa con el 50% de anticipo mínimo para iniciar tejido.";
+        if (adelantoEl) adelantoEl.value = (total * 0.5).toFixed(2);
+      }
+      calcularSaldoPedidoModal();
+    };
       
       if (opt && opt.dataset.precio && tipo === 'stock') {
         document.getElementById('ped-precio').value = opt.dataset.precio;
