@@ -1218,31 +1218,57 @@
     // ==========================================
     // NOTIFICACIONES & TELEGRAM API
     // ==========================================
-    window.abrirModalTelegram = () => {
+   window.abrirModalTelegram = () => {
       cargarConfigTelegram();
-      document.getElementById('modal-telegram').classList.remove('hidden');
+      const modal = document.getElementById('modal-telegram');
+      if (modal) modal.classList.remove('hidden');
     };
 
     function cargarConfigTelegram() {
-      const token = localStorage.getItem('rana_tg_token') || '';
-      const chatId = localStorage.getItem('rana_tg_chatid') || '';
-      if (document.getElementById('tg-bot-token')) document.getElementById('tg-bot-token').value = token;
-      if (document.getElementById('tg-chat-id')) document.getElementById('tg-chat-id').value = chatId;
+      const token = localStorage.getItem('rana_tg_token') || localStorage.getItem('tg_token') || '';
+      const chatId = localStorage.getItem('rana_tg_chatid') || localStorage.getItem('tg_chatid') || '';
+
+      const tokenEl = document.getElementById('tg-token') || document.getElementById('tg-bot-token');
+      const chatEl = document.getElementById('tg-chatid') || document.getElementById('tg-chat-id');
+
+      if (tokenEl) tokenEl.value = token;
+      if (chatEl) chatEl.value = chatId;
     }
 
     window.guardarConfigTelegram = () => {
-      const token = document.getElementById('tg-bot-token').value.trim();
-      const chatId = document.getElementById('tg-chat-id').value.trim();
+      const tokenEl = document.getElementById('tg-token') || document.getElementById('tg-bot-token');
+      const chatEl = document.getElementById('tg-chatid') || document.getElementById('tg-chat-id');
+
+      const token = tokenEl?.value?.trim() || '';
+      const chatId = chatEl?.value?.trim() || '';
+
+      if (!token || !chatId) {
+        alert("Por favor ingresa tu Token y Chat ID.");
+        return;
+      }
+
       localStorage.setItem('rana_tg_token', token);
       localStorage.setItem('rana_tg_chatid', chatId);
-      document.getElementById('tg-status-msg').innerText = '✓ Claves guardadas en el dispositivo';
-      document.getElementById('tg-status-msg').className = 'text-xs font-bold text-emerald-500';
-      setTimeout(() => cerrarModal('modal-telegram'), 800);
+      localStorage.setItem('tg_token', token);
+      localStorage.setItem('tg_chatid', chatId);
+
+      const statusMsg = document.getElementById('tg-status-msg');
+      if (statusMsg) {
+        statusMsg.innerText = '✓ Claves guardadas en el dispositivo';
+        statusMsg.className = 'text-xs font-bold text-emerald-500';
+      } else {
+        alert("¡Configuración de Telegram guardada correctamente!");
+      }
+
+      setTimeout(() => {
+        const modal = document.getElementById('modal-telegram');
+        if (modal) modal.classList.add('hidden');
+      }, 600);
     };
 
     window.enviarMensajeTelegram = async (texto) => {
-      const token = localStorage.getItem('rana_tg_token');
-      const chatId = localStorage.getItem('rana_tg_chatid');
+      const token = localStorage.getItem('rana_tg_token') || localStorage.getItem('tg_token');
+      const chatId = localStorage.getItem('rana_tg_chatid') || localStorage.getItem('tg_chatid');
       if (!token || !chatId) return false;
 
       try {
@@ -1264,29 +1290,49 @@
     };
 
     window.probarNotificacionTelegram = async () => {
-      const token = document.getElementById('tg-bot-token').value.trim();
-      const chatId = document.getElementById('tg-chat-id').value.trim();
+      const tokenEl = document.getElementById('tg-token') || document.getElementById('tg-bot-token');
+      const chatEl = document.getElementById('tg-chatid') || document.getElementById('tg-chat-id');
+
+      const token = tokenEl?.value?.trim();
+      const chatId = chatEl?.value?.trim();
+
       if (!token || !chatId) {
         alert('Por favor ingresa tu Token y Chat ID');
         return;
       }
+
       localStorage.setItem('rana_tg_token', token);
       localStorage.setItem('rana_tg_chatid', chatId);
+      localStorage.setItem('tg_token', token);
+      localStorage.setItem('tg_chatid', chatId);
 
       const msgStatus = document.getElementById('tg-status-msg');
-      msgStatus.innerText = 'Enviando mensaje de prueba...';
-      msgStatus.className = 'text-xs text-stone-400';
+      if (msgStatus) {
+        msgStatus.innerText = 'Enviando mensaje de prueba...';
+        msgStatus.className = 'text-xs text-stone-400';
+      }
 
       const ok = await window.enviarMensajeTelegram('🐸 <b>¡Conexión exitosa!</b>\nTu taller <i>Una Rana Enredada</i> está sincronizado con Telegram.');
+      
       if (ok) {
-        msgStatus.innerText = '✓ ¡Mensaje recibido en Telegram con éxito!';
-        msgStatus.className = 'text-xs font-bold text-emerald-500';
+        if (msgStatus) {
+          msgStatus.innerText = '✓ ¡Mensaje recibido en Telegram con éxito!';
+          msgStatus.className = 'text-xs font-bold text-emerald-500';
+        } else {
+          alert('¡Mensaje recibido en Telegram con éxito!');
+        }
       } else {
-        msgStatus.innerText = '✕ Error: revisa el Token, Chat ID o dale /start al bot';
-        msgStatus.className = 'text-xs font-bold text-rose-500';
+        if (msgStatus) {
+          msgStatus.innerText = '✗ Error: revisa el Token, Chat ID o dale /start al bot';
+          msgStatus.className = 'text-xs font-bold text-rose-500';
+        } else {
+          alert('Error: revisa el Token, Chat ID o asegúrate de haber presionado /start en tu bot de Telegram.');
+        }
       }
     };
 
+    // Alias para compatibilidad con el modal
+    window.probarTelegram = window.probarNotificacionTelegram;
     function actualizarAlertasTelegramAuto() {
       // Notifica si hay pedidos críticos activos que no hayan sido notificados hoy
       const hoyStr = new Date().toISOString().split('T')[0];
