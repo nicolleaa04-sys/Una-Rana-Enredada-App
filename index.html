@@ -1333,6 +1333,9 @@
 
     // Alias para compatibilidad con el modal
     window.probarTelegram = window.probarNotificacionTelegram;
+    window.guardarAjustesTelegram = window.guardarConfigTelegram;
+    window.probarEnvioTelegram = window.probarNotificacionTelegram;
+    
     function actualizarAlertasTelegramAuto() {
       // Notifica si hay pedidos críticos activos que no hayan sido notificados hoy
       const hoyStr = new Date().toISOString().split('T')[0];
