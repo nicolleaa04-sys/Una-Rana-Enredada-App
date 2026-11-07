@@ -1030,17 +1030,22 @@
     // SIDEBAR DRAWER (MENÚ LATERAL)
     window.toggleSidebar = () => {
       const drawer = document.getElementById('sidebar-drawer');
-      const backdrop = document.getElementById('sidebar-backdrop');
-      const isClosed = drawer.classList.contains('-translate-x-full');
+      const backdrop = document.getElementById('drawer-overlay') || document.getElementById('sidebar-backdrop');
+      if (!drawer) return;
       
+      const isClosed = drawer.classList.contains('-translate-x-full');
       if (isClosed) {
         drawer.classList.remove('-translate-x-full');
-        backdrop.classList.remove('hidden');
+        if (backdrop) backdrop.classList.remove('hidden');
       } else {
         drawer.classList.add('-translate-x-full');
-        backdrop.classList.add('hidden');
+        if (backdrop) backdrop.classList.add('hidden');
       }
     };
+
+    // Alias de compatibilidad para botones con nombres alternativos
+    window.toggleDrawer = window.toggleSidebar;
+    window.navegarModulo = (mod) => window.cambiarModulo(mod);
 
     window.toggleTheme = () => {
       const isDark = document.documentElement.classList.toggle('dark');
