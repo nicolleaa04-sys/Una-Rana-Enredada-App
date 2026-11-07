@@ -1236,11 +1236,18 @@
     }
 
     window.guardarConfigTelegram = () => {
-      const tokenEl = document.getElementById('tg-token') || document.getElementById('tg-bot-token');
-      const chatEl = document.getElementById('tg-chatid') || document.getElementById('tg-chat-id');
+      // Busca por cualquier ID posible o por el orden de los inputs en el modal
+      const inputs = document.querySelectorAll('#modal-telegram input');
+      let token = document.getElementById('tg-token')?.value || 
+                  document.getElementById('tg-bot-token')?.value || 
+                  (inputs[0] ? inputs[0].value : '');
+                  
+      let chatId = document.getElementById('tg-chatid')?.value || 
+                   document.getElementById('tg-chat-id')?.value || 
+                   (inputs[1] ? inputs[1].value : '');
 
-      const token = tokenEl?.value?.trim() || '';
-      const chatId = chatEl?.value?.trim() || '';
+      token = token.trim();
+      chatId = chatId.trim();
 
       if (!token || !chatId) {
         alert("Por favor ingresa tu Token y Chat ID.");
@@ -1252,18 +1259,10 @@
       localStorage.setItem('tg_token', token);
       localStorage.setItem('tg_chatid', chatId);
 
-      const statusMsg = document.getElementById('tg-status-msg');
-      if (statusMsg) {
-        statusMsg.innerText = '✓ Claves guardadas en el dispositivo';
-        statusMsg.className = 'text-xs font-bold text-emerald-500';
-      } else {
-        alert("¡Configuración de Telegram guardada correctamente!");
-      }
-
-      setTimeout(() => {
-        const modal = document.getElementById('modal-telegram');
-        if (modal) modal.classList.add('hidden');
-      }, 600);
+      alert("✓ ¡Configuración guardada con éxito!");
+      
+      const modal = document.getElementById('modal-telegram');
+      if (modal) modal.classList.add('hidden');
     };
 
     window.enviarMensajeTelegram = async (texto) => {
@@ -1290,44 +1289,32 @@
     };
 
     window.probarNotificacionTelegram = async () => {
-      const tokenEl = document.getElementById('tg-token') || document.getElementById('tg-bot-token');
-      const chatEl = document.getElementById('tg-chatid') || document.getElementById('tg-chat-id');
+      const inputs = document.querySelectorAll('#modal-telegram input');
+      let token = document.getElementById('tg-token')?.value || 
+                  document.getElementById('tg-bot-token')?.value || 
+                  (inputs[0] ? inputs[0].value : '');
+                  
+      let chatId = document.getElementById('tg-chatid')?.value || 
+                   document.getElementById('tg-chat-id')?.value || 
+                   (inputs[1] ? inputs[1].value : '');
 
-      const token = tokenEl?.value?.trim();
-      const chatId = chatEl?.value?.trim();
+      token = token.trim();
+      chatId = chatId.trim();
 
       if (!token || !chatId) {
-        alert('Por favor ingresa tu Token y Chat ID');
+        alert("Por favor ingresa tu Token y Chat ID.");
         return;
       }
 
       localStorage.setItem('rana_tg_token', token);
       localStorage.setItem('rana_tg_chatid', chatId);
-      localStorage.setItem('tg_token', token);
-      localStorage.setItem('tg_chatid', chatId);
-
-      const msgStatus = document.getElementById('tg-status-msg');
-      if (msgStatus) {
-        msgStatus.innerText = 'Enviando mensaje de prueba...';
-        msgStatus.className = 'text-xs text-stone-400';
-      }
 
       const ok = await window.enviarMensajeTelegram('🐸 <b>¡Conexión exitosa!</b>\nTu taller <i>Una Rana Enredada</i> está sincronizado con Telegram.');
       
       if (ok) {
-        if (msgStatus) {
-          msgStatus.innerText = '✓ ¡Mensaje recibido en Telegram con éxito!';
-          msgStatus.className = 'text-xs font-bold text-emerald-500';
-        } else {
-          alert('¡Mensaje recibido en Telegram con éxito!');
-        }
+        alert('✓ ¡Mensaje recibido en Telegram con éxito!');
       } else {
-        if (msgStatus) {
-          msgStatus.innerText = '✗ Error: revisa el Token, Chat ID o dale /start al bot';
-          msgStatus.className = 'text-xs font-bold text-rose-500';
-        } else {
-          alert('Error: revisa el Token, Chat ID o asegúrate de haber presionado /start en tu bot de Telegram.');
-        }
+        alert('Error: revisa el Token, Chat ID o dale /start al bot en Telegram.');
       }
     };
 
