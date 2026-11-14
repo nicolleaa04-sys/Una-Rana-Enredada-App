@@ -2723,17 +2723,17 @@ window.entregarYPasarAVentas = async (id) => {
     };
 
     window.calcularPrecioAmigurumi = () => {
-      const hG = Number(document.getElementById('calc-hilo').value) || 0;
-      const hrs = Number(document.getElementById('calc-horas').value) || 0;
-      const emp = Number(document.getElementById('calc-empaque').value) || 0;
-      const arg = Number(document.getElementById('calc-argolla').value) || 0;
-      const nG = Number(document.getElementById('calc-napa').value) || 0;
-      const ojos = Number(document.getElementById('calc-ojos').value) || 0;
-      const tar = Number(document.getElementById('calc-tarifa-hora').value) || 0;
+  const hG = Number(document.getElementById('calc-hilo')?.value) || 0;
+  const hrs = Number(document.getElementById('calc-horas')?.value) || 0;
+  const emp = Number(document.getElementById('calc-empaque')?.value ?? 1.5);
+  const arg = Number(document.getElementById('calc-argolla')?.value ?? 2.0);
+  const nG = Number(document.getElementById('calc-napa')?.value ?? Math.round(hG * 0.8));
+  const ojos = Number(document.getElementById('calc-ojos')?.value ?? 2.4);
+  const tar = Number(document.getElementById('calc-tarifa-hora')?.value ?? 7.0);
 
-      const mat = ((hG / 100) * 8.0) + ((nG / 1000) * 21.0) + arg + ojos + emp;
-      const mo = hrs * tar;
-      const sugerido = Math.round((mat + mo) * 1.25);
+  const mat = ((hG / 100) * 8.0) + ((nG / 1000) * 21.0) + arg + ojos + emp;
+  const mo = hrs * tar;
+  const sugerido = Math.round((mat + mo) * 1.25);
 
       document.getElementById('calc-precio-final').innerText = `S/ ${sugerido}.00`;
       document.getElementById('calc-desglose').innerText = `Materiales: S/ ${mat.toFixed(2)} | Mano de obra: S/ ${mo.toFixed(2)}`;
