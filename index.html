@@ -1696,19 +1696,6 @@ window.guardarPedido = async (e) => {
   }
 };
 
-      if (!id) {
-        data.estado = 'Por iniciar';
-        data.insumosDescontados = false;
-        await addDoc(collection(db, "pedidos"), data);
-
-        // Notificación opcional por Telegram al registrar
-        window.enviarMensajeTelegram(`🧶 <b>Nuevo Pedido Agendado</b>\n• <b>Cliente:</b> ${data.cliente}\n• <b>Diseño:</b> ${data.articulo}\n• <b>Entrega:</b> ${data.fechaEntrega}\n• <b>Adelanto:</b> S/ ${data.adelanto} (Pendiente: S/ ${data.saldoPendiente})`);
-      } else {
-        await updateDoc(doc(db, "pedidos", id), data);
-      }
-
-      cerrarModal('modal-pedido');
-    };
 
     window.borrarPedido = async (id) => {
       if (confirm('¿Eliminar este pedido de la cola de producción?')) {
