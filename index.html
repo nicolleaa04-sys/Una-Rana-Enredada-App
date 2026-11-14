@@ -364,6 +364,11 @@
 
       <!-- SUBTAB 1: INVENTARIO -->
       <div id="almacen-sub-inventario" class="space-y-3">
+        <div class="relative">
+    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+   <input type="text" id="buscador-inventario" oninput="renderizarAlmacen()" placeholder="Buscar hilo, color, código, accesorio..." class="w-full pl-9 pr-8 py-2 rounded-xl border border-stone-200 dark:border-noche-border bg-white dark:bg-noche-card text-xs outline-none focus:border-morado dark:focus:border-rana transition">
+    <button type="button" onclick="document.getElementById('buscador-inventario').value=''; renderizarAlmacen()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs px-1" title="Limpiar">×</button>
+  </div>
         <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
           <button onclick="filtrarAlmacen('all')" class="chip-filtro-almacen active px-3 py-1 rounded-full bg-morado dark:bg-rana text-white dark:text-morado font-bold" data-filter="all">Todos</button>
           <button onclick="filtrarAlmacen('hilos')" class="chip-filtro-almacen px-3 py-1 rounded-full bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border font-bold" data-filter="hilos">Hilos</button>
@@ -2447,11 +2452,26 @@ window.guardarPedido = async (e) => {
       const grid = document.getElementById('grid-materiales');
       if (!grid) return;
 
-      const filtrados = materiales.filter(m => {
-        if (filtroAlmacenActual === 'all') return true;
-        if (filtroAlmacenActual === 'alertas') return !m.noReponer && m.stock <= m.minStock;
-        return m.categoria === filtroAlmacenActual;
-      });
+      const textoBusqueda = (document.getElementById('buscador-inventario')?.value || '')
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+  const filtrados = materiales.filter(m => {
+    let pasaCategoria = true;
+    if (filtroAlmacenActual === 'alertas') {
+      pasaCategoria = !m.noReponer && m.stock <= m.minStock;
+    } else if (filtroAlmacenActual !== 'all') {
+      pasaCategoria = m.categoria === filtroAlmacenActual;
+    }
+    if (!pasaCategoria) return false;
+
+    if (!textoBusqueda) return true;
+    const ficha = `${m.nombre || ''} ${m.color || ''} ${m.codigo || ''} ${m.marca || ''} ${m.categoria || ''}`
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return ficha.includes(textoBusqueda);
+  });
 
       if (filtrados.length === 0) {
         grid.innerHTML = `<div class="col-span-full text-center py-8 text-stone-400 text-xs font-bold">Sin insumos en esta sección.</div>`;
