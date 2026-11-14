@@ -619,10 +619,16 @@
       <label class="text-[10px] text-stone-500 dark:text-stone-400 font-semibold block mb-1">Subtotal (S/)</label>
       <input type="number" id="ped-subtotal" readonly value="0" class="w-full p-1.5 border border-stone-300 dark:border-noche-border bg-stone-200/60 dark:bg-noche-card/50 rounded-lg text-xs font-bold text-stone-700 dark:text-stone-300">
     </div>
-    <div>
-      <label class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold block mb-1" title="1 bolsa kraft cada 4 piezas">Packaging</label>
-      <input type="number" id="ped-packaging" value="0" step="0.50" min="0" oninput="recalcularTotalesModalPedido()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs dark:text-white">
-    </div>
+   <div>
+            <label class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold block mb-1">Packaging (S/)</label>
+            <select id="ped-pack-tipo" onchange="aplicarTipoPackaging('ped')" class="w-full p-1 mb-1 border border-stone-300 dark:border-noche-border bg-white dark:bg-noche-card rounded-lg text-[10px] outline-none">
+              <option value="auto">Auto (1 c/4 · S/ 1.50)</option>
+              <option value="chica">1 Chica (S/ 1.50)</option>
+              <option value="grande">1 Grande (S/ 2.50)</option>
+              <option value="manual">Manual / Otro</option>
+            </select>
+            <input type="number" id="ped-packaging" value="0" step="0.50" min="0" oninput="document.getElementById('ped-pack-tipo').value='manual'; recalcularTotalesModalPedido()" class="w-full p-1.5 border border-stone-300 dark:border-noche-border bg-white dark:bg-noche-card rounded-lg text-xs outline-none">
+          </div>
     <div>
       <label class="text-[10px] text-emerald-600 dark:text-lime-400 font-semibold block mb-1">Dscto. Set</label>
       <input type="number" id="ped-descuento" value="0" step="0.50" min="0" oninput="recalcularTotalesModalPedido()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs dark:text-white">
@@ -702,7 +708,7 @@
 
   <!-- MODAL: VER PATRÓN -->
   <div id="modal-ver-patron" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white dark:bg-noche-card rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
+    <div class="bg-white dark:bg-noche-card rounded-3xl max-w-5xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-stone-200 dark:border-noche-border space-y-4">
       <div class="flex justify-between items-center border-b border-stone-100 dark:border-noche-border pb-3">
         <div>
           <span id="ver-p-categoria" class="text-[10px] uppercase font-bold text-morado-lila"></span>
@@ -757,14 +763,19 @@
           </div>
 
           <div id="contenedor-patron-archivo" class="hidden flex flex-col items-center">
-            <div class="w-full h-80 sm:h-96 bg-stone-200 dark:bg-noche-bg/80 relative">
+            <div class="w-full h-[72vh] min-h-[520px] bg-stone-200 dark:bg-noche-bg/80 relative">
               <iframe id="ver-p-iframe-pdf" class="w-full h-full border-0 rounded-t-2xl" src=""></iframe>
             </div>
-            <div class="w-full p-2.5 bg-stone-100 dark:bg-noche-card border-t border-stone-200 dark:border-noche-border flex justify-between items-center text-xs px-4">
+            <div class="w-full p-2.5 bg-stone-100 dark:bg-noche-card border-t border-stone-200 dark:border-noche-border flex flex-wrap justify-between items-center gap-2">
               <span class="text-stone-500 text-[11px] font-medium"><i class="fa-solid fa-file-pdf text-rose-500 mr-1"></i> Documento / Esquema</span>
-              <a id="btn-descargar-pdf-opcional" href="#" download="patron_amigurumi" class="px-3 py-1 rounded-lg bg-rana-soft dark:bg-morado-light text-morado dark:text-rana font-bold text-[11px] hover:bg-rana transition flex items-center gap-1">
-                <i class="fa-solid fa-file-arrow-down"></i> Descargar
-              </a>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="window.open(document.getElementById('ver-p-iframe-pdf').src, '_blank')" class="px-3 py-1.5 rounded-lg bg-rana text-morado font-extrabold text-[11px] hover:bg-rana-dark transition flex items-center gap-1.5 shadow-xs">
+                  <i class="fa-solid fa-up-right-from-square"></i> Pantalla Completa
+                </button>
+                <a id="btn-descargar-pdf-opcional" href="#" download="patron_amigurumi" class="px-3 py-1.5 rounded-lg bg-rana-soft dark:bg-morado text-morado dark:text-rana font-bold text-[11px] flex items-center gap-1.5">
+                  <i class="fa-solid fa-file-arrow-down"></i> Descargar
+                </a>
+              </div>
             </div>
           </div>
 
@@ -997,44 +1008,79 @@
       </div>
 
       <form id="form-venta" onsubmit="guardarVenta(event)" class="space-y-3 text-sm">
+      <!-- Armar Set / Lista de Muñecos Vendidos -->
+      <div class="bg-crema-100 dark:bg-noche-bg p-3 rounded-xl border border-stone-200 dark:border-noche-border space-y-2">
+        <label class="block text-[11px] font-bold text-morado dark:text-rana-light uppercase tracking-wider">
+          Diseños Vendidos (1 o varios por cliente)
+        </label>
+
+        <div class="flex gap-2">
+          <select id="v-proyecto" class="flex-1 px-2.5 py-2 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs outline-none">
+            <option value="">Selecciona diseño...</option>
+          </select>
+          <input type="number" id="v-item-cant" value="1" min="1" class="w-14 px-2 py-2 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs text-center font-bold outline-none" title="Cantidad">
+          <button type="button" onclick="agregarItemAVenta()" class="bg-rana hover:bg-rana-dark text-morado font-extrabold px-3 py-2 rounded-lg text-xs transition shadow-xs">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+
+        <!-- Diseño rápido fuera de catálogo -->
+        <div class="flex gap-2">
+          <input type="text" id="v-custom-nombre" placeholder="O escribe diseño nuevo..." class="flex-1 px-2.5 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs outline-none">
+          <input type="number" id="v-custom-precio" placeholder="Precio S/" step="0.50" class="w-24 px-2 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs outline-none">
+        </div>
+
+        <!-- Lista de muñecos agregados a esta venta -->
+        <ul id="v-lista-items" class="space-y-1 max-h-28 overflow-y-auto text-xs"></ul>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="block text-xs font-bold mb-1">Diseño Vendido</label>
-          <select id="v-proyecto" required onchange="sugerirPrecioVenta()" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none"></select>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-bold mb-1">Cantidad</label>
-            <input type="number" id="v-cantidad" value="1" min="1" required class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-bold mb-1">Fecha</label>
-            <input type="date" id="v-fecha" required class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-bold mb-1">Cliente</label>
-            <input type="text" id="v-cliente" placeholder="Nombre" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-bold mb-1">Canal</label>
-            <select id="v-canal" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
-              <option value="Instagram">Instagram</option>
-              <option value="WhatsApp">WhatsApp</option>
-              <option value="Feria">Feria Artesanal</option>
-              <option value="Conocido">Amigo / Familia</option>
-            </select>
-          </div>
+          <label class="block text-xs font-bold mb-1">Cliente</label>
+          <input type="text" id="v-cliente" placeholder="Nombre" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
         </div>
         <div>
-          <label class="block text-xs font-bold mb-1">Cobro Total (S/)</label>
-          <input type="number" step="0.5" id="v-monto" required class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl font-bold text-morado dark:text-mostaza outline-none">
+          <label class="block text-xs font-bold mb-1">Canal</label>
+          <select id="v-canal" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
+            <option value="Instagram">Instagram</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Feria">Feria Artesanal</option>
+            <option value="Conocido">Amigo / Familia</option>
+          </select>
         </div>
-        <div class="flex justify-end gap-2 pt-2 border-t border-stone-100 dark:border-noche-border">
-          <button type="button" onclick="cerrarModal('modal-venta')" class="px-4 py-2 rounded-xl text-stone-400 font-bold">Cancelar</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-mostaza text-morado font-extrabold">Registrar Venta</button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 bg-crema-100 dark:bg-noche-bg p-2.5 rounded-xl border border-stone-200 dark:border-noche-border">
+        <div>
+          <label class="block text-[10px] font-bold text-stone-500 mb-1">Fecha</label>
+          <input type="date" id="v-fecha" required class="w-full px-2 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs outline-none">
         </div>
-      </form>
+        <div>
+        <label class="block text-[10px] font-bold text-amber-600 dark:text-amber-400 mb-1">Packaging (S/)</label>
+        <select id="v-pack-tipo" onchange="aplicarTipoPackaging('v')" class="w-full px-1.5 py-1 mb-1 border dark:border-noche-border dark:bg-noche-card rounded-lg text-[10px] outline-none">
+          <option value="auto">Auto (1 c/4 · S/ 1.50)</option>
+          <option value="chica">1 Chica (S/ 1.50)</option>
+          <option value="grande">1 Grande (S/ 2.50)</option>
+          <option value="manual">Manual / Otro</option>
+        </select>
+        <input type="number" step="0.50" min="0" id="v-packaging" value="0" oninput="document.getElementById('v-pack-tipo').value='manual'" class="w-full px-2 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs outline-none">
+      </div>
+        <div>
+          <label class="block text-[10px] font-bold text-emerald-600 dark:text-lime-400 mb-1">Dscto. Set (S/)</label>
+          <input type="number" step="0.50" min="0" id="v-descuento" value="0" oninput="recalcularTotalVenta()" class="w-full px-2 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs outline-none">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold mb-1">Cobro Total Final (S/)</label>
+        <input type="number" step="0.5" id="v-monto" required class="w-full px-3 py-2 border border-mostaza dark:bg-noche-bg rounded-xl font-extrabold text-morado dark:text-mostaza outline-none">
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-stone-100 dark:border-noche-border">
+        <button type="button" onclick="cerrarModal('modal-venta')" class="px-4 py-2 rounded-xl text-stone-400 font-bold">Cancelar</button>
+        <button type="submit" class="px-5 py-2 rounded-xl bg-mostaza text-morado font-extrabold">Registrar Venta</button>
+      </div>
+    </form>
     </div>
   </div>
   <!-- JAVASCRIPT & FIREBASE -->
@@ -1560,14 +1606,37 @@ function renderizarListaItemsPedido() {
   `).join('');
 }
 
+window.aplicarTipoPackaging = (prefijo) => {
+  const tipo = document.getElementById(`${prefijo}-pack-tipo`)?.value || 'auto';
+  const inputPack = document.getElementById(`${prefijo}-packaging`);
+  if (!inputPack) return;
+
+  if (tipo === 'auto') {
+    const lista = prefijo === 'ped' ? itemsSetActual : itemsVentaActual;
+    const totalPiezas = lista.reduce((acc, i) => acc + i.cantidad, 0);
+    const bolsas = totalPiezas > 0 ? Math.ceil(totalPiezas / 4) : 0;
+    const costoBaseBolsa = typeof COSTO_BOLSA_KRAFT !== 'undefined' ? COSTO_BOLSA_KRAFT : 1.50;
+    inputPack.value = (bolsas * costoBaseBolsa).toFixed(2);
+  } else if (tipo === 'chica') {
+    inputPack.value = "1.50";
+  } else if (tipo === 'grande') {
+    inputPack.value = "2.50";
+  } else if (tipo === 'manual') {
+    inputPack.focus();
+  }
+
+  if (prefijo === 'ped') recalcularTotalesModalPedido();
+  else recalcularTotalVenta();
+};
+
 window.recalcularTotalesModalPedido = () => {
   const subtotal = itemsSetActual.reduce((acc, i) => acc + i.subtotal, 0);
   const totalPiezas = itemsSetActual.reduce((acc, i) => acc + i.cantidad, 0);
 
-  // 1 bolsa kraft por cada 4 piezas
-  const bolsasNecesarias = totalPiezas > 0 ? Math.ceil(totalPiezas / 4) : 0;
+  const tipoPack = document.getElementById('ped-pack-tipo')?.value || 'auto';
   const inputPack = document.getElementById('ped-packaging');
-  if (inputPack && document.activeElement !== inputPack) {
+  if (tipoPack === 'auto' && inputPack && document.activeElement !== inputPack) {
+    const bolsasNecesarias = totalPiezas > 0 ? Math.ceil(totalPiezas / 4) : 0;
     inputPack.value = (bolsasNecesarias * COSTO_BOLSA_KRAFT).toFixed(2);
   }
 
@@ -2615,31 +2684,138 @@ window.guardarPedido = async (e) => {
       if (p) document.getElementById('v-monto').value = p.precio;
     };
 
-    window.abrirModalVenta = () => {
-      document.getElementById('form-venta').reset();
-      document.getElementById('v-fecha').value = new Date().toISOString().split('T')[0];
-      document.getElementById('modal-venta').classList.remove('hidden');
-    };
+   let itemsVentaActual = [];
 
-    window.guardarVenta = async (e) => {
-      e.preventDefault();
-      const pId = document.getElementById('v-proyecto').value;
-      const proyecto = proyectos.find(p => p.id === pId);
+window.abrirModalVenta = () => {
+  document.getElementById('form-venta').reset();
+  itemsVentaActual = [];
+  renderizarListaItemsVenta();
+  if (document.getElementById('v-pack-tipo')) document.getElementById('v-pack-tipo').value = 'auto';
+  if (document.getElementById('v-packaging')) document.getElementById('v-packaging').value = '0';
+  if (document.getElementById('v-descuento')) document.getElementById('v-descuento').value = '0';
+  if (document.getElementById('v-monto')) document.getElementById('v-monto').value = '0';
+  document.getElementById('v-fecha').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modal-venta').classList.remove('hidden');
+};
 
-      const venta = {
-        proyectoId: pId,
-        nombreArticulo: proyecto ? proyecto.nombre : 'Personalizado',
-        costoBase: proyecto ? proyecto.costo : 0,
-        cantidad: Number(document.getElementById('v-cantidad').value) || 1,
-        fecha: document.getElementById('v-fecha').value,
-        cliente: document.getElementById('v-cliente').value || 'Cliente',
-        canal: document.getElementById('v-canal').value,
-        monto: Number(document.getElementById('v-monto').value) || 0
-      };
+window.agregarItemAVenta = () => {
+  const sel = document.getElementById('v-proyecto');
+  const cant = Math.max(1, parseInt(document.getElementById('v-item-cant').value) || 1);
+  const customNom = document.getElementById('v-custom-nombre').value.trim();
+  const customPre = parseFloat(document.getElementById('v-custom-precio').value) || 0;
 
-      await addDoc(collection(db, "ventas"), venta);
-      cerrarModal('modal-venta');
-    };
+  let proyectoId = '', nombre = '', precioUnit = 0, costoUnit = 0;
+
+  if (customNom !== '') {
+    nombre = customNom;
+    precioUnit = customPre;
+    costoUnit = precioUnit * 0.25;
+  } else if (sel && sel.value !== '' && sel.value !== 'personalizado') {
+    const pId = sel.value;
+    const proyecto = proyectos.find(p => p.id === pId);
+    if (!proyecto) return;
+    proyectoId = proyecto.id;
+    nombre = proyecto.nombre;
+    precioUnit = Number(proyecto.precio) || 0;
+    costoUnit = Number(proyecto.costo) || (precioUnit * 0.25);
+  } else {
+    alert("Selecciona un diseño o escribe uno nuevo.");
+    return;
+  }
+
+  itemsVentaActual.push({
+    proyectoId,
+    nombre,
+    cantidad: cant,
+    precioUnit,
+    costoUnit,
+    subtotal: cant * precioUnit
+  });
+
+  if (sel) sel.value = '';
+  document.getElementById('v-custom-nombre').value = '';
+  document.getElementById('v-custom-precio').value = '';
+  document.getElementById('v-item-cant').value = 1;
+
+  renderizarListaItemsVenta();
+  recalcularTotalVenta();
+};
+
+window.quitarItemDeVenta = (idx) => {
+  itemsVentaActual.splice(idx, 1);
+  renderizarListaItemsVenta();
+  recalcularTotalVenta();
+};
+
+function renderizarListaItemsVenta() {
+  const ul = document.getElementById('v-lista-items');
+  if (!ul) return;
+
+  ul.innerHTML = itemsVentaActual.map((item, idx) => `
+    <li class="flex justify-between items-center bg-white dark:bg-noche-card px-2.5 py-1.5 rounded-lg border border-stone-200 dark:border-noche-border">
+      <span class="font-semibold text-stone-800 dark:text-white"><b class="text-morado dark:text-rana">${item.cantidad}x</b> ${item.nombre}</span>
+      <div class="flex items-center gap-2">
+        <span class="text-stone-600 dark:text-stone-300 font-bold">S/ ${item.subtotal.toFixed(2)}</span>
+        <button type="button" onclick="quitarItemDeVenta(${idx})" class="text-rose-500 hover:text-rose-700 font-bold px-1">×</button>
+      </div>
+    </li>
+  `).join('');
+}
+
+window.recalcularTotalVenta = () => {
+  const subtotal = itemsVentaActual.reduce((acc, i) => acc + i.subtotal, 0);
+  const totalPiezas = itemsVentaActual.reduce((acc, i) => acc + i.cantidad, 0);
+
+  const tipoPack = document.getElementById('v-pack-tipo')?.value || 'auto';
+  const inputPack = document.getElementById('v-packaging');
+  if (tipoPack === 'auto' && inputPack && document.activeElement !== inputPack) {
+    const bolsasNecesarias = totalPiezas > 0 ? Math.ceil(totalPiezas / 4) : 0;
+    const costoBaseBolsa = typeof COSTO_BOLSA_KRAFT !== 'undefined' ? COSTO_BOLSA_KRAFT : 1.50;
+    inputPack.value = (bolsasNecesarias * costoBaseBolsa).toFixed(2);
+  }
+
+  const descuento = parseFloat(document.getElementById('v-descuento')?.value) || 0;
+  const totalFinal = Math.max(0, subtotal - descuento);
+  document.getElementById('v-monto').value = totalFinal.toFixed(2);
+};
+
+window.guardarVenta = async (e) => {
+  e.preventDefault();
+
+  const sel = document.getElementById('v-proyecto');
+  const customNom = document.getElementById('v-custom-nombre')?.value.trim();
+  if (itemsVentaActual.length === 0 && ((sel && sel.value !== '' && sel.value !== 'personalizado') || customNom)) {
+    agregarItemAVenta();
+  }
+
+  if (itemsVentaActual.length === 0) {
+    alert("Agrega al menos un diseño a la venta presionando (+).");
+    return;
+  }
+
+  const packaging = Number(document.getElementById('v-packaging')?.value) || 0;
+  const costoMateriales = itemsVentaActual.reduce((acc, i) => acc + (i.costoUnit * i.cantidad), 0);
+  const capitalTotal = costoMateriales + packaging;
+  const resumenArticulo = itemsVentaActual.map(i => `${i.cantidad}x ${i.nombre}`).join(', ');
+
+  const venta = {
+    proyectoId: itemsVentaActual[0]?.proyectoId || '',
+    nombreArticulo: resumenArticulo,
+    items: itemsVentaActual,
+    costoBase: capitalTotal,
+    cantidad: 1,
+    packaging,
+    descuentoSet: Number(document.getElementById('v-descuento')?.value) || 0,
+    fecha: document.getElementById('v-fecha').value,
+    cliente: document.getElementById('v-cliente').value.trim() || 'Cliente',
+    canal: document.getElementById('v-canal').value,
+    monto: Number(document.getElementById('v-monto').value) || 0
+  };
+
+  await addDoc(collection(db, "ventas"), venta);
+  itemsVentaActual = [];
+  cerrarModal('modal-venta');
+};
 
     window.borrarVenta = async (id) => {
       if (confirm('¿Eliminar venta?')) await deleteDoc(doc(db, "ventas", id));
