@@ -440,20 +440,44 @@
           <i class="fa-solid fa-bag-shopping"></i> Registrar Venta
         </button>
       </div>
+<!-- RESUMEN FINANCIERO EN PESTAÑA VENTAS -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <!-- Tarjeta 1: Ingreso Bruto -->
+  <div class="bg-purple-950/60 border border-purple-800/50 p-4 rounded-2xl">
+    <p class="text-xs text-purple-300 uppercase tracking-wider font-semibold">Ventas Totales (Mes)</p>
+    <h3 id="kpi-ventas-brutas" class="text-2xl font-bold text-white mt-1">S/ 0.00</h3>
+    <span class="text-[11px] text-purple-400">Total cobrado a clientes</span>
+  </div>
 
+  <!-- Tarjeta 2: Capital de Reposición -->
+  <div class="bg-amber-950/30 border border-amber-700/40 p-4 rounded-2xl">
+    <p class="text-xs text-amber-300 uppercase tracking-wider font-semibold">Capital (Insumos + Empaque)</p>
+    <h3 id="kpi-capital-reposicion" class="text-2xl font-bold text-amber-400 mt-1">S/ 0.00</h3>
+    <span class="text-[11px] text-amber-200/70">Reservar para reponer materiales</span>
+  </div>
+
+  <!-- Tarjeta 3: Ganancia Neta -->
+  <div class="bg-emerald-950/40 border border-emerald-700/40 p-4 rounded-2xl">
+    <p class="text-xs text-emerald-300 uppercase tracking-wider font-semibold">Ganancia Neta (Tu Sueldo)</p>
+    <h3 id="kpi-ganancia-neta" class="text-2xl font-bold text-lime-400 mt-1">S/ 0.00</h3>
+    <span class="text-[11px] text-emerald-200/70">Libre tras descontar capital</span>
+  </div>
+</div>
       <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
-            <thead class="bg-crema-100 dark:bg-noche-border text-stone-600 dark:text-stone-300 text-xs uppercase font-bold">
-              <tr>
-                <th class="p-3">Fecha</th>
-                <th class="p-3">Personaje</th>
-                <th class="p-3">Cliente</th>
-                <th class="p-3">Canal</th>
-                <th class="p-3">Cobrado</th>
-                <th class="p-3 text-center">Acción</th>
-              </tr>
-            </thead>
+           <thead class="bg-crema-100 dark:bg-noche-border text-stone-600 dark:text-stone-300 text-xs uppercase font-bold">
+  <tr>
+    <th class="p-3">Fecha</th>
+    <th class="p-3">Personaje / Set</th>
+    <th class="p-3">Cliente</th>
+    <th class="p-3">Canal</th>
+    <th class="p-3">Cobrado</th>
+    <th class="p-3 text-amber-600 dark:text-amber-400">Capital</th>
+    <th class="p-3 text-emerald-600 dark:text-lime-400">Ganancia</th>
+    <th class="p-3 text-center">Acción</th>
+  </tr>
+</thead>
             <tbody id="lista-ventas" class="divide-y divide-stone-100 dark:divide-noche-border"></tbody>
           </table>
         </div>
@@ -532,23 +556,33 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-bold mb-1">Amigurumi / Proyecto</label>
-            <select id="ped-proyecto-select" onchange="vincularPatronAPedido()" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl"></select>
-          </div>
-          <div>
-            <label class="block font-bold mb-1">Nombre Personalizado</label>
-            <input type="text" id="ped-proyecto-nombre" placeholder="Si no está en catálogo..." class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
-          </div>
-        </div>
+        <!-- SECCIÓN: ARMAR SET / LISTA DE AMIGURUMIS -->
+<div class="bg-crema-100 dark:bg-noche-bg p-3 rounded-xl border border-stone-200 dark:border-noche-border space-y-2.5">
+  <label class="text-[11px] font-bold text-morado dark:text-rana-light uppercase tracking-wider block">
+    Amigurumis del Pedido (Set o Individual)
+  </label>
 
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-bold mb-1">Fecha de Encargo</label>
-            <input type="date" id="ped-fecha-encargo" required class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl outline-none">
-          </div>
-          <div>
+  <div class="flex gap-2">
+    <select id="ped-articulo" class="flex-1 bg-white dark:bg-noche-card border border-stone-300 dark:border-noche-border rounded-lg px-2.5 py-2 text-xs text-stone-800 dark:text-white">
+      <option value="">Selecciona del taller...</option>
+    </select>
+    
+    <input type="number" id="ped-item-cant" value="1" min="1" class="w-14 bg-white dark:bg-noche-card border border-stone-300 dark:border-noche-border rounded-lg px-2 py-2 text-xs text-center font-bold dark:text-white" title="Cantidad">
+    
+    <button type="button" onclick="agregarItemAlSetPedido()" class="bg-rana hover:bg-rana-dark text-morado font-extrabold px-3 py-2 rounded-lg text-xs transition shadow-xs">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+  </div>
+
+  <!-- Diseño nuevo fuera de catálogo -->
+  <div class="flex gap-2">
+    <input type="text" id="ped-custom-nombre" placeholder="O escribe diseño nuevo..." class="flex-1 bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border rounded-lg px-2.5 py-1.5 text-xs dark:text-white">
+    <input type="number" id="ped-custom-precio" placeholder="Precio S/" step="0.50" class="w-24 bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border rounded-lg px-2 py-1.5 text-xs dark:text-white">
+  </div>
+
+  <!-- Lista de muñecos agregados a este cliente -->
+  <ul id="ped-lista-items" class="space-y-1 max-h-28 overflow-y-auto text-xs"></ul>
+</div>
             <label class="block font-bold mb-1 text-rose-500">Fecha de Entrega Límite *</label>
             <input type="date" id="ped-fecha-entrega" required class="w-full px-3 py-2 border border-rose-300 dark:border-rose-900 dark:bg-noche-bg rounded-xl font-bold outline-none">
           </div>
@@ -570,27 +604,45 @@
         </div>
 
         <!-- Módulo Financiero: Cobro y Adelantos -->
-        <div class="p-3 bg-rana-soft dark:bg-noche-bg rounded-xl border border-rana/30 space-y-2">
-          <span class="font-bold text-morado dark:text-rana-light block">Condición de Pago & Delivery</span>
-          <div class="grid grid-cols-3 gap-2">
-            <div>
-              <label class="block text-[10px] text-stone-500 font-semibold mb-1">Precio Producto (S/)</label>
-              <input type="number" step="0.5" id="ped-precio-producto" value="40" oninput="actualizarCalculoAdelanto()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold">
-            </div>
-            <div>
-              <label class="block text-[10px] text-stone-500 font-semibold mb-1">Costo Delivery (S/)</label>
-              <input type="number" step="0.5" id="ped-costo-delivery" value="10" oninput="actualizarCalculoAdelanto()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg">
-            </div>
-            <div>
-              <label class="block text-[10px] text-stone-500 font-semibold mb-1">Adelanto Recibido (S/)</label>
-              <input type="number" step="0.5" id="ped-monto-adelanto" value="20" oninput="actualizarCalculoAdelanto()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold text-emerald-600">
-            </div>
-          </div>
-          <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-200 dark:border-noche-border">
-            <span class="text-stone-500">Saldo pendiente de cobro:</span>
-            <span id="ped-saldo-label" class="font-extrabold text-rose-600 text-xs">S/ 30.00</span>
-          </div>
-        </div>
+        <!-- SECCIÓN: PAGOS, PACKAGING (1 BOLSA C/4 LLAVEROS) & DESCUENTO SET -->
+<div class="bg-crema-100 dark:bg-noche-bg p-3 rounded-xl border border-stone-200 dark:border-noche-border space-y-2.5">
+  <span class="text-xs font-bold text-morado dark:text-rana-light block">Condición de Pago & Delivery</span>
+
+  <div class="grid grid-cols-4 gap-2">
+    <div>
+      <label class="text-[10px] text-stone-500 dark:text-stone-400 font-semibold block mb-1">Subtotal (S/)</label>
+      <input type="number" id="ped-subtotal" readonly value="0" class="w-full p-1.5 border border-stone-300 dark:border-noche-border bg-stone-200/60 dark:bg-noche-card/50 rounded-lg text-xs font-bold text-stone-700 dark:text-stone-300">
+    </div>
+    <div>
+      <label class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold block mb-1" title="1 bolsa kraft cada 4 piezas">Packaging</label>
+      <input type="number" id="ped-packaging" value="0" step="0.50" min="0" oninput="recalcularTotalesModalPedido()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs dark:text-white">
+    </div>
+    <div>
+      <label class="text-[10px] text-emerald-600 dark:text-lime-400 font-semibold block mb-1">Dscto. Set</label>
+      <input type="number" id="ped-descuento" value="0" step="0.50" min="0" oninput="recalcularTotalesModalPedido()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs dark:text-white">
+    </div>
+    <div>
+      <label class="text-[10px] text-stone-500 dark:text-stone-400 font-semibold block mb-1">Delivery</label>
+      <input type="number" id="ped-costo-delivery" value="0" step="0.50" min="0" oninput="recalcularTotalesModalPedido()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs dark:text-white">
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-2 pt-1 border-t border-stone-200 dark:border-noche-border">
+    <div>
+      <label class="text-[10px] text-stone-500 dark:text-stone-400 font-semibold block mb-1">Total Producto (S/)</label>
+      <input type="number" id="ped-precio-producto" readonly value="0" class="w-full p-1.5 border border-stone-300 dark:border-noche-border bg-stone-200/60 dark:bg-noche-card/50 rounded-lg text-sm font-extrabold text-morado dark:text-mostaza">
+    </div>
+    <div>
+      <label class="text-[10px] text-stone-500 dark:text-stone-400 font-semibold block mb-1">Adelanto Recibido (S/)</label>
+      <input type="number" id="ped-monto-adelanto" value="0" step="0.50" min="0" oninput="recalcularTotalesModalPedido()" class="w-full p-1.5 border border-rana dark:bg-noche-card rounded-lg text-sm font-bold dark:text-white">
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center text-xs pt-1">
+    <span class="text-stone-500 dark:text-stone-400">Saldo pendiente de cobro:</span>
+    <span id="ped-saldo-texto" class="font-extrabold text-rose-500 text-sm">S/ 0.00</span>
+  </div>
+</div>
 
         <div>
           <label class="block font-bold mb-1">Notas de Taller (gancho mm, tonos de hilo, etc.)</label>
@@ -1413,67 +1465,236 @@
       document.getElementById('ped-saldo-calc').innerText = `S/ ${saldo.toFixed(2)}`;
     };
 
-    window.abrirModalPedido = (id = null) => {
-      document.getElementById('form-pedido').reset();
-      document.getElementById('ped-id').value = '';
-      document.getElementById('ped-fecha-encargo').value = new Date().toISOString().split('T')[0];
-      
-      const entregaSugerida = new Date();
-      entregaSugerida.setDate(entregaSugerida.getDate() + 5);
-      document.getElementById('ped-fecha-entrega').value = entregaSugerida.toISOString().split('T')[0];
+   let itemsSetActual = [];
+const COSTO_BOLSA_KRAFT = 1.50; // Bolsa kraft + papel seda + sticker
 
-      if (id) {
-        const ped = pedidos.find(p => p.id === id);
-        if (ped) {
-          document.getElementById('ped-id').value = ped.id;
-          document.getElementById('ped-cliente').value = ped.cliente;
-          document.getElementById('ped-telefono').value = ped.telefono || '';
-          document.getElementById('ped-tipo').value = ped.tipo || 'personalizado';
-          document.getElementById('ped-articulo').value = ped.articulo;
-          document.getElementById('ped-dificultad').value = ped.dificultad || 2;
-          document.getElementById('ped-horas').value = ped.horasTejido || 3;
-          document.getElementById('ped-fecha-encargo').value = ped.fechaEncargo;
-          document.getElementById('ped-fecha-entrega').value = ped.fechaEntrega;
-          document.getElementById('ped-precio').value = ped.precioTotal;
-          document.getElementById('ped-delivery').value = ped.delivery || 0;
-          document.getElementById('ped-adelanto').value = ped.adelanto || 0;
-          document.getElementById('ped-notas').value = ped.notas || '';
-        }
+window.poblarSelectorAmigurumis = () => {
+  const sel = document.getElementById('ped-articulo');
+  if (!sel) return;
+
+  const listaCatalogo = (typeof patrones !== 'undefined' && Array.isArray(patrones) && patrones.length > 0) ? patrones
+                      : (typeof proyectos !== 'undefined' && Array.isArray(proyectos)) ? proyectos
+                      : [];
+
+  sel.innerHTML = '<option value="">Selecciona del taller...</option>';
+
+  listaCatalogo.forEach(item => {
+    const nombre = item.nombre || item.titulo || item.articulo || 'Sin nombre';
+    const precio = Number(item.precioVenta || item.precio || item.precioFinal || 0);
+    const costo = Number(item.costoMateriales || item.costoInsumos || (precio * 0.25));
+    const horas = Number(item.horasTejido || item.horas || 2);
+    sel.innerHTML += `<option value="${nombre}" data-id="${item.id || ''}" data-precio="${precio}" data-costo="${costo}" data-horas="${horas}">${nombre} (S/ ${precio.toFixed(2)})</option>`;
+  });
+};
+
+window.agregarItemAlSetPedido = () => {
+  const sel = document.getElementById('ped-articulo');
+  const cant = Math.max(1, parseInt(document.getElementById('ped-item-cant').value) || 1);
+  const customNom = document.getElementById('ped-custom-nombre').value.trim();
+  const customPre = parseFloat(document.getElementById('ped-custom-precio').value) || 0;
+
+  let nombre = '', precioUnit = 0, costoInsumos = 0, proyectoId = '', horasUnit = 2;
+
+  if (customNom !== '') {
+    nombre = customNom;
+    precioUnit = customPre;
+    costoInsumos = precioUnit * 0.25;
+  } else if (sel && sel.value !== '') {
+    const opt = sel.options[sel.selectedIndex];
+    nombre = sel.value;
+    proyectoId = opt.dataset.id || '';
+    precioUnit = parseFloat(opt.dataset.precio) || 0;
+    costoInsumos = parseFloat(opt.dataset.costo) || (precioUnit * 0.25);
+    horasUnit = parseFloat(opt.dataset.horas) || 2;
+  } else {
+    alert("Selecciona un amigurumi del taller o escribe un diseño nuevo.");
+    return;
+  }
+
+  itemsSetActual.push({
+    proyectoId,
+    nombre,
+    cantidad: cant,
+    precioUnit,
+    costoInsumos,
+    horasUnit,
+    subtotal: cant * precioUnit
+  });
+
+  if (sel) sel.value = '';
+  document.getElementById('ped-custom-nombre').value = '';
+  document.getElementById('ped-custom-precio').value = '';
+  document.getElementById('ped-item-cant').value = 1;
+
+  const totalHoras = itemsSetActual.reduce((acc, i) => acc + (i.horasUnit * i.cantidad), 0);
+  if (document.getElementById('ped-horas')) document.getElementById('ped-horas').value = totalHoras;
+
+  renderizarListaItemsPedido();
+  recalcularTotalesModalPedido();
+};
+
+window.quitarItemDelSetPedido = (idx) => {
+  itemsSetActual.splice(idx, 1);
+  renderizarListaItemsPedido();
+  recalcularTotalesModalPedido();
+};
+
+function renderizarListaItemsPedido() {
+  const ul = document.getElementById('ped-lista-items');
+  if (!ul) return;
+
+  ul.innerHTML = itemsSetActual.map((item, idx) => `
+    <li class="flex justify-between items-center bg-white dark:bg-noche-card px-2.5 py-1.5 rounded-lg border border-stone-200 dark:border-noche-border">
+      <span class="font-semibold text-stone-800 dark:text-white"><b class="text-morado dark:text-rana">${item.cantidad}x</b> ${item.nombre}</span>
+      <div class="flex items-center gap-2">
+        <span class="text-stone-600 dark:text-stone-300 font-bold">S/ ${item.subtotal.toFixed(2)}</span>
+        <button type="button" onclick="quitarItemDelSetPedido(${idx})" class="text-rose-500 hover:text-rose-700 font-bold px-1">×</button>
+      </div>
+    </li>
+  `).join('');
+}
+
+window.recalcularTotalesModalPedido = () => {
+  const subtotal = itemsSetActual.reduce((acc, i) => acc + i.subtotal, 0);
+  const totalPiezas = itemsSetActual.reduce((acc, i) => acc + i.cantidad, 0);
+
+  // 1 bolsa kraft por cada 4 piezas
+  const bolsasNecesarias = totalPiezas > 0 ? Math.ceil(totalPiezas / 4) : 0;
+  const inputPack = document.getElementById('ped-packaging');
+  if (inputPack && document.activeElement !== inputPack) {
+    inputPack.value = (bolsasNecesarias * COSTO_BOLSA_KRAFT).toFixed(2);
+  }
+
+  const descuento = parseFloat(document.getElementById('ped-descuento')?.value) || 0;
+  const delivery = parseFloat(document.getElementById('ped-costo-delivery')?.value) || 0;
+  const adelanto = parseFloat(document.getElementById('ped-monto-adelanto')?.value) || 0;
+
+  const precioProductosFinal = Math.max(0, subtotal - descuento);
+  const saldo = Math.max(0, (precioProductosFinal + delivery) - adelanto);
+
+  document.getElementById('ped-subtotal').value = subtotal.toFixed(2);
+  document.getElementById('ped-precio-producto').value = precioProductosFinal.toFixed(2);
+  if (document.getElementById('ped-saldo-texto')) {
+    document.getElementById('ped-saldo-texto').innerText = `S/ ${saldo.toFixed(2)}`;
+  }
+};
+
+window.abrirModalPedido = (id = null) => {
+  document.getElementById('form-pedido').reset();
+  document.getElementById('ped-id').value = '';
+  document.getElementById('ped-fecha-encargo').value = new Date().toISOString().split('T')[0];
+
+  const entregaSugerida = new Date();
+  entregaSugerida.setDate(entregaSugerida.getDate() + 5);
+  document.getElementById('ped-fecha-entrega').value = entregaSugerida.toISOString().split('T')[0];
+
+  poblarSelectorAmigurumis();
+  itemsSetActual = [];
+
+  if (id) {
+    const ped = pedidos.find(p => p.id === id);
+    if (ped) {
+      document.getElementById('ped-id').value = ped.id;
+      document.getElementById('ped-cliente').value = ped.cliente;
+      if (document.getElementById('ped-telefono')) document.getElementById('ped-telefono').value = ped.telefono || '';
+      document.getElementById('ped-tipo').value = ped.tipo || 'personalizado';
+      document.getElementById('ped-dificultad').value = ped.dificultad || 2;
+      document.getElementById('ped-horas').value = ped.horasTejido || 3;
+      document.getElementById('ped-fecha-encargo').value = ped.fechaEncargo || '';
+      document.getElementById('ped-fecha-entrega').value = ped.fechaEntrega || '';
+      document.getElementById('ped-packaging').value = ped.packaging || 0;
+      document.getElementById('ped-descuento').value = ped.descuentoSet || 0;
+      document.getElementById('ped-costo-delivery').value = ped.delivery || 0;
+      document.getElementById('ped-monto-adelanto').value = ped.adelanto || 0;
+      document.getElementById('ped-notas').value = ped.notas || '';
+
+      if (Array.isArray(ped.items) && ped.items.length > 0) {
+        itemsSetActual = [...ped.items];
+      } else if (ped.articulo) {
+        itemsSetActual = [{
+          proyectoId: ped.proyectoId || '',
+          nombre: ped.articulo,
+          cantidad: 1,
+          precioUnit: Number(ped.precioTotal) || 0,
+          costoInsumos: (Number(ped.precioTotal) || 0) * 0.25,
+          horasUnit: Number(ped.horasTejido) || 3,
+          subtotal: Number(ped.precioTotal) || 0
+        }];
       }
-      
-      adaptarFormularioPedido();
-      document.getElementById('modal-pedido').classList.remove('hidden');
-    };
+    }
+  }
 
-    window.guardarPedido = async (e) => {
-      e.preventDefault();
-      const id = document.getElementById('ped-id').value;
-      const precioTotal = Number(document.getElementById('ped-precio').value) || 0;
-      const delivery = Number(document.getElementById('ped-delivery').value) || 0;
-      const adelanto = Number(document.getElementById('ped-adelanto').value) || 0;
-      const saldoPendiente = Math.max(0, (precioTotal + delivery) - adelanto);
+  renderizarListaItemsPedido();
+  recalcularTotalesModalPedido();
+  document.getElementById('modal-pedido').classList.remove('hidden');
+};
 
-      const selArt = document.getElementById('ped-articulo');
-      const opt = selArt.options[selArt.selectedIndex];
-      const proyectoId = opt ? (opt.dataset.id || '') : '';
+window.guardarPedido = async (e) => {
+  e.preventDefault();
 
-      const data = {
-        cliente: document.getElementById('ped-cliente').value.trim(),
-        telefono: document.getElementById('ped-telefono').value.trim(),
-        tipo: document.getElementById('ped-tipo').value,
-        articulo: document.getElementById('ped-articulo').value,
-        proyectoId: proyectoId,
-        dificultad: Number(document.getElementById('ped-dificultad').value) || 2,
-        horasTejido: Number(document.getElementById('ped-horas').value) || 3,
-        fechaEncargo: document.getElementById('ped-fecha-encargo').value,
-        fechaEntrega: document.getElementById('ped-fecha-entrega').value,
-        precioTotal: precioTotal,
-        delivery: delivery,
-        adelanto: adelanto,
-        saldoPendiente: saldoPendiente,
-        notas: document.getElementById('ped-notas').value.trim(),
-        vueltasRnd: 0
-      };
+  const sel = document.getElementById('ped-articulo');
+  const customNom = document.getElementById('ped-custom-nombre')?.value.trim();
+  if (itemsSetActual.length === 0 && ((sel && sel.value !== '') || customNom)) {
+    agregarItemAlSetPedido();
+  }
+
+  if (itemsSetActual.length === 0) {
+    alert("Agrega al menos un amigurumi al pedido presionando el botón (+).");
+    return;
+  }
+
+  const id = document.getElementById('ped-id').value;
+  const precioTotal = Number(document.getElementById('ped-precio-producto').value) || 0;
+  const packaging = Number(document.getElementById('ped-packaging').value) || 0;
+  const descuentoSet = Number(document.getElementById('ped-descuento').value) || 0;
+  const delivery = Number(document.getElementById('ped-costo-delivery').value) || 0;
+  const adelanto = Number(document.getElementById('ped-monto-adelanto').value) || 0;
+  const saldoPendiente = Math.max(0, (precioTotal + delivery) - adelanto);
+
+  const capitalInsumos = itemsSetActual.reduce((acc, i) => acc + ((i.costoInsumos || 0) * i.cantidad), 0) + packaging;
+  const resumenArticulo = itemsSetActual.map(i => `${i.cantidad}x ${i.nombre}`).join(', ');
+
+  const data = {
+    cliente: document.getElementById('ped-cliente').value.trim(),
+    telefono: document.getElementById('ped-telefono') ? document.getElementById('ped-telefono').value.trim() : '',
+    tipo: document.getElementById('ped-tipo').value,
+    articulo: resumenArticulo,
+    items: itemsSetActual,
+    proyectoId: itemsSetActual[0]?.proyectoId || '',
+    dificultad: Number(document.getElementById('ped-dificultad').value) || 2,
+    horasTejido: Number(document.getElementById('ped-horas').value) || 3,
+    fechaEncargo: document.getElementById('ped-fecha-encargo').value,
+    fechaEntrega: document.getElementById('ped-fecha-entrega').value,
+    precioTotal,
+    packaging,
+    descuentoSet,
+    delivery,
+    adelanto,
+    saldoPendiente,
+    capital: capitalInsumos,
+    notas: document.getElementById('ped-notas').value.trim(),
+    vueltasRnd: 0
+  };
+
+  try {
+    if (!id) {
+      data.estado = 'Por iniciar';
+      data.insumosDescontados = false;
+      await addDoc(collection(db, "pedidos"), data);
+
+      if (typeof window.enviarMensajeTelegram === 'function') {
+        window.enviarMensajeTelegram(`🧶 <b>Nuevo Pedido Agendado</b>\n• <b>Cliente:</b> ${data.cliente}\n• <b>Diseño:</b> ${data.articulo}\n• <b>Total:</b> S/ ${data.precioTotal.toFixed(2)} (Adelanto: S/ ${data.adelanto.toFixed(2)})`);
+      }
+    } else {
+      await updateDoc(doc(db, "pedidos", id), data);
+    }
+
+    document.getElementById('modal-pedido').classList.add('hidden');
+  } catch (err) {
+    console.error("Error al guardar pedido:", err);
+    alert("Error al guardar el pedido: " + err.message);
+  }
+};
 
       if (!id) {
         data.estado = 'Por iniciar';
@@ -2432,26 +2653,65 @@
     };
 
     window.renderizarVentas = () => {
-      const tbody = document.getElementById('lista-ventas');
-      if (!tbody) return;
-      if (ventas.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-stone-400 text-xs">Sin ventas registradas.</td></tr>`;
-        return;
-      }
-      const ord = [...ventas].sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
-      tbody.innerHTML = ord.map(v => `
-        <tr class="hover:bg-crema-100 dark:hover:bg-noche-border/40 text-xs">
-          <td class="p-3 text-stone-400">${v.fecha}</td>
-          <td class="p-3 font-bold text-stone-800 dark:text-white">${v.nombreArticulo} (x${v.cantidad})</td>
-          <td class="p-3 text-stone-600 dark:text-stone-300">${v.cliente}</td>
-          <td class="p-3"><span class="px-2 py-0.5 rounded bg-stone-100 dark:bg-noche-bg">${v.canal}</span></td>
-          <td class="p-3 font-extrabold text-morado dark:text-mostaza">S/ ${parseFloat(v.monto).toFixed(2)}</td>
-          <td class="p-3 text-center">
-            <button onclick="borrarVenta('${v.id}')" class="text-stone-300 hover:text-rose-500"><i class="fa-regular fa-trash-can"></i></button>
-          </td>
-        </tr>
-      `).join('');
-    };
+  const tbody = document.getElementById('lista-ventas');
+  if (!tbody) return;
+
+  let totalVentasBrutas = 0;
+  let totalCapital = 0;
+  let totalGananciaNeta = 0;
+
+  if (ventas.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-stone-400 text-xs">Sin ventas registradas.</td></tr>`;
+    if (document.getElementById('kpi-ventas-brutas')) {
+      document.getElementById('kpi-ventas-brutas').innerText = 'S/ 0.00';
+      document.getElementById('kpi-capital-reposicion').innerText = 'S/ 0.00';
+      document.getElementById('kpi-ganancia-neta').innerText = 'S/ 0.00';
+    }
+    return;
+  }
+
+  const ord = [...ventas].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  
+  tbody.innerHTML = ord.map(v => {
+    const montoTotal = parseFloat(v.monto || 0);
+    // Usa costoInsumos/capital si existe; si es un registro antiguo sin ese dato, estima un 25% de materiales
+    const capital = v.capital !== undefined 
+      ? parseFloat(v.capital) 
+      : (v.costoInsumos !== undefined ? parseFloat(v.costoInsumos) * (v.cantidad || 1) : montoTotal * 0.25);
+    
+    const ganancia = Math.max(0, montoTotal - capital);
+
+    totalVentasBrutas += montoTotal;
+    totalCapital += capital;
+    totalGananciaNeta += ganancia;
+
+    const detalleArticulo = v.items && Array.isArray(v.items)
+      ? v.items.map(i => `${i.nombre} (x${i.cantidad})`).join(', ')
+      : `${v.nombreArticulo} ${v.cantidad ? `(x${v.cantidad})` : ''}`;
+
+    return `
+      <tr class="hover:bg-crema-100 dark:hover:bg-noche-border/40 text-xs">
+        <td class="p-3 text-stone-400">${v.fecha}</td>
+        <td class="p-3 font-bold text-stone-800 dark:text-white">${detalleArticulo}</td>
+        <td class="p-3 text-stone-600 dark:text-stone-300">${v.cliente}</td>
+        <td class="p-3"><span class="px-2 py-0.5 rounded bg-stone-100 dark:bg-noche-bg">${v.canal}</span></td>
+        <td class="p-3 font-extrabold text-morado dark:text-mostaza">S/ ${montoTotal.toFixed(2)}</td>
+        <td class="p-3 font-bold text-amber-600 dark:text-amber-400">S/ ${capital.toFixed(2)}</td>
+        <td class="p-3 font-extrabold text-emerald-600 dark:text-lime-400">S/ ${ganancia.toFixed(2)}</td>
+        <td class="p-3 text-center">
+          <button onclick="borrarVenta('${v.id}')" class="text-stone-300 hover:text-rose-500"><i class="fa-regular fa-trash-can"></i></button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  // Actualiza las 3 tarjetas superiores de Ventas
+  if (document.getElementById('kpi-ventas-brutas')) {
+    document.getElementById('kpi-ventas-brutas').innerText = `S/ ${totalVentasBrutas.toFixed(2)}`;
+    document.getElementById('kpi-capital-reposicion').innerText = `S/ ${totalCapital.toFixed(2)}`;
+    document.getElementById('kpi-ganancia-neta').innerText = `S/ ${totalGananciaNeta.toFixed(2)}`;
+  }
+};
 
     window.filtrarFinanzas = (p) => {
       filtroFinanzasActual = p;
