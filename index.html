@@ -768,15 +768,15 @@
           </div>
 
           <div id="contenedor-patron-archivo" class="hidden flex flex-col items-center">
-            <div class="w-full h-[72vh] min-h-[520px] bg-stone-200 dark:bg-noche-bg/80 relative">
+           <div id="contenedor-iframe-fullscreen" class="w-full h-[72vh] min-h-[520px] bg-stone-200 dark:bg-noche-bg/80 relative">
               <iframe id="ver-p-iframe-pdf" class="w-full h-full border-0 rounded-t-2xl" src=""></iframe>
             </div>
             <div class="w-full p-2.5 bg-stone-100 dark:bg-noche-card border-t border-stone-200 dark:border-noche-border flex flex-wrap justify-between items-center gap-2">
               <span class="text-stone-500 text-[11px] font-medium"><i class="fa-solid fa-file-pdf text-rose-500 mr-1"></i> Documento / Esquema</span>
               <div class="flex items-center gap-2">
-                <button type="button" onclick="window.open(document.getElementById('ver-p-iframe-pdf').src, '_blank')" class="px-3 py-1.5 rounded-lg bg-rana text-morado font-extrabold text-[11px] hover:bg-rana-dark transition flex items-center gap-1.5 shadow-xs">
-                  <i class="fa-solid fa-up-right-from-square"></i> Pantalla Completa
-                </button>
+                <button type="button" onclick="(function(){ const box = document.getElementById('contenedor-iframe-fullscreen'); const src = document.getElementById('ver-p-iframe-pdf').src; if (box && box.requestFullscreen) { box.requestFullscreen().catch(() => {}); } else if (src.startsWith('data:')) { const arr = src.split(','); const mime = arr[0].match(/:(.*?);/)[1]; const bstr = atob(arr[1]); let n = bstr.length; const u8 = new Uint8Array(n); while(n--) u8[n] = bstr.charCodeAt(n); window.open(URL.createObjectURL(new Blob([u8], {type: mime})), '_blank'); } else { window.open(src, '_blank'); } })()" class="px-3 py-1.5 rounded-lg bg-morado text-white text-xs font-bold hover:opacity-90 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-up-right-from-square"></i> Pantalla Completa
+        </button>
                 <a id="btn-descargar-pdf-opcional" href="#" download="patron_amigurumi" class="px-3 py-1.5 rounded-lg bg-rana-soft dark:bg-morado text-morado dark:text-rana font-bold text-[11px] flex items-center gap-1.5">
                   <i class="fa-solid fa-file-arrow-down"></i> Descargar
                 </a>
@@ -1885,6 +1885,11 @@ window.guardarPedido = async (e) => {
                     <i class="fa-solid fa-boxes-packing"></i> Descontar Stock
                   </button>
                 ` : (p.insumosDescontados ? `<span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold"><i class="fa-solid fa-check-double mr-1"></i>Stock descontado</span>` : '')}
+              ${p.estado !== 'Entregado' && !p.pasadoAVentas ? `
+            <button onclick="entregarYPasarAVentas('${p.id}')" class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition flex items-center gap-1" title="Marcar entregado y registrar en Ventas">
+              <i class="fa-solid fa-circle-check"></i> Entregado → Venta
+            </button>
+          ` : (p.pasadoAVentas ? `<span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold"><i class="fa-solid fa-check-double"></i> En Ventas</span>` : '')}
               </div>
 
               <div class="flex items-center gap-1">
@@ -1899,7 +1904,70 @@ window.guardarPedido = async (e) => {
         `;
       }).join('');
     };
+window.entregarYPasarAVentas = async (id) => {
+  const p = pedidos.find(x => x.id === id);
+  if (!p) return;
 
+  if (p.pasadoAVentas) {
+    alert("Este pedido ya fue registrado en el Libro de Ventas.");
+    return;
+  }
+
+  const totalCobrado = Number(p.precioTotal) || 0;
+  if (!confirm(`¿Confirmas entregar "${p.articulo}" a ${p.cliente} y registrarlo en Ventas por S/ ${totalCobrado.toFixed(2)}?`)) {
+    return;
+  }
+
+  try {
+    const hoy = new Date().toISOString().split('T')[0];
+    const itemsVenta = (Array.isArray(p.items) && p.items.length > 0)
+      ? p.items.map(i => ({
+          proyectoId: i.proyectoId || '',
+          nombre: i.nombre || p.articulo,
+          cantidad: Number(i.cantidad) || 1,
+          precioUnit: Number(i.precioUnit) || 0,
+          costoUnit: Number(i.costoInsumos) || 0,
+          subtotal: Number(i.subtotal) || 0
+        }))
+      : [{
+          proyectoId: p.proyectoId || '',
+          nombre: p.articulo || 'Pedido personalizado',
+          cantidad: 1,
+          precioUnit: totalCobrado,
+          costoUnit: Number(p.capitalInsumos) || 0,
+          subtotal: totalCobrado
+        }];
+
+    const nuevaVenta = {
+      proyectoId: p.proyectoId || itemsVenta[0]?.proyectoId || '',
+      nombreArticulo: p.articulo || 'Pedido entregado',
+      items: itemsVenta,
+      costoBase: Number(p.capitalInsumos) || 0,
+      cantidad: 1,
+      packaging: Number(p.packaging) || 0,
+      descuentoSet: Number(p.descuentoSet) || 0,
+      fecha: hoy,
+      cliente: p.cliente || 'Cliente',
+      canal: 'Pedido Agendado',
+      monto: totalCobrado
+    };
+
+    await addDoc(collection(db, "ventas"), nuevaVenta);
+    await updateDoc(doc(db, "pedidos", id), {
+      estado: 'Entregado',
+      adelanto: totalCobrado + (Number(p.delivery) || 0),
+      saldoPendiente: 0,
+      pasadoAVentas: true
+    });
+
+    if (typeof window.enviarMensajeTelegram === 'function') {
+      window.enviarMensajeTelegram(`✅ <b>Pedido Entregado y Cobrado</b>\n• <b>Cliente:</b> ${p.cliente}\n• <b>Diseño:</b> ${p.articulo}\n• <b>Total:</b> S/ ${totalCobrado.toFixed(2)}`);
+    }
+  } catch (err) {
+    console.error("Error al pasar pedido a ventas:", err);
+    alert("Hubo un error al registrar la venta.");
+  }
+};
     // CONTADOR DE VUELTAS (MESA DE TRABAJO RND)
     window.abrirFichaVueltas = (id) => {
       const p = pedidos.find(x => x.id === id);
