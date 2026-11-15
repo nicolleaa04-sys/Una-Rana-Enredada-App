@@ -411,15 +411,68 @@
           <input type="text" id="calc-nombre-amigurumi" placeholder="Ej. Ranita con Overol" class="w-full px-3 py-2 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-rana">
         </div>
 
+        <!-- Selector de Modo: Manual vs Estimador Automático -->
+        <div class="grid grid-cols-2 gap-1.5 p-1 bg-stone-100 dark:bg-noche-bg rounded-xl border border-stone-200 dark:border-noche-border text-[11px] font-bold">
+          <button type="button" id="btn-modo-manual" onclick="cambiarModoCotizador('manual')" class="py-1.5 px-2 rounded-lg bg-morado text-white dark:bg-rana dark:text-noche-bg shadow-sm transition">
+            Ya sé los gramos
+          </button>
+          <button type="button" id="btn-modo-estimar" onclick="cambiarModoCotizador('estimar')" class="py-1.5 px-2 rounded-lg text-stone-500 dark:text-stone-400 hover:text-morado dark:hover:text-rana transition">
+            No sé los gramos (Estimar)
+          </button>
+        </div>
+
+        <!-- Panel del Estimador Automático (oculto por defecto) -->
+        <div id="panel-estimador-gramaje" class="hidden space-y-2.5 bg-morado/5 dark:bg-rana/5 p-3.5 rounded-2xl border border-morado/20 dark:border-rana/20 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-morado dark:text-rana-light text-[11px] uppercase tracking-wider">
+              <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Estimador Automático (+15% margen)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block font-bold mb-1 text-stone-600 dark:text-stone-300 text-[11px]">Altura (cm)</label>
+              <input type="number" id="est-altura" value="15" min="3" max="150" oninput="previsualizarEstimado()" class="w-full p-2 border dark:border-noche-border rounded-xl bg-white dark:bg-noche-card font-bold">
+            </div>
+            <div>
+              <label class="block font-bold mb-1 text-stone-600 dark:text-stone-300 text-[11px]">Nivel de detalle</label>
+              <select id="est-detalle" onchange="previsualizarEstimado()" class="w-full p-2 border dark:border-noche-border rounded-xl bg-white dark:bg-noche-card font-bold">
+                <option value="base">Base / Simple</option>
+                <option value="detallado">Detallado (+25%)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold mb-1 text-stone-600 dark:text-stone-300 text-[11px]">Técnica / Grosor de hilo</label>
+            <select id="est-grosor" onchange="previsualizarEstimado()" class="w-full p-2 border dark:border-noche-border rounded-xl bg-white dark:bg-noche-card font-bold">
+              <option value="1hebra">1 hebra (Algodón estándar / 2.0 - 2.5 mm)</option>
+              <option value="doble">Doble hebra (2 cabos juntos / 3.5 - 4.0 mm)</option>
+              <option value="chenille">Felpa / Chenille (Grueso / 4.0 - 5.0 mm)</option>
+            </select>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <span id="est-preview-texto" class="text-[11px] font-semibold text-stone-600 dark:text-stone-300">
+              Estimado: 57g hilo • 34g napa
+            </span>
+            <button type="button" onclick="aplicarEstimadoACalculadora()" class="px-3 py-1.5 rounded-xl bg-morado hover:bg-morado-light dark:bg-rana dark:hover:bg-rana-light text-white dark:text-noche-bg font-bold text-[11px] shadow-sm transition">
+              Aplicar estimado
+            </button>
+          </div>
+        </div>
+
+        <!-- Inputs Principales (Siempre visibles para ver/ajustar el resultado aplicado) -->
         <div class="grid grid-cols-2 gap-3 text-xs bg-crema-50 dark:bg-noche-bg/60 p-3.5 rounded-2xl border border-stone-100 dark:border-noche-border">
           <div>
             <label class="block font-bold mb-1 text-morado dark:text-rana-light">Gramos de Hilo</label>
-            <input type="number" id="calc-hilo" value="35" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-card rounded-xl font-bold">
+            <input type="number" id="calc-hilo" value="35" oninput="document.getElementById('calc-napa-estimada').value=''; calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border rounded-xl bg-white dark:bg-noche-card font-bold">
           </div>
           <div>
             <label class="block font-bold mb-1 text-morado dark:text-rana-light">Horas de Tejido</label>
-            <input type="number" step="0.5" id="calc-horas" value="3" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border dark:bg-noche-card rounded-xl font-bold">
+            <input type="number" step="0.5" id="calc-horas" value="3" oninput="calcularPrecioAmigurumi()" class="w-full p-2 border dark:border-noche-border rounded-xl bg-white dark:bg-noche-card font-bold">
           </div>
+          <input type="hidden" id="calc-napa-estimada" value="">
         </div>
 
         <div class="p-4 bg-rana-soft dark:bg-noche-bg border-2 border-dashed border-rana rounded-2xl text-center space-y-1">
@@ -2722,12 +2775,90 @@ window.entregarYPasarAVentas = async (id) => {
       icono.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
     };
 
-    window.calcularPrecioAmigurumi = () => {
+    window.cambiarModoCotizador = (modo) => {
+  const panelEst = document.getElementById('panel-estimador-gramaje');
+  const btnManual = document.getElementById('btn-modo-manual');
+  const btnEstimar = document.getElementById('btn-modo-estimar');
+  if (!panelEst || !btnManual || !btnEstimar) return;
+
+  const activoClases = ['bg-morado', 'text-white', 'dark:bg-rana', 'dark:text-noche-bg', 'shadow-sm'];
+  const inactivoClases = ['text-stone-500', 'dark:text-stone-400', 'hover:text-morado', 'dark:hover:text-rana'];
+
+  if (modo === 'estimar') {
+    panelEst.classList.remove('hidden');
+    btnEstimar.classList.add(...activoClases);
+    btnEstimar.classList.remove(...inactivoClases);
+    btnManual.classList.remove(...activoClases);
+    btnManual.classList.add(...inactivoClases);
+    previsualizarEstimado();
+  } else {
+    panelEst.classList.add('hidden');
+    btnManual.classList.add(...activoClases);
+    btnManual.classList.remove(...inactivoClases);
+    btnEstimar.classList.remove(...activoClases);
+    btnEstimar.classList.add(...inactivoClases);
+  }
+};
+
+window.calcularValoresEstimados = () => {
+  const h = Number(document.getElementById('est-altura')?.value) || 0;
+  const grosor = document.getElementById('est-grosor')?.value || '1hebra';
+  const detalle = document.getElementById('est-detalle')?.value || 'base';
+
+  // 1. Gramos base (1 hebra: 0.22 * h^2)
+  let hiloBase = 0.22 * (h * h);
+
+  // 2. Multiplicador de grosor / técnica
+  if (grosor === 'doble') hiloBase *= 1.45;
+  else if (grosor === 'chenille') hiloBase *= 1.6;
+
+  // 3. Napa = 60% del hilo estimado
+  let napaBase = hiloBase * 0.60;
+
+  // 4. Multiplicador por nivel de detalle (+25%)
+  if (detalle === 'detallado') {
+    hiloBase *= 1.25;
+    napaBase *= 1.25;
+  }
+
+  // 5. Margen de seguridad final (+15%) redondeado a enteros
+  const hiloFinal = Math.round(hiloBase * 1.15);
+  const napaFinal = Math.round(napaBase * 1.15);
+
+  return { hiloFinal, napaFinal };
+};
+
+window.previsualizarEstimado = () => {
+  const { hiloFinal, napaFinal } = calcularValoresEstimados();
+  const preview = document.getElementById('est-preview-texto');
+  if (preview) {
+    preview.innerText = `Estimado: ${hiloFinal}g hilo • ${napaFinal}g napa`;
+  }
+};
+
+window.aplicarEstimadoACalculadora = () => {
+  const { hiloFinal, napaFinal } = calcularValoresEstimados();
+  const inputHilo = document.getElementById('calc-hilo');
+  const inputNapaEst = document.getElementById('calc-napa-estimada');
+
+  if (inputHilo) inputHilo.value = hiloFinal;
+  if (inputNapaEst) inputNapaEst.value = napaFinal;
+
+  calcularPrecioAmigurumi();
+};
+
+window.calcularPrecioAmigurumi = () => {
   const hG = Number(document.getElementById('calc-hilo')?.value) || 0;
   const hrs = Number(document.getElementById('calc-horas')?.value) || 0;
   const emp = Number(document.getElementById('calc-empaque')?.value ?? 1.5);
   const arg = Number(document.getElementById('calc-argolla')?.value ?? 2.0);
-  const nG = Number(document.getElementById('calc-napa')?.value ?? Math.round(hG * 0.8));
+
+  // Usa la napa del estimador si se aplicó; si se editó manual, estima 60% del hilo
+  const napaEstVal = document.getElementById('calc-napa-estimada')?.value;
+  const nG = (napaEstVal !== undefined && napaEstVal !== '')
+    ? Number(napaEstVal)
+    : Number(document.getElementById('calc-napa')?.value ?? Math.round(hG * 0.6));
+
   const ojos = Number(document.getElementById('calc-ojos')?.value ?? 2.4);
   const tar = Number(document.getElementById('calc-tarifa-hora')?.value ?? 7.0);
 
@@ -2735,11 +2866,11 @@ window.entregarYPasarAVentas = async (id) => {
   const mo = hrs * tar;
   const sugerido = Math.round((mat + mo) * 1.25);
 
-      document.getElementById('calc-precio-final').innerText = `S/ ${sugerido}.00`;
-      document.getElementById('calc-desglose').innerText = `Materiales: S/ ${mat.toFixed(2)} | Mano de obra: S/ ${mo.toFixed(2)}`;
+  document.getElementById('calc-precio-final').innerText = `S/ ${sugerido}.00`;
+  document.getElementById('calc-desglose').innerText = `Materiales: S/ ${mat.toFixed(2)} | Mano de obra: S/ ${mo.toFixed(2)}`;
 
-      return { costo: Math.round(mat), precio: sugerido, materiales: `${hG}g hilo, ${nG}g napa, empaque y accesorios` };
-    };
+  return { costo: Math.round(mat), precio: sugerido, materiales: `${hG}g hilo, ${nG}g napa, empaque y accesorios` };
+};
 
     window.guardarCotizacionEnPatrones = () => {
       const nom = document.getElementById('calc-nombre-amigurumi').value.trim();
