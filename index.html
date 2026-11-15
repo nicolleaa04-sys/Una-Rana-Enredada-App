@@ -677,16 +677,16 @@
       <label class="text-[10px] text-stone-500 dark:text-stone-400 font-semibold block mb-1">Subtotal (S/)</label>
       <input type="number" id="ped-subtotal" readonly value="0" class="w-full p-1.5 border border-stone-300 dark:border-noche-border bg-stone-200/60 dark:bg-noche-card/50 rounded-lg text-xs font-bold text-stone-700 dark:text-stone-300">
     </div>
-   <div>
-            <label class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold block mb-1">Packaging (S/)</label>
-            <select id="ped-pack-tipo" onchange="aplicarTipoPackaging('ped')" class="w-full p-1 mb-1 border border-stone-300 dark:border-noche-border bg-white dark:bg-noche-card rounded-lg text-[10px] outline-none">
-              <option value="auto">Auto (1 c/4 · S/ 1.50)</option>
-              <option value="chica">1 Chica (S/ 1.50)</option>
-              <option value="grande">1 Grande (S/ 2.50)</option>
-              <option value="manual">Manual / Otro</option>
-            </select>
-            <input type="number" id="ped-packaging" value="0" step="0.50" min="0" oninput="document.getElementById('ped-pack-tipo').value='manual'; recalcularTotalesModalPedido()" class="w-full p-1.5 border border-stone-300 dark:border-noche-border bg-white dark:bg-noche-card rounded-lg text-xs outline-none">
-          </div>
+  <div>
+              <label class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold block mb-1">Packaging (S/)</label>
+              <select id="ped-pack-tipo" onchange="aplicarTipoPackaging('ped')" class="w-full p-1 mb-1 border border-stone-300 dark:border-noche-border dark:bg-noche-card rounded text-[11px] font-bold">
+                <option value="organza">Kit Organza (c/u)</option>
+                <option value="llavero_seda">Llavero + 1/2 Seda + Kraft</option>
+                <option value="estandar_seda" selected>Muñeco + 1 Seda + Kraft</option>
+                <option value="manual">Manual / Otro</option>
+              </select>
+              <input type="number" id="ped-packaging" value="0" step="0.10" min="0" oninput="document.getElementById('ped-pack-tipo').value='manual'; recalcularTotalesModalPedido()" class="w-full p-1.5 border border-stone-300 dark:border-noche-border dark:bg-noche-card rounded font-bold text-xs">
+            </div>
     <div>
       <label class="text-[10px] text-emerald-600 dark:text-lime-400 font-semibold block mb-1">Dscto. Set</label>
       <input type="number" id="ped-descuento" value="0" step="0.50" min="0" oninput="recalcularTotalesModalPedido()" class="w-full p-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs dark:text-white">
@@ -1028,11 +1028,32 @@
             <input type="color" id="mat-color-hex" value="#A6D854" class="w-full h-9 p-1 border dark:border-noche-border dark:bg-noche-bg rounded-xl cursor-pointer">
           </div>
         </div>
-
+<!-- Calculadora rápida por paquete / lote -->
+          <div class="bg-morado/5 dark:bg-rana/5 p-2.5 rounded-xl border border-morado/20 dark:border-rana/20 text-xs">
+            <button type="button" onclick="document.getElementById('calc-paquete-box').classList.toggle('hidden')" class="w-full flex items-center justify-between font-bold text-morado dark:text-rana-light text-[11px]">
+              <span><i class="fa-solid fa-box-open mr-1"></i> ¿Compraste por paquete? Calcular costo unitario</span>
+              <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </button>
+            <div id="calc-paquete-box" class="hidden grid grid-cols-3 gap-2 mt-2 pt-2 border-t border-morado/10 dark:border-rana/10">
+              <div>
+                <label class="block text-[10px] text-stone-500 font-semibold mb-0.5">Costo Paq. (S/)</label>
+                <input type="number" step="0.01" id="paq-costo-total" placeholder="9.00" oninput="calcularCostoDesdePaquete()" class="w-full p-1.5 border dark:border-noche-border rounded-lg bg-white dark:bg-noche-card font-bold">
+              </div>
+              <div>
+                <label class="block text-[10px] text-stone-500 font-semibold mb-0.5">Trae (unid/pliegos)</label>
+                <input type="number" step="1" id="paq-cantidad" placeholder="60" oninput="calcularCostoDesdePaquete()" class="w-full p-1.5 border dark:border-noche-border rounded-lg bg-white dark:bg-noche-card font-bold">
+              </div>
+              <div>
+                <label class="block text-[10px] text-stone-500 font-semibold mb-0.5">Paquetes compr.</label>
+                <input type="number" step="1" id="paq-num" value="1" min="1" oninput="calcularCostoDesdePaquete()" class="w-full p-1.5 border dark:border-noche-border rounded-lg bg-white dark:bg-noche-card font-bold">
+              </div>
+            </div>
+          </div>
+        
         <div class="grid grid-cols-3 gap-2">
           <div>
             <label id="lbl-mat-costo" class="block text-[11px] font-bold mb-1">Costo Unit. (S/)</label>
-            <input type="number" step="0.01" id="mat-costo" required placeholder="8.00" class="w-full px-2 py-1.5 border dark:border-noche-border dark:bg-noche-bg rounded-xl text-xs outline-none">
+            <input type="number" step="0.001" id="mat-costo" required placeholder="8.00" class="w-full px-2 py-1.5 border dark:border-noche-border dark:bg-noche-bg rounded-lg">
           </div>
           <div>
             <label id="lbl-mat-stock" class="block text-[11px] font-bold mb-1">Stock Actual</label>
@@ -1532,8 +1553,8 @@
       const sel = document.getElementById('ped-articulo');
       if (!sel) return;
       sel.innerHTML = `<option value="">Seleccionar amigurumi o diseño...</option>` +
-        proyectos.map(p => `<option value="${p.nombre}" data-precio="${p.precio}" data-id="${p.id}">${p.nombre} (S/ ${p.precio})</option>`).join('') +
-        `<option value="Personalizado">-- Personalizado / A Pedido --</option>`;
+    proyectos.map(p => `<option value="${p.nombre}" data-precio="${p.precio}" data-costo="${p.costo || 0}" data-horas="${p.horasEstimadas || p.horas || 2}" data-id="${p.id}">${p.nombre} (S/ ${p.precio})</option>`).join('') +
+    `<option value="Personalizado">-- Personalizado / A Pedido --</option>`;
     };
 
     window.adaptarFormularioPedido = () => {
@@ -1664,22 +1685,63 @@ function renderizarListaItemsPedido() {
   `).join('');
 }
 
+window.calcularCostoDesdePaquete = () => {
+  const costoPaq = parseFloat(document.getElementById('paq-costo-total')?.value) || 0;
+  const cantPaq = parseFloat(document.getElementById('paq-cantidad')?.value) || 0;
+  const numPaq = parseFloat(document.getElementById('paq-num')?.value) || 1;
+  if (costoPaq > 0 && cantPaq > 0) {
+    document.getElementById('mat-costo').value = (costoPaq / cantPaq).toFixed(3);
+    document.getElementById('mat-stock').value = cantPaq * numPaq;
+    document.getElementById('mat-min-stock').value = Math.max(1, Math.round(cantPaq * 0.25));
+  }
+};
+
+// Lee en tiempo real el costo unitario desde tu colección 'materiales' (Almacén)
+window.obtenerPrecioInsumoAlmacen = (palabrasClave, fallback) => {
+  if (!Array.isArray(materiales)) return fallback;
+  const encontrado = materiales.find(m => {
+    const nom = (m.nombre || '').toLowerCase();
+    return palabrasClave.some(p => nom.includes(p));
+  });
+  return (encontrado && Number(encontrado.costo) > 0) ? Number(encontrado.costo) : fallback;
+};
+
+window.calcularCostoKitPackaging = (tipo, totalPiezas) => {
+  const piezas = Math.max(1, totalPiezas || 1);
+  // Precios dinámicos desde Almacén (si aún no creas el insumo, usa un respaldo seguro)
+  const cOrganza   = obtenerPrecioInsumoAlmacen(['organza'], 0.30);
+  const cSeda      = obtenerPrecioInsumoAlmacen(['papel seda', 'seda'], 0.15);
+  const cKraftCh   = obtenerPrecioInsumoAlmacen(['kraft chica', 'kraft pequeña', 'kraft'], 0.50);
+  const cKraftMd   = obtenerPrecioInsumoAlmacen(['kraft mediana', 'kraft grande', 'kraft'], 0.80);
+  const cHojaStick = obtenerPrecioInsumoAlmacen(['papel sticker', 'sticker', 'fotográfico'], 0.50);
+  const cTarjeta   = obtenerPrecioInsumoAlmacen(['tarjeta', 'agradecimiento'], cHojaStick / 8); // 8 tarjetas por hoja
+  const cNenufar   = obtenerPrecioInsumoAlmacen(['nenúfar', 'nenufar'], cHojaStick / 12);      // 12 stickers por hoja
+
+  if (tipo === 'organza') {
+    // 1 bolsa organza + 1 tarjetita + 1 sticker por cada llavero
+    return piezas * (cOrganza + cTarjeta + cNenufar);
+  }
+  if (tipo === 'llavero_seda') {
+    // 1 bolsa kraft chica + 1 tarjeta (por pedido) + 0.5 pliego seda y 1 sticker nenúfar por pieza
+    return cKraftCh + cTarjeta + (piezas * ((cSeda * 0.5) + cNenufar));
+  }
+  if (tipo === 'estandar_seda') {
+    // 1 bolsa kraft mediana + 1 tarjeta (por pedido) + 1 pliego seda y 1 sticker nenúfar por pieza
+    return cKraftMd + cTarjeta + (piezas * (cSeda + cNenufar));
+  }
+  return 0;
+};
+
 window.aplicarTipoPackaging = (prefijo) => {
-  const tipo = document.getElementById(`${prefijo}-pack-tipo`)?.value || 'auto';
+  const tipo = document.getElementById(`${prefijo}-pack-tipo`)?.value || 'estandar_seda';
   const inputPack = document.getElementById(`${prefijo}-packaging`);
   if (!inputPack) return;
 
-  if (tipo === 'auto') {
+  if (tipo !== 'manual') {
     const lista = prefijo === 'ped' ? itemsSetActual : itemsVentaActual;
     const totalPiezas = lista.reduce((acc, i) => acc + i.cantidad, 0);
-    const bolsas = totalPiezas > 0 ? Math.ceil(totalPiezas / 4) : 0;
-    const costoBaseBolsa = typeof COSTO_BOLSA_KRAFT !== 'undefined' ? COSTO_BOLSA_KRAFT : 1.50;
-    inputPack.value = (bolsas * costoBaseBolsa).toFixed(2);
-  } else if (tipo === 'chica') {
-    inputPack.value = "1.50";
-  } else if (tipo === 'grande') {
-    inputPack.value = "2.50";
-  } else if (tipo === 'manual') {
+    inputPack.value = calcularCostoKitPackaging(tipo, totalPiezas).toFixed(2);
+  } else {
     inputPack.focus();
   }
 
@@ -1691,11 +1753,17 @@ window.recalcularTotalesModalPedido = () => {
   const subtotal = itemsSetActual.reduce((acc, i) => acc + i.subtotal, 0);
   const totalPiezas = itemsSetActual.reduce((acc, i) => acc + i.cantidad, 0);
 
-  const tipoPack = document.getElementById('ped-pack-tipo')?.value || 'auto';
+  // Actualiza automáticamente las horas estimadas según los muñecos agregados al pedido
+  const inputHoras = document.getElementById('ped-horas');
+  if (inputHoras && itemsSetActual.length > 0 && document.activeElement !== inputHoras) {
+    const totalHoras = itemsSetActual.reduce((acc, i) => acc + ((Number(i.horasUnit) || 2) * i.cantidad), 0);
+    inputHoras.value = totalHoras;
+  }
+
+  const tipoPack = document.getElementById('ped-pack-tipo')?.value || 'estandar_seda';
   const inputPack = document.getElementById('ped-packaging');
-  if (tipoPack === 'auto' && inputPack && document.activeElement !== inputPack) {
-    const bolsasNecesarias = totalPiezas > 0 ? Math.ceil(totalPiezas / 4) : 0;
-    inputPack.value = (bolsasNecesarias * COSTO_BOLSA_KRAFT).toFixed(2);
+  if (tipoPack !== 'manual' && inputPack && document.activeElement !== inputPack) {
+    inputPack.value = calcularCostoKitPackaging(tipoPack, totalPiezas).toFixed(2);
   }
 
   const descuento = parseFloat(document.getElementById('ped-descuento')?.value) || 0;
@@ -2436,67 +2504,76 @@ window.entregarYPasarAVentas = async (id) => {
       quitarFoto('p');
       setModoPatron('texto');
 
-      if (id) {
-        const p = proyectos.find(x => x.id === id);
-        if (p) {
-          document.getElementById('p-id').value = p.id;
-          document.getElementById('p-nombre').value = p.nombre;
-          document.getElementById('p-categoria').value = p.categoria;
-          document.getElementById('p-tamano').value = p.tamano || '';
-          document.getElementById('p-crochet').value = p.crochet || '';
-          document.getElementById('p-costo').value = p.costo;
-          document.getElementById('p-precio').value = p.precio;
-          document.getElementById('p-materiales').value = p.materiales || '';
-          document.getElementById('p-patron').value = p.patron || '';
-          document.getElementById('p-link').value = p.link || '';
-          document.getElementById('p-archivo-data').value = p.archivo || '';
+      const formProyecto = document.getElementById('form-proyecto');
+  if (formProyecto) formProyecto.dataset.horasEstimadas = '';
 
-          if (p.fotoUrl) {
-            document.getElementById('p-foto-url').value = p.fotoUrl;
-            mostrarPreview('p', p.fotoUrl);
-          } else if (p.fotoData) {
-            document.getElementById('p-foto-data').value = p.fotoData;
-            mostrarPreview('p', p.fotoData);
-          }
+  if (id) {
+    const p = proyectos.find(x => x.id === id);
+    if (p) {
+      document.getElementById('p-id').value = p.id;
+      document.getElementById('p-nombre').value = p.nombre;
+      document.getElementById('p-categoria').value = p.categoria;
+      document.getElementById('p-tamano').value = p.tamano || '';
+      document.getElementById('p-crochet').value = p.crochet || '';
+      document.getElementById('p-costo').value = p.costo;
+      document.getElementById('p-precio').value = p.precio;
+      document.getElementById('p-materiales').value = p.materiales || '';
+      document.getElementById('p-patron').value = p.patron || '';
+      document.getElementById('p-link').value = p.link || '';
+      document.getElementById('p-archivo-data').value = p.archivo || '';
+      if (formProyecto) formProyecto.dataset.horasEstimadas = p.horasEstimadas || p.horas || '';
 
-          if (p.link) setModoPatron('link');
-          else if (p.archivo) {
-            setModoPatron('archivo');
-            document.getElementById('p-archivo-status').innerText = '✓ PDF guardado';
-          }
-        }
-      } else if (datosPrecargados) {
-        document.getElementById('p-nombre').value = datosPrecargados.nombre || '';
-        document.getElementById('p-costo').value = datosPrecargados.costo || 0;
-        document.getElementById('p-precio').value = datosPrecargados.precio || 0;
-        document.getElementById('p-materiales').value = datosPrecargados.materiales || '';
+      if (p.fotoUrl) {
+        document.getElementById('p-foto-url').value = p.fotoUrl;
+        mostrarPreview('p', p.fotoUrl);
+      } else if (p.fotoData) {
+        document.getElementById('p-foto-data').value = p.fotoData;
+        mostrarPreview('p', p.fotoData);
       }
 
-      document.getElementById('modal-proyecto').classList.remove('hidden');
-    };
+      if (p.link) setModoPatron('link');
+      else if (p.archivo) {
+        setModoPatron('archivo');
+        document.getElementById('p-archivo-status').innerText = '✓ PDF guardado';
+      }
+    }
+  } else if (datosPrecargados) {
+    document.getElementById('p-nombre').value = datosPrecargados.nombre || '';
+    document.getElementById('p-costo').value = datosPrecargados.costo || 0;
+    document.getElementById('p-precio').value = datosPrecargados.precio || 0;
+    document.getElementById('p-materiales').value = datosPrecargados.materiales || '';
+    if (formProyecto) formProyecto.dataset.horasEstimadas = datosPrecargados.horasEstimadas || datosPrecargados.horas || '';
+  }
 
-    window.guardarProyecto = async (e) => {
-      e.preventDefault();
-      const id = document.getElementById('p-id').value;
-      const data = {
-        nombre: document.getElementById('p-nombre').value,
-        categoria: document.getElementById('p-categoria').value,
-        tamano: document.getElementById('p-tamano').value,
-        crochet: document.getElementById('p-crochet').value,
-        costo: Number(document.getElementById('p-costo').value) || 0,
-        precio: Number(document.getElementById('p-precio').value) || 0,
-        materiales: document.getElementById('p-materiales').value,
-        patron: document.getElementById('p-patron').value,
-        link: document.getElementById('p-link').value,
-        archivo: document.getElementById('p-archivo-data').value,
-        fotoUrl: document.getElementById('p-foto-url').value,
-        fotoData: document.getElementById('p-foto-data').value
-      };
+  document.getElementById('modal-proyecto').classList.remove('hidden');
+};
 
-      if (id) await updateDoc(doc(db, "proyectos", id), data);
-      else await addDoc(collection(db, "proyectos"), data);
-      cerrarModal('modal-proyecto');
-    };
+window.guardarProyecto = async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('p-id').value;
+  const formProyecto = document.getElementById('form-proyecto');
+  const horasGuardadas = Number(formProyecto?.dataset.horasEstimadas) || 0;
+
+  const data = {
+    nombre: document.getElementById('p-nombre').value,
+    categoria: document.getElementById('p-categoria').value,
+    tamano: document.getElementById('p-tamano').value,
+    crochet: document.getElementById('p-crochet').value,
+    costo: Number(document.getElementById('p-costo').value) || 0,
+    precio: Number(document.getElementById('p-precio').value) || 0,
+    horasEstimadas: horasGuardadas,
+    materiales: document.getElementById('p-materiales').value,
+    patron: document.getElementById('p-patron').value,
+    link: document.getElementById('p-link').value,
+    archivo: document.getElementById('p-archivo-data').value,
+    fotoUrl: document.getElementById('p-foto-url').value,
+    fotoData: document.getElementById('p-foto-data').value
+  };
+
+  if (id) await updateDoc(doc(db, "proyectos", id), data);
+  else await addDoc(collection(db, "proyectos"), data);
+  cerrarModal('modal-proyecto');
+};
 
     window.borrarProyecto = async (id) => {
       if (confirm('¿Eliminar este diseño?')) await deleteDoc(doc(db, "proyectos", id));
@@ -2869,22 +2946,24 @@ window.calcularPrecioAmigurumi = () => {
   document.getElementById('calc-precio-final').innerText = `S/ ${sugerido}.00`;
   document.getElementById('calc-desglose').innerText = `Materiales: S/ ${mat.toFixed(2)} | Mano de obra: S/ ${mo.toFixed(2)}`;
 
-  return { costo: Math.round(mat), precio: sugerido, materiales: `${hG}g hilo, ${nG}g napa, empaque y accesorios` };
+ return { costo: Math.round(mat), precio: sugerido, horas: hrs, materiales: `${hG}g hilo, ${nG}g napa, empaque y accesorios` };
 };
 
-    window.guardarCotizacionEnPatrones = () => {
-      const nom = document.getElementById('calc-nombre-amigurumi').value.trim();
-      if (!nom) return alert('Escribe el nombre del personaje en el cotizador.');
+window.guardarCotizacionEnPatrones = () => {
+  const nom = document.getElementById('calc-nombre-amigurumi').value.trim();
+  if (!nom) return alert('Escribe el nombre del personaje en el cotizador.');
 
-      const datos = calcularPrecioAmigurumi();
-      cambiarModulo('proyectos');
-      abrirModalProyecto(null, {
-        nombre: nom,
-        costo: datos.costo,
-        precio: datos.precio,
-        materiales: datos.materiales
-      });
-    };
+  const datos = calcularPrecioAmigurumi();
+  cambiarModulo('proyectos');
+  abrirModalProyecto(null, {
+    nombre: nom,
+    costo: datos.costo,
+    precio: datos.precio,
+    horas: datos.horas,
+    horasEstimadas: datos.horas,
+    materiales: datos.materiales
+  });
+};
 
     // ==========================================
     // MÓDULO VENTAS & FINANZAS
