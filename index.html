@@ -270,7 +270,7 @@
         </div>
       </div>
 
-      <div id="lista-pedidos-cards" class="space-y-3"></div>
+      <div id="lista-pedidos-priorizados" class="space-y-3"></div>
     </section>
 
     <!-- MÓDULO: CALENDARIO DE ENTREGAS Y CUPOS -->
@@ -1963,6 +1963,7 @@ window.guardarPedido = async (e) => {
     fechaEntrega: document.getElementById('ped-fecha-entrega').value,
     precioTotal,
     packaging,
+    packTipo: document.getElementById('ped-pack-tipo')?.value || 'auto_volumen',
     descuentoSet,
     delivery,
     adelanto,
@@ -2014,10 +2015,22 @@ window.guardarPedido = async (e) => {
       await updateDoc(doc(db, "pedidos", id), updateData);
     };
 
-    // RENDERIZAR PEDIDOS ORDENADOS POR PRIORIDAD
-    window.renderizarPedidos = () => {
-      const cont = document.getElementById('lista-pedidos-priorizados');
-      if (!cont) return;
+// RENDERIZAR PEDIDOS ORDENADOS POR PRIORIDAD
+window.renderizarPedidos = () => {
+  // Actualizar las 4 tarjetas KPI superiores
+  const urgentes = pedidos.filter(p => p.estado !== 'Entregado' && (calcularDiasRestantes(p.fechaEntrega) <= 1 || calcularScoreUrgencia(p) > 1.2)).length;
+  const enTejido = pedidos.filter(p => p.estado === 'En proceso' || p.estado === 'Por iniciar').length;
+  const saldos = pedidos.filter(p => p.estado !== 'Entregado').reduce((acc, p) => acc + (Number(p.saldoPendiente) || 0), 0);
+  const listos = pedidos.filter(p => p.estado === 'Listo para entrega').length;
+
+  if (document.getElementById('kpi-pedidos-urgentes')) document.getElementById('kpi-pedidos-urgentes').innerText = urgentes;
+  if (document.getElementById('kpi-pedidos-tejido')) document.getElementById('kpi-pedidos-tejido').innerText = enTejido;
+  if (document.getElementById('kpi-pedidos-saldos')) document.getElementById('kpi-pedidos-saldos').innerText = `S/ ${saldos.toFixed(0)}`;
+  if (document.getElementById('kpi-pedidos-listos')) document.getElementById('kpi-pedidos-listos').innerText = listos;
+
+  const cont = document.getElementById('lista-pedidos-priorizados');
+  if (!cont) return;
+      
 
       if (pedidos.length === 0) {
         cont.innerHTML = `<div class="p-8 text-center bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border text-stone-400 text-xs font-bold">No tienes pedidos agendados actualmente. ¡Presiona "Nuevo Pedido" para empezar!</div>`;
