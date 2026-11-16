@@ -284,16 +284,17 @@
         </div>
         <div class="flex items-center gap-2">
           <button onclick="cambiarMesCalendario(-1)" class="w-8 h-8 rounded-lg bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border text-xs"><i class="fa-solid fa-chevron-left"></i></button>
-          <span id="cal-mes-label" class="text-xs font-bold text-morado dark:text-white px-2"></span>
-          <button onclick="cambiarMesCalendario(1)" class="w-8 h-8 rounded-lg bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border text-xs"><i class="fa-solid fa-chevron-right"></i></button>
-        </div>
+          <span id="cal-mes-titulo" class="text-xs font-bold text-morado dark:text-white px-2"></span>
+        <button onclick="cambiarMesCalendario(1)" class="w-8 h-8 rounded-lg bg-white dark:bg-noche-card border border-stone-200 dark:border-noche-border text-morado dark:text-white flex items-center justify-center hover:bg-stone-100"><i class="fa-solid fa-chevron-right text-xs"></i></button>
       </div>
+    </div>
 
-      <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border p-4 shadow-sm">
-        <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-stone-400 uppercase mb-2">
-          <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span>
-        </div>
-        <div id="grid-dias-calendario" class="grid grid-cols-7 gap-1"></div>
+    <div class="bg-white dark:bg-noche-card rounded-2xl border border-stone-200 dark:border-noche-border p-4 shadow-sm">
+      <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-stone-400 uppercase mb-2">
+        <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+      </div>
+      <div id="calendario-dias-grid" class="grid grid-cols-7 gap-1"></div>
+    </div>
       </div>
 
       <div id="detalle-dia-calendario" class="bg-crema-100 dark:bg-noche-card/60 p-4 rounded-2xl border border-stone-200 dark:border-noche-border text-xs space-y-2">
@@ -2269,25 +2270,60 @@ window.entregarYPasarAVentas = async (id) => {
         }
 
         celdasHTML += `
-          <div class="min-h-[70px] sm:min-h-[90px] p-1.5 rounded-xl border border-stone-200 dark:border-noche-border flex flex-col justify-between ${cupoColor} ${esHoy ? 'ring-2 ring-rana' : ''} transition">
-            <div class="flex justify-between items-center">
-              <span class="text-[11px] font-bold ${esHoy ? 'text-morado dark:text-rana font-extrabold' : 'text-stone-600 dark:text-stone-300'}">${dia}</span>
-              ${badgeCupo}
+      <div onclick="seleccionarDiaCalendario('${fechaStr}')" class="cursor-pointer min-h-[70px] sm:min-h-[90px] p-1.5 rounded-xl border border-stone-200 dark:border-noche-border ${cupoColor} hover:ring-2 hover:ring-morado dark:hover:ring-rana transition flex flex-col justify-between">
+        <div class="flex justify-between items-center">
+          <span class="text-[11px] font-bold ${esHoy ? 'text-morado dark:text-rana font-extrabold' : 'text-stone-600 dark:text-stone-300'}">${dia}</span>
+          ${badgeCupo}
+        </div>
+        <div class="space-y-1 mt-1 overflow-y-auto max-h-12 hide-scrollbar">
+          ${pedidosDelDia.map(p => `
+            <div class="text-[9px] font-bold px-1 py-0.5 rounded bg-morado dark:bg-rana text-white dark:text-morado truncate shadow-xs" title="${p.cliente}: ${p.articulo}">
+              ${p.articulo}
             </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
 
-            <div class="space-y-1 mt-1 overflow-y-auto max-h-12 hide-scrollbar">
-              ${pedidosDelDia.map(p => `
-                <div class="text-[9px] font-bold px-1 py-0.5 rounded bg-morado dark:bg-rana text-white dark:text-morado truncate shadow-xs" title="${p.cliente}: ${p.articulo}">
-                  ${p.articulo}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
+  contenedor.innerHTML = celdasHTML;
+};
 
-      contenedor.innerHTML = celdasHTML;
-    };
+window.cambiarMesCalendario = (delta) => {
+  calMesActual += delta;
+  if (calMesActual < 0) {
+    calMesActual = 11;
+    calAnioActual--;
+  } else if (calMesActual > 11) {
+    calMesActual = 0;
+    calAnioActual++;
+  }
+  renderizarCalendario();
+};
+
+window.seleccionarDiaCalendario = (fechaStr) => {
+  const tituloEl = document.getElementById('cal-dia-seleccionado-titulo');
+  const listaEl = document.getElementById('cal-pedidos-del-dia');
+  if (!tituloEl || !listaEl) return;
+
+  const delDia = pedidos.filter(p => p.fechaEntrega === fechaStr);
+  tituloEl.innerText = `Entregas para el ${fechaStr} (${delDia.length})`;
+
+  if (delDia.length === 0) {
+    listaEl.innerHTML = `<p class="text-xs text-stone-400">Día libre sin entregas programadas.</p>`;
+    return;
+  }
+
+  listaEl.innerHTML = delDia.map(p => `
+    <div class="p-2 rounded-lg bg-white dark:bg-noche-bg border border-stone-200 dark:border-noche-border flex justify-between items-center text-xs">
+      <div>
+        <span class="font-bold text-morado dark:text-rana-light">${p.articulo}</span>
+        <span class="text-stone-400"> • ${p.cliente}</span>
+      </div>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 dark:bg-noche-card">${p.estado}</span>
+    </div>
+  `).join('');
+};
     // ==========================================
     // DESCUENTO AUTOMÁTICO DE MATERIALES (RECETA)
     // ==========================================
