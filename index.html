@@ -680,12 +680,11 @@
   <div>
               <label class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold block mb-1">Packaging (S/)</label>
               <select id="ped-pack-tipo" onchange="aplicarTipoPackaging('ped')" class="w-full p-1 mb-1 border border-stone-300 dark:border-noche-border dark:bg-noche-card rounded text-[11px] font-bold">
-                <option value="organza">Kit Organza (c/u)</option>
-                <option value="llavero_seda">Llavero + 1/2 Seda + Kraft</option>
-                <option value="estandar_seda" selected>Muñeco + 1 Seda + Kraft</option>
+                <option value="auto_volumen" selected>Auto (Volumen/cm)</option>
                 <option value="manual">Manual / Otro</option>
               </select>
               <input type="number" id="ped-packaging" value="0" step="0.10" min="0" oninput="document.getElementById('ped-pack-tipo').value='manual'; recalcularTotalesModalPedido()" class="w-full p-1.5 border border-stone-300 dark:border-noche-border dark:bg-noche-card rounded font-bold text-xs">
+              <span id="ped-pack-detalle" class="block text-[9px] text-stone-500 dark:text-stone-400 mt-0.5 leading-tight"></span>
             </div>
     <div>
       <label class="text-[10px] text-emerald-600 dark:text-lime-400 font-semibold block mb-1">Dscto. Set</label>
@@ -1557,8 +1556,8 @@
       const sel = document.getElementById('ped-articulo');
       if (!sel) return;
       sel.innerHTML = `<option value="">Seleccionar amigurumi o diseño...</option>` +
-    proyectos.map(p => `<option value="${p.nombre}" data-precio="${p.precio}" data-costo="${p.costo || 0}" data-horas="${p.horasEstimadas || p.horas || 2}" data-id="${p.id}">${p.nombre} (S/ ${p.precio})</option>`).join('') +
-    `<option value="Personalizado">-- Personalizado / A Pedido --</option>`;
+      proyectos.map(p => `<option value="${p.nombre}" data-precio="${p.precio}" data-costo="${p.costo || 0}" data-horas="${p.horasEstimadas || p.horas || 2}" data-tamano="${p.tamano || ''}" data-id="${p.id}">${p.nombre} (S/ ${p.precio})</option>`).join('') +
+      `<option value="Personalizado">-- Personalizado / A Pedido --</option>`;
     };
 
     window.adaptarFormularioPedido = () => {
@@ -1628,7 +1627,7 @@ window.agregarItemAlSetPedido = () => {
   const customNom = document.getElementById('ped-custom-nombre').value.trim();
   const customPre = parseFloat(document.getElementById('ped-custom-precio').value) || 0;
 
-  let nombre = '', precioUnit = 0, costoInsumos = 0, proyectoId = '', horasUnit = 2;
+  let nombre = '', precioUnit = 0, costoInsumos = 0, proyectoId = '', horasUnit = 2, tamanoCm = 12; 
 
   if (customNom !== '') {
     nombre = customNom;
@@ -1641,6 +1640,7 @@ window.agregarItemAlSetPedido = () => {
     precioUnit = parseFloat(opt.dataset.precio) || 0;
     costoInsumos = parseFloat(opt.dataset.costo) || (precioUnit * 0.25);
     horasUnit = parseFloat(opt.dataset.horas) || 2;
+    tamanoCm = extraerAlturaCm(opt.dataset.tamano || 12);
   } else {
     alert("Selecciona un amigurumi del taller o escribe un diseño nuevo.");
     return;
@@ -1653,6 +1653,7 @@ window.agregarItemAlSetPedido = () => {
     precioUnit,
     costoInsumos,
     horasUnit,
+    tamanoCm,
     subtotal: cant * precioUnit
   });
 
@@ -1710,42 +1711,116 @@ window.obtenerPrecioInsumoAlmacen = (palabrasClave, fallback) => {
   return (encontrado && Number(encontrado.costo) > 0) ? Number(encontrado.costo) : fallback;
 };
 
-window.calcularCostoKitPackaging = (tipo, totalPiezas) => {
-  const piezas = Math.max(1, totalPiezas || 1);
-  // Precios dinámicos desde Almacén (si aún no creas el insumo, usa un respaldo seguro)
+// Extrae altura numérica en cm desde texto (ej. "14.5 cm" -> 14.5)
+window.extraerAlturaCm = (valor) => {
+  if (typeof valor === 'number' && !isNaN(valor)) return valor;
+  const match = String(valor || '').match(/(\d+(?:[.,]\d+)?)/);
+  return match ? parseFloat(match[1].replace(',', '.')) : 12; // 12 cm por defecto si no se indicó
+};
+
+// Calcula costo + cantidades exactas a descontar de inventario según volumen y altura
+window.calcularDesglosePackagingVolumen = (listaItems) => {
+  if (!Array.isArray(listaItems) || listaItems.length === 0) {
+    return { costoTotal: 0, volumenTotal: 0, resumen: 'Sin ítems', consumos: [] };
+  }
+
+  let organzaUnid = 0;
+  let sedaPliegos = 0;
+  let adhesivoHojas = 0;
+  let volumenTotal = 0;
+
+  // 1. Envoltura interna y puntaje por cada ítem según altura en cm
+  listaItems.forEach(item => {
+    const cant = Number(item.cantidad) || 1;
+    const h = extraerAlturaCm(item.tamanoCm ?? item.tamano ?? 12);
+
+    if (h <= 9) {
+      organzaUnid += 1 * cant;
+      volumenTotal += 1 * cant;
+    } else if (h <= 14.5) {
+      sedaPliegos += 0.5 * cant;
+      adhesivoHojas += 0.0417 * cant; // 1 nenúfar (1/24 hoja)
+      volumenTotal += 3 * cant;
+    } else if (h <= 25) {
+      sedaPliegos += 1.0 * cant;
+      adhesivoHojas += 0.0417 * cant; // 1 nenúfar
+      volumenTotal += 6 * cant;
+    } else {
+      sedaPliegos += 2.0 * cant;
+      adhesivoHojas += 0.0833 * cant; // 2 nenúfares
+      volumenTotal += 10 * cant;
+    }
+  });
+
+  // 2. Bolsa exterior y papelería según volumenTotal acumulado
+  let kraftPeqUnid = 0;
+  let kraftGraUnid = 0;
+  let totalBolsas = 0;
+
+  if (volumenTotal >= 1 && volumenTotal <= 4) {
+    kraftPeqUnid = 1;
+    totalBolsas = 1;
+    adhesivoHojas += 0.05; // 1 logo pequeño (1/20 hoja)
+  } else if (volumenTotal >= 5 && volumenTotal <= 12) {
+    kraftGraUnid = 1;
+    totalBolsas = 1;
+    adhesivoHojas += 0.125; // 1 logo grande (1/8 hoja)
+  } else if (volumenTotal > 12) {
+    kraftGraUnid = Math.ceil(volumenTotal / 12);
+    totalBolsas = kraftGraUnid;
+    adhesivoHojas += 0.125 * kraftGraUnid; // 1 logo grande por bolsa
+  }
+
+  // Tarjeta de agradecimiento: 0.125 hojas (1/8) por cada bolsa kraft utilizada
+  const cartulinaHojas = 0.125 * totalBolsas;
+
+  // Precios unitarios desde Almacén
   const cOrganza   = obtenerPrecioInsumoAlmacen(['organza'], 0.30);
   const cSeda      = obtenerPrecioInsumoAlmacen(['papel seda', 'seda'], 0.15);
-  const cKraftCh   = obtenerPrecioInsumoAlmacen(['kraft chica', 'kraft pequeña', 'kraft'], 0.50);
-  const cKraftMd   = obtenerPrecioInsumoAlmacen(['kraft mediana', 'kraft grande', 'kraft'], 0.80);
-  const cHojaStick = obtenerPrecioInsumoAlmacen(['papel sticker', 'sticker', 'fotográfico'], 0.50);
-  const cTarjeta   = obtenerPrecioInsumoAlmacen(['tarjeta', 'agradecimiento'], cHojaStick / 8); // 8 tarjetas por hoja
-  const cNenufar   = obtenerPrecioInsumoAlmacen(['nenúfar', 'nenufar'], cHojaStick / 12);      // 12 stickers por hoja
+  const cKraftPeq  = obtenerPrecioInsumoAlmacen(['kraft pequeña', 'kraft chica'], 0.50);
+  const cKraftGra  = obtenerPrecioInsumoAlmacen(['kraft grande', 'kraft a4'], 0.80);
+  const cAdhesivo  = obtenerPrecioInsumoAlmacen(['papel adhesivo', 'adhesivo', 'sticker'], 0.50);
+  const cCartulina = obtenerPrecioInsumoAlmacen(['sketchbook', 'cartulina', 'tarjeta'], 0.40);
 
-  if (tipo === 'organza') {
-    // 1 bolsa organza + 1 tarjetita + 1 sticker por cada llavero
-    return piezas * (cOrganza + cTarjeta + cNenufar);
-  }
-  if (tipo === 'llavero_seda') {
-    // 1 bolsa kraft chica + 1 tarjeta (por pedido) + 0.5 pliego seda y 1 sticker nenúfar por pieza
-    return cKraftCh + cTarjeta + (piezas * ((cSeda * 0.5) + cNenufar));
-  }
-  if (tipo === 'estandar_seda') {
-    // 1 bolsa kraft mediana + 1 tarjeta (por pedido) + 1 pliego seda y 1 sticker nenúfar por pieza
-    return cKraftMd + cTarjeta + (piezas * (cSeda + cNenufar));
-  }
-  return 0;
+  const costoTotal =
+    (organzaUnid * cOrganza) +
+    (sedaPliegos * cSeda) +
+    (kraftPeqUnid * cKraftPeq) +
+    (kraftGraUnid * cKraftGra) +
+    (adhesivoHojas * cAdhesivo) +
+    (cartulinaHojas * cCartulina);
+
+  // Lista estructurada para descontar fracciones reales de Firestore al completar pedido
+  const consumos = [
+    { keywords: ['organza'], cantidad: organzaUnid },
+    { keywords: ['papel seda', 'seda'], cantidad: Number(sedaPliegos.toFixed(4)) },
+    { keywords: ['kraft pequeña', 'kraft chica'], cantidad: kraftPeqUnid },
+    { keywords: ['kraft grande', 'kraft a4'], cantidad: kraftGraUnid },
+    { keywords: ['papel adhesivo', 'adhesivo', 'sticker'], cantidad: Number(adhesivoHojas.toFixed(4)) },
+    { keywords: ['sketchbook', 'cartulina', 'tarjeta'], cantidad: Number(cartulinaHojas.toFixed(4)) }
+  ].filter(c => c.cantidad > 0);
+
+  const bolsaTexto = kraftPeqUnid > 0
+    ? `${kraftPeqUnid} Kraft Peq.`
+    : `${kraftGraUnid} Kraft Grande`;
+  const resumen = `${volumenTotal} pts • ${bolsaTexto}`;
+
+  return { costoTotal, volumenTotal, resumen, consumos };
 };
 
 window.aplicarTipoPackaging = (prefijo) => {
-  const tipo = document.getElementById(`${prefijo}-pack-tipo`)?.value || 'estandar_seda';
+  const tipo = document.getElementById(`${prefijo}-pack-tipo`)?.value || 'auto_volumen';
   const inputPack = document.getElementById(`${prefijo}-packaging`);
+  const detEl = document.getElementById(`${prefijo}-pack-detalle`);
   if (!inputPack) return;
 
   if (tipo !== 'manual') {
     const lista = prefijo === 'ped' ? itemsSetActual : itemsVentaActual;
-    const totalPiezas = lista.reduce((acc, i) => acc + i.cantidad, 0);
-    inputPack.value = calcularCostoKitPackaging(tipo, totalPiezas).toFixed(2);
+    const calc = calcularDesglosePackagingVolumen(lista);
+    inputPack.value = calc.costoTotal.toFixed(2);
+    if (detEl) detEl.innerText = calc.resumen;
   } else {
+    if (detEl) detEl.innerText = 'Edición manual';
     inputPack.focus();
   }
 
@@ -1755,19 +1830,22 @@ window.aplicarTipoPackaging = (prefijo) => {
 
 window.recalcularTotalesModalPedido = () => {
   const subtotal = itemsSetActual.reduce((acc, i) => acc + i.subtotal, 0);
-  const totalPiezas = itemsSetActual.reduce((acc, i) => acc + i.cantidad, 0);
 
-  // Actualiza automáticamente las horas estimadas según los muñecos agregados al pedido
+  // Actualiza horas estimadas según los muñecos agregados al pedido
   const inputHoras = document.getElementById('ped-horas');
   if (inputHoras && itemsSetActual.length > 0 && document.activeElement !== inputHoras) {
     const totalHoras = itemsSetActual.reduce((acc, i) => acc + ((Number(i.horasUnit) || 2) * i.cantidad), 0);
     inputHoras.value = totalHoras;
   }
 
-  const tipoPack = document.getElementById('ped-pack-tipo')?.value || 'estandar_seda';
+  const tipoPack = document.getElementById('ped-pack-tipo')?.value || 'auto_volumen';
   const inputPack = document.getElementById('ped-packaging');
+  const detEl = document.getElementById('ped-pack-detalle');
+
   if (tipoPack !== 'manual' && inputPack && document.activeElement !== inputPack) {
-    inputPack.value = calcularCostoKitPackaging(tipoPack, totalPiezas).toFixed(2);
+    const calc = calcularDesglosePackagingVolumen(itemsSetActual);
+    inputPack.value = calc.costoTotal.toFixed(2);
+    if (detEl) detEl.innerText = calc.resumen;
   }
 
   const descuento = parseFloat(document.getElementById('ped-descuento')?.value) || 0;
