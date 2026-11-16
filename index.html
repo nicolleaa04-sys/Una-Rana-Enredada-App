@@ -912,16 +912,20 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 bg-crema-100 dark:bg-noche-bg p-3 rounded-xl border border-stone-200 dark:border-noche-border">
-          <div>
-            <label class="block text-xs font-bold mb-1">Costo Base (S/)</label>
-            <input type="number" step="0.5" id="p-costo" required placeholder="10.00" class="w-full px-3 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs">
+        <div class="grid grid-cols-3 gap-2.5 bg-crema-100 dark:bg-noche-bg p-3 rounded-xl border border-stone-200 dark:border-noche-border">
+            <div>
+              <label class="block text-[11px] font-bold mb-1">Costo Base (S/)</label>
+              <input type="number" step="0.01" id="p-costo" required placeholder="10.00" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold mb-1">Precio Venta (S/)</label>
+              <input type="number" step="0.01" id="p-precio" required placeholder="35.00" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold mb-1 text-morado dark:text-rana-light">Horas Est.</label>
+              <input type="number" step="0.5" id="p-horas" placeholder="3" class="w-full px-2.5 py-2 border dark:border-noche-border dark:bg-noche-card rounded-lg font-bold">
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold mb-1">Precio Venta (S/)</label>
-            <input type="number" step="0.5" id="p-precio" required placeholder="35.00" class="w-full px-3 py-1.5 border dark:border-noche-border dark:bg-noche-card rounded-lg text-xs font-bold text-morado dark:text-rana">
-          </div>
-        </div>
 
         <div>
           <label class="block text-xs font-bold mb-1">Materiales Recomendados</label>
@@ -2517,6 +2521,7 @@ window.entregarYPasarAVentas = async (id) => {
       document.getElementById('p-crochet').value = p.crochet || '';
       document.getElementById('p-costo').value = p.costo;
       document.getElementById('p-precio').value = p.precio;
+      document.getElementById('p-horas').value = p.horasEstimadas || p.horas || '';
       document.getElementById('p-materiales').value = p.materiales || '';
       document.getElementById('p-patron').value = p.patron || '';
       document.getElementById('p-link').value = p.link || '';
@@ -2537,12 +2542,13 @@ window.entregarYPasarAVentas = async (id) => {
         document.getElementById('p-archivo-status').innerText = '✓ PDF guardado';
       }
     }
-  } else if (datosPrecargados) {
+ } else if (datosPrecargados) {
     document.getElementById('p-nombre').value = datosPrecargados.nombre || '';
+    document.getElementById('p-tamano').value = datosPrecargados.tamano || '';
     document.getElementById('p-costo').value = datosPrecargados.costo || 0;
     document.getElementById('p-precio').value = datosPrecargados.precio || 0;
+    document.getElementById('p-horas').value = datosPrecargados.horasEstimadas || datosPrecargados.horas || '';
     document.getElementById('p-materiales').value = datosPrecargados.materiales || '';
-    if (formProyecto) formProyecto.dataset.horasEstimadas = datosPrecargados.horasEstimadas || datosPrecargados.horas || '';
   }
 
   document.getElementById('modal-proyecto').classList.remove('hidden');
@@ -2561,7 +2567,7 @@ window.guardarProyecto = async (e) => {
     crochet: document.getElementById('p-crochet').value,
     costo: Number(document.getElementById('p-costo').value) || 0,
     precio: Number(document.getElementById('p-precio').value) || 0,
-    horasEstimadas: horasGuardadas,
+    horasEstimadas: Number(document.getElementById('p-horas').value) || 0,
     materiales: document.getElementById('p-materiales').value,
     patron: document.getElementById('p-patron').value,
     link: document.getElementById('p-link').value,
@@ -2927,10 +2933,8 @@ window.aplicarEstimadoACalculadora = () => {
 window.calcularPrecioAmigurumi = () => {
   const hG = Number(document.getElementById('calc-hilo')?.value) || 0;
   const hrs = Number(document.getElementById('calc-horas')?.value) || 0;
-  const emp = Number(document.getElementById('calc-empaque')?.value ?? 1.5);
   const arg = Number(document.getElementById('calc-argolla')?.value ?? 2.0);
 
-  // Usa la napa del estimador si se aplicó; si se editó manual, estima 60% del hilo
   const napaEstVal = document.getElementById('calc-napa-estimada')?.value;
   const nG = (napaEstVal !== undefined && napaEstVal !== '')
     ? Number(napaEstVal)
@@ -2939,14 +2943,26 @@ window.calcularPrecioAmigurumi = () => {
   const ojos = Number(document.getElementById('calc-ojos')?.value ?? 2.4);
   const tar = Number(document.getElementById('calc-tarifa-hora')?.value ?? 7.0);
 
-  const mat = ((hG / 100) * 8.0) + ((nG / 1000) * 21.0) + arg + ojos + emp;
+  // Costo neto del amigurumi (sin packaging, porque el kit de empaque se suma en el pedido)
+  const mat = ((hG / 100) * 8.0) + ((nG / 1000) * 21.0) + arg + ojos;
   const mo = hrs * tar;
   const sugerido = Math.round((mat + mo) * 1.25);
 
   document.getElementById('calc-precio-final').innerText = `S/ ${sugerido}.00`;
   document.getElementById('calc-desglose').innerText = `Materiales: S/ ${mat.toFixed(2)} | Mano de obra: S/ ${mo.toFixed(2)}`;
 
- return { costo: Math.round(mat), precio: sugerido, horas: hrs, materiales: `${hG}g hilo, ${nG}g napa, empaque y accesorios` };
+  // Si el estimador está abierto o tiene altura, capturamos el tamaño en cm
+  const panelEstVisible = !document.getElementById('panel-estimador-gramaje')?.classList.contains('hidden');
+  const alturaEst = document.getElementById('est-altura')?.value;
+  const tamanoStr = (panelEstVisible && alturaEst) ? `${alturaEst} cm` : '';
+
+  return {
+    costo: Math.round(mat),
+    precio: sugerido,
+    horas: hrs,
+    tamano: tamanoStr,
+    materiales: `${hG}g hilo, ${nG}g napa y accesorios`
+  };
 };
 
 window.guardarCotizacionEnPatrones = () => {
@@ -2961,6 +2977,7 @@ window.guardarCotizacionEnPatrones = () => {
     precio: datos.precio,
     horas: datos.horas,
     horasEstimadas: datos.horas,
+    tamano: datos.tamano,
     materiales: datos.materiales
   });
 };
