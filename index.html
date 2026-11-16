@@ -1637,10 +1637,12 @@ window.agregarItemAlSetPedido = () => {
     const opt = sel.options[sel.selectedIndex];
     nombre = sel.value;
     proyectoId = opt.dataset.id || '';
-    precioUnit = parseFloat(opt.dataset.precio) || 0;
-    costoInsumos = parseFloat(opt.dataset.costo) || (precioUnit * 0.25);
-    horasUnit = parseFloat(opt.dataset.horas) || 2;
-    tamanoCm = extraerAlturaCm(opt.dataset.tamano || 12);
+    const proyReal = Array.isArray(proyectos) ? proyectos.find(p => p.id === proyectoId) : null;
+
+    precioUnit = proyReal ? (Number(proyReal.precio) || 0) : (parseFloat(opt.dataset.precio) || 0);
+    costoInsumos = proyReal ? (Number(proyReal.costo) || precioUnit * 0.25) : (parseFloat(opt.dataset.costo) || (precioUnit * 0.25));
+    horasUnit = proyReal ? (Number(proyReal.horasEstimadas || proyReal.horas) || 2) : (parseFloat(opt.dataset.horas) || 2);
+    tamanoCm = proyReal ? extraerAlturaCm(proyReal.tamano || 12) : extraerAlturaCm(opt.dataset.tamano || 12);
   } else {
     alert("Selecciona un amigurumi del taller o escribe un diseño nuevo.");
     return;
@@ -1853,13 +1855,17 @@ window.recalcularTotalesModalPedido = () => {
     if (detEl) detEl.innerText = calc.resumen;
   }
 
-  const packagingVal = parseFloat(inputPack?.value) || 0;
+const packagingVal = parseFloat(inputPack?.value) || 0;
   const descuento = parseFloat(document.getElementById('ped-descuento')?.value) || 0;
   const delivery = parseFloat(document.getElementById('ped-costo-delivery')?.value) || 0;
   const adelanto = parseFloat(document.getElementById('ped-monto-adelanto')?.value) || 0;
 
-  // Suma subtotal + packaging, resta descuento y redondea a la unidad
-  const precioProductosFinal = Math.max(0, Math.round((subtotal + packagingVal) - descuento));
+  // Redondeo: céntimos <= 0.50 van a .50; céntimos > 0.50 suben al sol entero
+  const bruto = Math.max(0, (subtotal + packagingVal) - descuento);
+  const entero = Math.floor(bruto);
+  const centimos = Number((bruto - entero).toFixed(2));
+  const precioProductosFinal = centimos === 0 ? entero : (centimos <= 0.5 ? entero + 0.5 : entero + 1);
+
   const saldo = Math.max(0, (precioProductosFinal + delivery) - adelanto);
 
   document.getElementById('ped-subtotal').value = subtotal.toFixed(2);
