@@ -1800,10 +1800,15 @@ window.calcularDesglosePackagingVolumen = (listaItems) => {
     { keywords: ['sketchbook', 'cartulina', 'tarjeta'], cantidad: Number(cartulinaHojas.toFixed(4)) }
   ].filter(c => c.cantidad > 0);
 
-  const bolsaTexto = kraftPeqUnid > 0
-    ? `${kraftPeqUnid} Kraft Peq.`
-    : `${kraftGraUnid} Kraft Grande`;
-  const resumen = `${volumenTotal} pts • ${bolsaTexto}`;
+  const nenufares = Math.round(adhesivoHojas / 0.0417) - (kraftPeqUnid > 0 ? 1 : 0);
+  const partesDetalle = [];
+  if (kraftPeqUnid > 0) partesDetalle.push(`${kraftPeqUnid} Kraft Peq`);
+  if (kraftGraUnid > 0) partesDetalle.push(`${kraftGraUnid} Kraft Gr`);
+  if (organzaUnid > 0) partesDetalle.push(`${organzaUnid} organza`);
+  if (sedaPliegos > 0) partesDetalle.push(`${sedaPliegos} seda`);
+  partesDetalle.push(`${totalBolsas} logo`, `${totalBolsas} tarj.`);
+
+  const resumen = `${volumenTotal} pts • ${partesDetalle.join(' + ')}`;
 
   return { costoTotal, volumenTotal, resumen, consumos };
 };
@@ -1848,11 +1853,13 @@ window.recalcularTotalesModalPedido = () => {
     if (detEl) detEl.innerText = calc.resumen;
   }
 
+  const packagingVal = parseFloat(inputPack?.value) || 0;
   const descuento = parseFloat(document.getElementById('ped-descuento')?.value) || 0;
   const delivery = parseFloat(document.getElementById('ped-costo-delivery')?.value) || 0;
   const adelanto = parseFloat(document.getElementById('ped-monto-adelanto')?.value) || 0;
 
-  const precioProductosFinal = Math.max(0, subtotal - descuento);
+  // Suma subtotal + packaging, resta descuento y redondea a la unidad
+  const precioProductosFinal = Math.max(0, Math.round((subtotal + packagingVal) - descuento));
   const saldo = Math.max(0, (precioProductosFinal + delivery) - adelanto);
 
   document.getElementById('ped-subtotal').value = subtotal.toFixed(2);
