@@ -1452,6 +1452,31 @@
       if (modal) modal.classList.add('hidden');
     };
 
+    window.enviarAlertaManualTelegram = async () => {
+  const pendientes = pedidos.filter(p => p.estado !== 'Entregado');
+  if (pendientes.length === 0) {
+    alert("¡No tienes pedidos pendientes por entregar! 🎉");
+    return;
+  }
+
+  // Ordenar por urgencia de mayor a menor
+  const ordenados = [...pendientes].sort((a, b) => calcularScoreUrgencia(b) - calcularScoreUrgencia(a));
+
+  let msg = `🐸 <b>Resumen de Pedidos Pendientes (${ordenados.length})</b>\n\n`;
+  ordenados.forEach((p, idx) => {
+    const dias = calcularDiasRestantes(p.fechaEntrega);
+    const alerta = dias < 0 ? `⚠️ Vencido (${Math.abs(dias)}d)` : (dias === 0 ? `🔥 HOY` : (dias === 1 ? `⏰ Mañana` : `📅 ${p.fechaEntrega} (${dias}d)`));
+    msg += `${idx + 1}. <b>${p.articulo}</b> — ${p.cliente}\n   • Estado: ${p.estado} | Entrega: ${alerta}\n   • Saldo: S/ ${(Number(p.saldoPendiente) || 0).toFixed(2)}\n\n`;
+  });
+
+  const enviado = await window.enviarMensajeTelegram(msg);
+  if (enviado) {
+    alert("✅ ¡Resumen de pedidos enviado a tu Telegram!");
+  } else {
+    alert("⚠️ No se pudo enviar. Verifica tu Token y Chat ID en el ícono de Telegram arriba.");
+  }
+};
+    
     window.enviarMensajeTelegram = async (texto) => {
       const token = localStorage.getItem('rana_tg_token') || localStorage.getItem('tg_token');
       const chatId = localStorage.getItem('rana_tg_chatid') || localStorage.getItem('tg_chatid');
